@@ -7,12 +7,12 @@
     "status": "Online!"
   },
   "apiSettings": {
-    "creator": "FlowFalcon", 
+    "creator": "FlowFalcon",
     "apikey": ["falcon-api"]
   },
   "categories": [
     {
-      "name": "AI (Artificial Intelligence)",
+      "name": "Artificial Intelligence",
       "items": [
         {
           "name": "LuminAI",
@@ -23,14 +23,32 @@
             "text": "Text for luminai to respond to"
           }
         },
-       {
+        {
           "name": "HydroMind",
           "desc": "See the list of supported AI models here: https://mind.hydrooo.web.id",
           "path": "/ai/hydromind?text=&model=",
           "status": "ready",
           "params": {
             "text": "Teks atau perintah untuk chat AI",
-            "model":"1See the list of supported AI models here: https://mind.hydrooo.web.id"
+            "model": "Model AI yang ingin digunakan (lihat di https://mind.hydrooo.web.id)"
+          }
+        },
+        {
+          "name": "CyaaAi",
+          "desc": "Model ai bahasa indonesia",
+          "path": "/ai/Cyaaai?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI"
+          }
+        },
+        {
+          "name": "TruepingAi",
+          "desc": "Model ai bahasa indonesia yang lucu dan imut 🧸🎀",
+          "path": "/ai/truepingai?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI"
           }
         }
       ]
@@ -59,6 +77,6 @@
           }
         }
       ]
-    }               
+    }
   ]
 }
