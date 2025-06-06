@@ -89,7 +89,30 @@
                     "path": "/tools/text-to-speech?text=",
                     "status": "ready",
                     "params": {
-                      "text": "Masukan Text Nya"
+                        "text": "Masukan Text Nya"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Image Generator",
+            "items": [
+                {
+                    "name": "Brat",
+                    "desc": "Create sticker brat on whatsapp",
+                    "path": "/imagecreator/text2ghibli?text=",
+                    "status": "ready",
+                    "params": {
+                        "text": "Masukan Text Nya"
+                    }
+                },
+                {
+                    "name": "Nulis",
+                    "desc": "Kerjakan pekerjaan rumah kamu lebih cepat dengan fitur nulis",
+                    "path": "/imagecreator/nulis?text=",
+                    "status": "ready",
+                    "params": {
+                        "text": "Masukan texf"
                     }
                 }
             ]
