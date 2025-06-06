@@ -36,7 +36,7 @@
         {
           "name": "CyaaAi",
           "desc": "Model ai bahasa indonesia",
-          "path": "/ai/Cyaaai?text=",
+          "path": "/ai/cyaaai?text=",
           "status": "ready",
           "params": {
             "text": "Teks atau perintah untuk chat AI"
