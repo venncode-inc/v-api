@@ -8,9 +8,7 @@
     },
     "apiSettings": {
         "creator": "Hazel",
-        "apikey": [
-            "velin"
-        ]
+        "apikey": [ "velin" ]
     },
     "categories": [
         {
@@ -20,7 +18,7 @@
                     "name": "LuminAI",
                     "desc": "Talk with luminai",
                     "path": "/ai/luminai?text=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "text": "Text for luminai to respond to"
                     }
@@ -29,7 +27,7 @@
                     "name": "HydroMind",
                     "desc": "See the list of supported AI models here: https://mind.hydrooo.web.id",
                     "path": "/ai/hydromind?text=&model=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
                     }
@@ -38,7 +36,7 @@
                     "name": "TruepingAi",
                     "desc": "Ai Bahasa indonesia dengan sikap yang lucu 🧸🎀",
                     "path": "/ai/truepingai?text=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
                     }
@@ -52,7 +50,7 @@
                     "name": "Blue Archive",
                     "desc": "Blue Archive Random Images",
                     "path": "/random/ba",
-                    "status": "ready"
+                    "status": "READY"
                 }
             ]
         },
@@ -63,13 +61,13 @@
                     "name": "Cek Gempa",
                     "desc": "Cek Gempa by bmkg",
                     "path": "/tools/cekgempa",
-                    "status": "ready"
+                    "status": "READY"
                 },
                 {
                     "name": "Cek Kode Pos",
                     "desc": "Cek Kode Pos Di Daerah Kamu",
                     "path": "/tools/cekkodepos?q=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "q": "Search query"
                     }
@@ -78,7 +76,7 @@
                     "name": "Tinyurl",
                     "desc": "Ubah long link kamu jadi sortlink",
                     "path": "/tools/tinyurl?url=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "url": "Masukan url nya"
                     }
@@ -87,7 +85,7 @@
                     "name": "Texs to speech",
                     "desc": "Ubah kamu jadi suara karakter",
                     "path": "/tools/text-to-speech?text=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "text": "Masukan Text Nya"
                     }
@@ -98,10 +96,10 @@
             "name": "Image Generator",
             "items": [
                 {
-                    "name": "Brat",
+                    "name": "Ghibli",
                     "desc": "Create sticker brat on whatsapp",
                     "path": "/imagecreator/text2ghibli?text=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "text": "Masukan Text Nya"
                     }
@@ -110,7 +108,7 @@
                     "name": "Nulis",
                     "desc": "Kerjakan pekerjaan rumah kamu lebih cepat dengan fitur nulis",
                     "path": "/imagecreator/nulis?text=",
-                    "status": "ready",
+                    "status": "EROR",
                     "params": {
                         "text": "Masukan texf"
                     }
@@ -124,7 +122,7 @@
                     "name": "Search YouTube",
                     "desc": "Video search",
                     "path": "/search/youtube?q=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "q": "Search query"
                     }
@@ -133,7 +131,7 @@
                     "name": "Search YTS",
                     "desc": "Video search",
                     "path": "/search/yts?q=",
-                    "status": "ready",
+                    "status": "READY",
                     "params": {
                         "q": "Search query"
                     }
