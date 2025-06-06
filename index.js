@@ -18,7 +18,7 @@ app.use(cors());
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 // static menu utama API di /api
-app.use('/api', express.static(path.join(__dirname, 'api-page')));
+app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
 
 // middleware untuk response JSON
 const settingsPath = path.join(__dirname, './src/settings.json');
