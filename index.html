@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dokumentasi API</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    .api-card {
+      background-color: var(--card-bg, #f9fafb);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .dark .api-card {
+      background-color: #1f2937;
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+    <div class="flex gap-3 items-center">
+      <button id="menu-toggle" class="text-gray-600 dark:text-gray-300 focus:outline-none">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+      <h1 class="text-lg font-semibold">📘 Dokumentasi API</h1>
+    </div>
+    <button id="dark-toggle" class="text-gray-600 dark:text-gray-300 text-xl focus:outline-none">
+      <i class="fas fa-moon"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar -->
+  <nav id="sidebar" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 hidden">
+    <div class="flex flex-col bg-white dark:bg-gray-900 w-64 h-full p-4">
+      <button id="close-menu" class="self-end text-gray-600 dark:text-gray-300 mb-4 focus:outline-none">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+      <h2 class="text-xl font-bold mb-4">📑 Menu</h2>
+      <a href="#overview" class="py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i class="fas fa-eye mr-2"></i> Overview</a>
+      <a href="#authentication" class="py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i class="fas fa-key mr-2"></i> Authentication</a>
+      <a href="#endpoints" class="py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i class="fas fa-link mr-2"></i> Endpoints</a>
+      <a href="#support" class="py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i class="fas fa-headset mr-2"></i> Support</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-grow p-4 space-y-8">
+
+    <!-- Overview -->
+    <section id="overview" data-aos="fade-up" class="api-card p-6 max-w-md mx-auto">
+      <div class="flex justify-center mb-4 text-blue-600 dark:text-blue-400">
+        <i class="fas fa-plug fa-3x"></i>
+      </div>
+      <h2 class="text-2xl font-semibold mb-2 text-center">Apa itu API?</h2>
+      <p class="text-gray-600 dark:text-gray-300 text-sm text-justify">
+        API (Application Programming Interface) adalah jembatan komunikasi antar sistem. Dengan API, aplikasi bisa
+        saling terhubung dan bertukar data dengan mudah tanpa harus tahu bagaimana sistem lain bekerja secara internal.
+      </p>
+    </section>
+
+    <!-- Authentication -->
+    <section id="authentication" data-aos="fade-up" class="api-card p-6 max-w-md mx-auto">
+      <h2 class="text-xl font-semibold mb-2"><i class="fas fa-lock mr-2 text-yellow-500"></i>Authentication</h2>
+      <p class="text-gray-600 dark:text-gray-300 text-sm">
+        Untuk mengakses endpoint tertentu, Anda harus menggunakan API Key yang dikirim melalui header
+        <code class="bg-gray-100 dark:bg-gray-700 px-1">Authorization: Bearer YOUR_API_KEY</code>.
+      </p>
+    </section>
+
+    <!-- Endpoints -->
+    <section id="endpoints" data-aos="fade-up" class="api-card p-6 max-w-md mx-auto">
+      <h2 class="text-xl font-semibold mb-2"><i class="fas fa-code-branch mr-2 text-green-500"></i>Endpoints</h2>
+      <ul class="list-disc pl-5 text-gray-700 dark:text-gray-300 text-sm">
+        <li><strong>GET</strong> /api/users — Mendapatkan daftar user</li>
+        <li><strong>POST</strong> /api/login — Autentikasi user</li>
+        <li><strong>GET</strong> /api/data — Ambil data umum</li>
+      </ul>
+    </section>
+
+    <!-- Support -->
+    <section id="support" data-aos="fade-up" class="api-card p-6 max-w-md mx-auto">
+      <h2 class="text-xl font-semibold mb-2"><i class="fas fa-life-ring mr-2 text-pink-500"></i>Support</h2>
+      <p class="text-gray-600 dark:text-gray-300 text-sm">
+        Jika Anda mengalami kesulitan atau butuh bantuan teknis, silakan hubungi kami melalui halaman
+        <a href="#" class="text-blue-600 dark:text-blue-400 underline">Support</a>.
+      </p>
+    </section>
+
+    <!-- CTA -->
+    <div class="flex justify-center" data-aos="zoom-in">
+      <a href="api-page/index.html"
+         class="bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow-lg hover:bg-blue-700 transition duration-200">
+        🚀 Go to API Page
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-800 text-center p-4 mt-4 text-sm text-gray-700 dark:text-gray-300">
+    &copy; 2024 Dokumentasi API. <a href="#support" class="text-blue-600 dark:text-blue-400 hover:underline">Support</a> • <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">More Docs</a>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 600 });
+
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const closeMenu = document.getElementById('close-menu');
+    const darkToggle = document.getElementById('dark-toggle');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.remove('hidden');
+    });
+
+    closeMenu.addEventListener('click', () => {
+      sidebar.classList.add('hidden');
+    });
+
+    // Dark mode toggle
+    darkToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+  </script>
+</body>
+</html>
