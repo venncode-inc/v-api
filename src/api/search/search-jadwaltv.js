@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = function (app) {
-  app.get('/tools/jadwaltv', async (req, res) => {
+  app.get('/search/jadwaltv', async (req, res) => {
     const { channel } = req.query;
     if (!channel) {
       return res.status(400).json({
