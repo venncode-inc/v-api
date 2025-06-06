@@ -1,3 +1,4 @@
+
 {
     "name": "Hazel Api's",
     "version": "v1.0.0",
@@ -134,6 +135,79 @@
                     "status": "READY",
                     "params": {
                         "q": "Search query"
+                    }
+                },
+                {               
+                    "name": "Search Cookpad",
+                    "desc": "Cari resep masakan enak di cookpad",
+                    "path": "/search/cookpad?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Search query"
+                    }
+                },
+                {
+                    "name": "Search Jadwaltv",
+                    "desc": "Cari jadwal tv kesukaan kamu secara realtime dengan api dari api.siputzx.my.id",
+                    "path": "/search/jadwaltv?channel=",
+                    "status": "READY",
+                    "params": {
+                    "channel": "Search jadwtv"     
+                    }
+                },
+                {               
+                    "name": "Search Happymod",
+                    "desc": "Cari aplikasi mod di happymod.com",
+                    "path": "/search/cookpad?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Search happymod"
+                    }
+                },
+                {
+                    "name": "Search Playstore",
+                    "desc": "Cari aplikasi di playstore dengan lebih cepat",
+                    "path": "/search/playstore?q=",
+                    "status": "READY",
+                    "params": {
+                          "q": "Search apk"      
+                    }
+                },
+                {               
+                    "name": "Search Bastation",
+                    "desc": "Cari anime kesukaan mu di aplikasi terpercaya",
+                    "path": "/search/bastation?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Search bastation"
+                    }
+                },
+                {
+                    "name": "Search Npm",
+                    "desc": "Cari module node.js kamu di npm",
+                    "path": "/search/npm?text=",
+                    "status": "READY",
+                    "params": {
+                       "text": "Search npm"      
+                    }
+                },
+                {               
+                    "name": "Search TikTok",
+                    "desc": "Cari video lucu dan terpercaya di tiktok",
+                    "path": "/search/tiktok?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Search tiktok"
+                    }
+                },
+                {
+                    "name": "Search xnxx",
+                    "desc": "Cari hentai/bokep kesukaan kamu di xnxx",
+                    "path": "/search/xnxx?q=&apikey=",
+                    "status": "READY",
+                    "params": {
+                     "apikey": "Masukan apikey kamu",
+                          "q": "Search xnxx"         
                     }
                 }
             ]
