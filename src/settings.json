@@ -31,8 +31,16 @@
                     "path": "/ai/hydromind?text=&model=",
                     "status": "ready",
                     "params": {
-                        "text": "Teks atau perintah untuk chat AI",
-                        "model": "See the list of supported AI models here: https://mind.hydrooo.web.id"
+                        "text": "Teks atau perintah untuk chat AI"
+                    }
+                },
+                {
+                    "name": "TruepingAi",
+                    "desc": "Ai Bahasa indonesia dengan sikap yang lucu 🧸🎀",
+                    "path": "/ai/truepingai?text=",
+                    "status": "ready",
+                    "params": {
+                        "text": "Teks atau perintah untuk chat AI"
                     }
                 }
             ]
