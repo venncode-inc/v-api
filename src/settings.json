@@ -57,6 +57,44 @@
             ]
         },
         {
+            "name": "Tools",
+            "items": [
+                {
+                    "name": "Cek Gempa",
+                    "desc": "Cek Gempa by bmkg",
+                    "path": "/tools/cekgempa",
+                    "status": "ready"
+                },
+                {
+                    "name": "Cek Kode Pos",
+                    "desc": "Cek Kode Pos Di Daerah Kamu",
+                    "path": "/tools/cekkodepos?q=",
+                    "status": "ready",
+                    "params": {
+                        "q": "Search query"
+                    }
+                },
+                {
+                    "name": "Tinyurl",
+                    "desc": "Ubah long link kamu jadi sortlink",
+                    "path": "/tools/tinyurl?url=",
+                    "status": "ready",
+                    "params": {
+                        "url": "Masukan url nya"
+                    }
+                },
+                {
+                    "name": "Texs to speech",
+                    "desc": "Ubah kamu jadi suara karakter",
+                    "path": "/tools/text-to-speech?text=",
+                    "status": "ready",
+                    "params": {
+                      "text": "Masukan Text Nya"
+                    }
+                }
+            ]
+        },
+        {
             "name": "Search",
             "items": [
                 {
