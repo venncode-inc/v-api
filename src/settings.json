@@ -32,24 +32,6 @@
             "text": "Teks atau perintah untuk chat AI",
             "model": "Model AI yang ingin digunakan (lihat di https://mind.hydrooo.web.id)"
           }
-        },
-        {
-          "name": "CyaaAi",
-          "desc": "Model ai bahasa indonesia",
-          "path": "/ai/cyaaai?text=",
-          "status": "ready",
-          "params": {
-            "text": "Teks atau perintah untuk chat AI"
-          }
-        },
-        {
-          "name": "TruepingAi",
-          "desc": "Model ai bahasa indonesia yang lucu dan imut 🧸🎀",
-          "path": "/ai/truepingai?text=",
-          "status": "ready",
-          "params": {
-            "text": "Teks atau perintah untuk chat AI"
-          }
         }
       ]
     },
