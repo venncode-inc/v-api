@@ -61,6 +61,10 @@ fs.readdirSync(apiFolder).forEach((subfolder) => {
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(' Load Complete! ✓ '));
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Total Routes Loaded: ${totalRoutes} `));
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
+});
+
 // fallback 404
 app.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
