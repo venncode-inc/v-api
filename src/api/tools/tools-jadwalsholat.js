@@ -11,35 +11,35 @@ module.exports = function (app) {
     }
 
     try {
-      // Cari ID kota
-      const search = await axios.get(`https://api.myquran.com/v1/sholat/kota/cari/${encodeURIComponent(kota)}`);
-      const found = search.data.data.find(k => k.lokasi.toLowerCase().includes(kota.toLowerCase()));
+      const apiUrl = `https://nirkyy-dev.hf.space/api/v1/jadwal-sholat?city=${encodeURIComponent(kota)}`;
+      const response = await axios.get(apiUrl);
 
-      if (!found) {
-        return res.status(404).json({ status: false, message: 'Kota tidak ditemukan' });
+      const data = response.data;
+
+      if (!data || !data.jadwal) {
+        return res.status(404).json({ status: false, message: 'Data jadwal tidak ditemukan untuk kota tersebut.' });
       }
-
-      const today = new Date().toISOString().split('T')[0]; // format YYYY-MM-DD
-      const { data } = await axios.get(`https://api.myquran.com/v1/sholat/jadwal/${found.id}/${today}`);
-
-      const jadwal = data.data.jadwal;
 
       res.json({
         status: true,
-        kota: found.lokasi,
-        tanggal: jadwal.tanggal,
+        kota: data.kota || kota,
+        tanggal: data.tanggal || new Date().toISOString().split('T')[0],
         jadwal: {
-          imsak: jadwal.imsak,
-          subuh: jadwal.subuh,
-          dzuhur: jadwal.dzuhur,
-          ashar: jadwal.ashar,
-          maghrib: jadwal.maghrib,
-          isya: jadwal.isya
+          imsak: data.jadwal.imsak,
+          subuh: data.jadwal.subuh,
+          dzuhur: data.jadwal.dzuhur,
+          ashar: data.jadwal.ashar,
+          maghrib: data.jadwal.maghrib,
+          isya: data.jadwal.isya
         }
       });
 
     } catch (e) {
-      res.status(500).json({ status: false, message: 'Gagal mengambil data jadwal sholat' });
+      res.status(500).json({
+        status: false,
+        message: 'Gagal mengambil data dari API eksternal',
+        error: e.message
+      });
     }
   });
 };
