@@ -9,12 +9,19 @@
     --warning-color: #fdcb6e;
     
     /* Light Mode */
-    --background-color: #f8f9fd;
-    --card-background: #ffffff;
-    --text-color: #2d3436;
-    --text-muted: #636e72;
-    --border-color: rgba(0, 0, 0, 0.08);
-    --highlight-color: rgba(108, 92, 231, 0.1);
+     --background-color: #f9fbff;     
+    --card-background: #ffffff;                
+    --text-color: #2c3e50;               
+    --text-muted: #7f8c8d;               
+    --border-color: rgba(0, 0, 0, 0.06);   
+    --highlight-color: rgba(127, 97, 255, 0.1);
+    --primary-color: #7f61ff;           
+    --primary-hover: #6e54e6;             
+    --secondary-color: #5ce1e6;         
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);   
+    --hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --background-color-rgb: 249, 251, 255;
     
     /* UI Elements */
     --border-radius-sm: 8px;
@@ -47,20 +54,20 @@
 }
 
 .dark-mode {
-    --primary-color: #a29bfe;
-    --primary-hover: #8983d8;
-    --secondary-color: #6c5ce7;
-    --accent-color: #00cec9;
-    --background-color: #1a1b2e;
-    --card-background: #252640;
-    --text-color: #e5e5e5;
-    --text-muted: #b2becd;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --highlight-color: rgba(162, 155, 254, 0.2);
-    --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    --background-color-rgb: 26, 27, 46;
+    --primary-color: #8cafff;   
+    --primary-hover: #7092e8;     
+    --secondary-color: #7f61ff;      
+    --accent-color: #5ce1e6;       
+    --background-color: #161821;    
+    --card-background: #1e2030;      
+    --text-color: #f0f0f0;        
+    --text-muted: #9ca3af;       
+    --border-color: rgba(255, 255, 255, 0.06);
+    --highlight-color: rgba(140, 175, 255, 0.15);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    --background-color-rgb: 22, 24, 33;
 }
 
 * {
@@ -1417,23 +1424,23 @@ input:checked + .slider:before {
 }
 
 .dark-mode .json-string {
-    color: #7ee787;
+    color: #a5f2cc;
 }
 
 .dark-mode .json-number {
-    color: #79c0ff;
+    color: #6ec4ff; 
 }
 
 .dark-mode .json-boolean {
-    color: #ff7b72;
+    color: #ff9a8b; 
 }
 
 .dark-mode .json-null {
-    color: #ff7b72;
+    color: #c084fc; 
 }
 
 .dark-mode .json-key {
-    color: #ffa657;
+    color: #fbc77a; 
 }
 
 /* Responsive Styles */
