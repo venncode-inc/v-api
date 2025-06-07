@@ -128,6 +128,15 @@
                     "params": {
                         "text": "Masukan Text Nya"
                     }
+                },
+                {
+                    "name": "Jadwal Shalat",
+                    "desc": "Cek jadwal shalat di kota kamu",
+                    "path": "/tools/jadwalsholat?city=",
+                    "status": "READY",
+                    "params": {
+                        "city": "Masukan Text Nya"    
+                    }
                 }
             ]
         },
