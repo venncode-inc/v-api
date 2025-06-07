@@ -31,13 +31,50 @@
                     "path": "/ai/hydromind?text=&model=",
                     "status": "READY",
                     "params": {
-                        "text": "Teks atau perintah untuk chat AI"
+                        "text": "Teks atau perintah untuk chat AI",
+                        "model": "Masukan model ai"
                     }
                 },
                 {
                     "name": "TruepingAi",
                     "desc": "Ai Bahasa indonesia dengan sikap yang lucu 🧸🎀",
                     "path": "/ai/truepingai?text=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Teks atau perintah untuk chat AI"
+                    }
+                },
+                {
+                    "name": "TruecallerAi",
+                    "desc": "Ai dari truecaller yang siap membantu kamu",
+                    "path": "/ai/truecaller?text=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Teks atau perintah untuk chat AI"
+                    }
+                },
+                {
+                    "name": "CopilotAi",
+                    "desc": "Ai dari microsoft yang siap membantu pekerjaan kamu",
+                    "path": "/ai/copilotai?text=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Teks atau perintah untuk chat AI"
+                    }
+                },
+                {
+                    "name": "OpenAi",
+                    "desc": "Ai dari OpenAi yang siap membantu semua masalah kamu",
+                    "path": "/ai/openai?text=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Teks atau perintah untuk chat AI"
+                    }
+                },
+                {
+                    "name": "TruecallerAi",
+                    "desc": "Ai dari truecaller yang siap membantu kamu",
+                    "path": "/ai/truecaller?text=",
                     "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
@@ -113,7 +150,7 @@
                     "status": "EROR",
                     "params": {
                         "text": "Masukan text"
-                   }
+                    }
                 },
                 {
                     "name": "Brat",
@@ -121,7 +158,7 @@
                     "path": "/imagecreator/bratv2?text=",
                     "status": "EROR",
                     "params": {
-                        "text": "Masukan text"      
+                        "text": "Masukan text"
                     }
                 }
             ]
@@ -148,12 +185,12 @@
                     }
                 },
                 {
-                 "name": "Search GsmArena",
+                    "name": "Search GsmArena",
                     "desc": "Cari hape kamu di gsm arena",
                     "path": "/search/gsmarena?phone=",
                     "status": "READY",
                     "params": {
-                     "phone": "Search phone"
+                        "phone": "Search phone"
                     }
                 },
                 {
@@ -228,6 +265,17 @@
                         "apikey": "Masukan apikey kamu",
                         "q": "Search xnxx"
                     }
+                }
+            ]
+        },
+        {
+            "name": "Api Status",
+            "items": [
+                {
+                    "name": "Search YouTube",
+                    "desc": "Video search",
+                    "path": "/api-status/status",
+                    "status": "READY"
                 }
             ]
         }
