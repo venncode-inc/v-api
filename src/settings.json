@@ -1,4 +1,3 @@
-
 {
     "name": "Hazel Api's",
     "version": "v1.0.0",
@@ -9,7 +8,9 @@
     },
     "apiSettings": {
         "creator": "Hazel",
-        "apikey": [ "velin" ]
+        "apikey": [
+            "velin"
+        ]
     },
     "categories": [
         {
@@ -94,6 +95,84 @@
             ]
         },
         {
+            "name": "Download",
+            "items": [
+                {
+                    "name": "Download CapCut",
+                    "desc": "Download video from capcut",
+                    "path": "/download/capcut?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan url"
+                    }
+                },
+                {
+                    "name": "",
+                    "desc": "Download video from facebook",
+                    "path": "/download/facebook?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan url"
+                    }
+                },
+                {
+                    "name": "Github",
+                    "desc": "Download git from github.com",
+                    "path": "/tools/github?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan url nya"
+                    }
+                },
+                {
+                    "name": "Instagram",
+                    "desc": "Download video from instagram",
+                    "path": "/tools/instagram?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan url"
+                    }
+                },
+                {
+                    "name": "SnackVideo",
+                    "desc": "Download video from snackvideo",
+                    "path": "/tools/snackvideo?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan url nya"
+                    }
+                },
+                {
+                    "name": "Spotify",
+                    "desc": "Download music from spotify",
+                    "path": "/tools/spotify?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan url"
+                    }
+                },
+                {
+                    "name": "TikTok",
+                    "desc": "Download video from ttsave.app (no watermark + audio)",
+                    "path": "/download/tiktok?url=",
+                    "status": "READY",
+                    "params": {
+                        "apikey": "Masukkan apikey kamu",
+                        "url": "Masukan URL video TikTok"
+                    }
+                },
+                {
+                    "name": "TikTok V2",
+                    "desc": "Download video via tikwm.com API",
+                    "path": "/download/tiktok-v2?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Masukan URL video TikTok"
+                    }
+                }
+            ]
+        },
+        {
             "name": "Image Generator",
             "items": [
                 {
@@ -137,7 +216,7 @@
                         "q": "Search query"
                     }
                 },
-                {               
+                {
                     "name": "Search Cookpad",
                     "desc": "Cari resep masakan enak di cookpad",
                     "path": "/search/cookpad?q=",
@@ -152,10 +231,10 @@
                     "path": "/search/jadwaltv?channel=",
                     "status": "READY",
                     "params": {
-                    "channel": "Search jadwtv"     
+                        "channel": "Search jadwtv"
                     }
                 },
-                {               
+                {
                     "name": "Search Happymod",
                     "desc": "Cari aplikasi mod di happymod.com",
                     "path": "/search/cookpad?q=",
@@ -170,10 +249,10 @@
                     "path": "/search/playstore?q=",
                     "status": "READY",
                     "params": {
-                          "q": "Search apk"      
+                        "q": "Search apk"
                     }
                 },
-                {               
+                {
                     "name": "Search Bastation",
                     "desc": "Cari anime kesukaan mu di aplikasi terpercaya",
                     "path": "/search/bastation?q=",
@@ -188,10 +267,10 @@
                     "path": "/search/npm?text=",
                     "status": "READY",
                     "params": {
-                       "text": "Search npm"      
+                        "text": "Search npm"
                     }
                 },
-                {               
+                {
                     "name": "Search TikTok",
                     "desc": "Cari video lucu dan terpercaya di tiktok",
                     "path": "/search/tiktok?q=",
@@ -206,8 +285,8 @@
                     "path": "/search/xnxx?q=&apikey=",
                     "status": "READY",
                     "params": {
-                     "apikey": "Masukan apikey kamu",
-                          "q": "Search xnxx"         
+                        "apikey": "Masukan apikey kamu",
+                        "q": "Search xnxx"
                     }
                 }
             ]
