@@ -272,8 +272,8 @@
             "name": "Api Status",
             "items": [
                 {
-                    "name": "Search YouTube",
-                    "desc": "Video search",
+                    "name": "Status Api's",
+                    "desc": "Api monitoring endpoint",
                     "path": "/api-status/status",
                     "status": "READY"
                 }
