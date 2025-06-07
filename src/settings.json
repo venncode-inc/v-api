@@ -79,6 +79,16 @@
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
                     }
+                },
+                {
+                    "name": "AliciaAi",
+                    "desc": "See the list of supported AI models here: https://nirkyy-dev.hf.space",
+                    "path": "/ai/hydromind?user=&msg=",
+                    "status": "READY",
+                    "params": {
+                        "user": "Masukan nama user",
+                        "msg": "Masukan message"
+                    }
                 }
             ]
         },
@@ -132,10 +142,10 @@
                 {
                     "name": "Jadwal Shalat",
                     "desc": "Cek jadwal shalat di kota kamu",
-                    "path": "/tools/jadwalsholat?city=",
+                    "path": "/tools/jadwalsholat?kota=",
                     "status": "READY",
                     "params": {
-                        "city": "Masukan Text Nya"    
+                        "kota": "Masukan Text Nya"
                     }
                 }
             ]
