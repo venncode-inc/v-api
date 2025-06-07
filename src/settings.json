@@ -1,3 +1,4 @@
+
 {
     "name": "Hazel Api's",
     "version": "v1.0.0",
@@ -90,84 +91,6 @@
                     "status": "READY",
                     "params": {
                         "text": "Masukan Text Nya"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Download",
-            "items": [
-                {
-                    "name": "Download CapCut",
-                    "desc": "Download video from capcut",
-                    "path": "/download/capcut?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                },
-                {
-                    "name": "",
-                    "desc": "Download video from facebook",
-                    "path": "/download/facebook?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                },
-                {
-                    "name": "Github",
-                    "desc": "Download git from github.com",
-                    "path": "/tools/github?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url nya"
-                    }
-                },
-                {
-                    "name": "Instagram",
-                    "desc": "Download video from instagram",
-                    "path": "/tools/instagram?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                },
-                {
-                    "name": "SnackVideo",
-                    "desc": "Download video from snackvideo",
-                    "path": "/tools/snackvideo?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url nya"
-                    }
-                },
-                {
-                    "name": "Spotify",
-                    "desc": "Download music from spotify",
-                    "path": "/tools/spotify?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                },
-                {
-                    "name": "TikTok",
-                    "desc": "Download video from ttsave.app (no watermark + audio)",
-                    "path": "/download/tiktok?url=",
-                    "status": "READY",
-                    "params": {
-                        "apikey": "Masukkan apikey kamu",
-                        "url": "Masukan URL video TikTok"
-                    }
-                },
-                {
-                    "name": "TikTok V2",
-                    "desc": "Download video via tikwm.com API",
-                    "path": "/download/tiktok-v2?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan URL video TikTok"
                     }
                 }
             ]
