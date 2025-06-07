@@ -1,4 +1,3 @@
-
 {
     "name": "Hazel Api's",
     "version": "v1.0.0",
@@ -100,7 +99,7 @@
             "items": [
                 {
                     "name": "Ghibli",
-                    "desc": "Create sticker brat on whatsapp",
+                    "desc": "Create foto ghibli",
                     "path": "/imagecreator/text2ghibli?text=",
                     "status": "READY",
                     "params": {
@@ -113,7 +112,16 @@
                     "path": "/imagecreator/nulis?text=",
                     "status": "EROR",
                     "params": {
-                        "text": "Masukan texf"
+                        "text": "Masukan text"
+                   }
+                },
+                {
+                    "name": "Brat",
+                    "desc": "Create sticker brat on whatsapp",
+                    "path": "/imagecreator/bratv2?text=",
+                    "status": "EROR",
+                    "params": {
+                        "text": "Masukan text"      
                     }
                 }
             ]
@@ -137,6 +145,15 @@
                     "status": "READY",
                     "params": {
                         "q": "Search query"
+                    }
+                },
+                {
+                 "name": "Search GsmArena",
+                    "desc": "Cari hape kamu di gsm arena",
+                    "path": "/search/gsmarena?phone=",
+                    "status": "READY",
+                    "params": {
+                     "phone": "Search phone"
                     }
                 },
                 {
