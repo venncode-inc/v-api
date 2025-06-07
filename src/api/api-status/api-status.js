@@ -35,7 +35,7 @@ module.exports = function (app) {
   }
 
   // Endpoint /status
-  app.get('api-status/status', async (req, res) => {
+  app.get('/api-status/status', async (req, res) => {
     try {
       // (opsional) contoh axios call ke luar buat test API
       // await axios.get('https://zenz.biz.id'); 
