@@ -2,27 +2,27 @@ const axios = require('axios');
 
 module.exports = function (app) {
   app.get('/tools/jadwalsholat', async (req, res) => {
-    const { kota } = req.query;
-    if (!kota) {
+    const { city } = req.query;
+    if (!city) {
       return res.status(400).json({
         status: false,
-        message: 'Masukkan nama kota, contoh: /tools/jadwalsholat?kota=bandung'
+        message: 'Masukkan nama kota, contoh: /tools/jadwalsholat?city=bandung'
       });
     }
 
     try {
-      const apiUrl = `https://nirkyy-dev.hf.space/api/v1/jadwal-sholat?city=${encodeURIComponent(kota)}`;
+      const apiUrl = `https://nirkyy-dev.hf.space/api/v1/jadwal-sholat?city=${encodeURIComponent(city)}`;
       const response = await axios.get(apiUrl);
 
       const data = response.data;
 
       if (!data || !data.jadwal) {
-        return res.status(404).json({ status: false, message: 'Data jadwal tidak ditemukan untuk kota tersebut.' });
+        return res.status(404).json({ status: false, message: 'Data jadwal tidak ditemukan untuk city tersebut.' });
       }
 
       res.json({
         status: true,
-        kota: data.kota || kota,
+        city: data.city || city,
         tanggal: data.tanggal || new Date().toISOString().split('T')[0],
         jadwal: {
           imsak: data.jadwal.imsak,
