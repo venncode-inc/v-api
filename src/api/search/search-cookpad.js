@@ -15,8 +15,13 @@ module.exports = function (app) {
         },
       });
 
-      // Output langsung dari API zenz.biz.id TANPA DIUBAH
-      res.json(data);
+      // Ganti creator-nya tapi sisanya tetap
+      const modified = {
+        ...data,
+        creator: 'Hazel' // <- ganti sesuai nama lu
+      };
+
+      res.json(modified);
     } catch (e) {
       res.status(500).json({ status: false, message: 'Gagal mengambil data dari zenz.biz.id', error: e.message });
     }
