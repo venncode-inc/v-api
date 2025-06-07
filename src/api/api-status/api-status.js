@@ -1,16 +1,16 @@
 const axios = require('axios');
 
 let totalRequest = 0;
-const startTime = Date.now(); // waktu saat server mulai
+
+// Ganti ini dengan waktu deploy asli (UTC)
+const deployTimestamp = new Date('2025-06-05T03:00:00Z'); // contoh: 5 Juni 2025, jam 10 pagi WIB
 
 module.exports = function (app) {
-  // Middleware buat ngitung total request
   app.use((req, res, next) => {
     totalRequest++;
     next();
   });
 
-  // Hitung total fitur dari route yang terdaftar
   function countRoutes() {
     let routeCount = 0;
     app._router.stack.forEach((middleware) => {
@@ -25,7 +25,6 @@ module.exports = function (app) {
     return routeCount;
   }
 
-  // Konversi runtime ke format waktu
   function formatRuntime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const hrs = Math.floor(totalSeconds / 3600);
@@ -34,13 +33,9 @@ module.exports = function (app) {
     return `${hrs}j ${mins}m ${secs}d`;
   }
 
-  // Endpoint /status
   app.get('/api-status/status', async (req, res) => {
     try {
-      // (opsional) contoh axios call ke luar buat test API
-      // await axios.get('https://zenz.biz.id'); 
-
-      const runtime = Date.now() - startTime;
+      const runtime = Date.now() - deployTimestamp.getTime();
       const domain = req.hostname;
       const totalfitur = countRoutes();
 
