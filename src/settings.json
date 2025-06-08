@@ -154,7 +154,8 @@
                     "path": "/imagecreator/hdin?image_url=",
                     "status": "READY",
                     "params": {
-                  "image_url": "Masukan Url Foto"     
+                    "image_url": "Masukan Url Foto",
+                    "apikey": "Masukan Apikey Kamu"
                     }
                 }
             ]
