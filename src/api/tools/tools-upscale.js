@@ -2,23 +2,14 @@ const axios = require('axios');
 
 module.exports = function (app) {
   app.get('/imagecreator/hdin', async (req, res) => {
-    const { image_url, apikey } = req.query;
-
-    // Validasi apikey
-    if (!apikey || !global.apikey.includes(apikey)) {
-      return res.status(403).json({
-        status: false,
-        creator: 'Hazel',
-        error: 'Apikey invalid'
-      });
-    }
+    const { image_url } = req.query;
 
     // Validasi image_url
     if (!image_url) {
       return res.status(400).json({
         status: false,
         creator: 'Hazel',
-        message: 'Parameter "image_url" wajib diisi. Contoh: /imagecreator/hdin?image_url=https://example.com/foto.jpg&apikey=xxx'
+        message: 'Parameter "image_url" wajib diisi. Contoh: /imagecreator/hdin?image_url=https://example.com/foto.jpg'
       });
     }
 
