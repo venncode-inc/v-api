@@ -146,6 +146,15 @@
                     "status": "READY",
                     "params": {
                         "kota": "Masukan Text Nya"
+                   }
+                },
+                {
+                    "name": "Upscale",
+                    "desc": "Yuk hdin foto kamu yang ngeblur itu di zelapioffciall.vercel.app",
+                    "path": "/imagecreator/hdin?image_url=",
+                    "status": "READY",
+                    "params": {
+                  "image_url": "Masukan Url Foto"     
                     }
                 }
             ]
