@@ -331,6 +331,12 @@
                     "desc": "Api monitoring endpoint",
                     "path": "/api-status/status",
                     "status": "READY"
+                },
+                {
+                    "name": "Informasi User",
+                    "desc": "Check your informasition",
+                    "path": "/api-status/informasiuser",
+                    "status": "READY"
                 }
             ]
         }
