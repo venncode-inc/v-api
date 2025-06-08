@@ -1,22 +1,48 @@
 const axios = require('axios');
 
-let totalRequest = 0;
-let requestHarian = {};
-let requestBulanan = {};
-
-// Ganti ini dengan waktu deploy asli (UTC)
+const ENDPOINT_URL = 'https://api.npoint.io/bf65c11b534bde0e3ad4'; // ganti sama punyamu
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 
 module.exports = function (app) {
-  app.use((req, res, next) => {
-    totalRequest++;
+  app.use(async (req, res, next) => {
+    try {
+      // ambil data terkini dari npoint
+      const { data } = await axios.get(ENDPOINT_URL);
 
-    const now = new Date();
-    const hari = now.toISOString().split('T')[0]; // YYYY-MM-DD
-    const bulan = now.toISOString().slice(0, 7);   // YYYY-MM
+      const now = new Date();
+      const hari = now.toISOString().split('T')[0];
+      const bulan = now.toISOString().slice(0, 7);
 
-    requestHarian[hari] = (requestHarian[hari] || 0) + 1;
-    requestBulanan[bulan] = (requestBulanan[bulan] || 0) + 1;
+      // update data di variabel
+      const totalRequest = (data.totalRequest || 0) + 1;
+      const requestHarian = data.requestHarian || {};
+      const requestBulanan = data.requestBulanan || {};
+
+      requestHarian[hari] = (requestHarian[hari] || 0) + 1;
+      requestBulanan[bulan] = (requestBulanan[bulan] || 0) + 1;
+
+      // update balik ke npoint
+      await axios.put(ENDPOINT_URL, {
+        totalRequest,
+        requestHarian,
+        requestBulanan
+      });
+
+      // simpan ke req biar bisa dipakai di route
+      req.statData = {
+        totalRequest,
+        requestHarian,
+        requestBulanan
+      };
+
+    } catch (err) {
+      console.log('⚠️ Gagal ambil/update npoint:', err.message);
+      req.statData = {
+        totalRequest: 0,
+        requestHarian: {},
+        requestBulanan: {}
+      };
+    }
 
     next();
   });
@@ -43,15 +69,16 @@ module.exports = function (app) {
     return `${hrs}j ${mins}m ${secs}d`;
   }
 
-  app.get('/api-status/status', async (req, res) => {
+  app.get('/api-status/status', (req, res) => {
     try {
+      const now = new Date();
+      const hari = now.toISOString().split('T')[0];
+      const bulan = now.toISOString().slice(0, 7);
       const runtime = Date.now() - deployTimestamp.getTime();
       const domain = req.hostname;
       const totalfitur = countRoutes();
 
-      const now = new Date();
-      const hari = now.toISOString().split('T')[0];
-      const bulan = now.toISOString().slice(0, 7);
+      const { totalRequest, requestHarian, requestBulanan } = req.statData;
 
       res.json({
         status: true,
