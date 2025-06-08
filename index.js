@@ -106,7 +106,7 @@ app.use(cors());
 
 // === STATIC FILES ===
 app.use('/', express.static(path.join(__dirname, 'public')));
-app.use('/', express.static(path.join(__dirname, 'api-page')));
+app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
 app.use('/src', express.static(path.join(__dirname, 'src')));
 
 // === RESPONSE JSON MODIFIER ===
