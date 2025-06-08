@@ -1,3 +1,4 @@
+const axios = require('axios');
 const moment = require('moment');
 
 const apiKeys = [
@@ -28,6 +29,16 @@ function getRandomApiKey() {
   return apiKeys[randomIndex];
 }
 
+// Fungsi generateRandomString 8 karakter alphanumeric
+function generateRandomString(length) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for(let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 app.post('/api-status/create-apikey', async (req, res) => {
   try {
     const nomor = req.body.nomor;
@@ -36,7 +47,7 @@ app.post('/api-status/create-apikey', async (req, res) => {
     }
 
     const userid = generateRandomString(8);
-    const apikey = getRandomApiKey();  // pilih API key random dari list
+    const apikey = getRandomApiKey();
     const domain = req.hostname;
     const status = 'done';
     const tanggal = moment().format('YYYY-MM-DD');
