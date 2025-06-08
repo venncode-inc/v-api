@@ -100,6 +100,30 @@
                     "desc": "Blue Archive Random Images",
                     "path": "/random/ba",
                     "status": "READY"
+                },
+                {
+                    "name": "Waifu",
+                    "desc": "Waifu Random Images",
+                    "path": "/random/waifu",
+                    "status": "READY"
+                },
+                {
+                    "name": "Paptt",
+                    "desc": "Paptt Random Images",
+                    "path": "/random/paptt?apikey=",
+                    "status": "READY",
+                    "params": {
+                        "apikey": "Masukan apikey kamu"
+                    }
+                },
+                {
+                    "name": "Rule34",
+                    "desc": "Rule Random Images",
+                    "path": "/random/rule34?apikey=",
+                    "status": "READY",
+                    "params": {
+                        "apikey": "Masukan apikey kamu"
+                    }
                 }
             ]
         },
@@ -146,7 +170,7 @@
                     "status": "READY",
                     "params": {
                         "kota": "Masukan Text Nya"
-                   }
+                    }
                 },
                 {
                     "name": "Upscale",
@@ -154,7 +178,7 @@
                     "path": "/imagecreator/hdin?image_url=",
                     "status": "READY",
                     "params": {
-                    "image_url": "Masukan Url Foto"
+                        "image_url": "Masukan Url Foto"
                     }
                 }
             ]
@@ -195,7 +219,7 @@
                     "path": "/imagecreator/bratanime?text=",
                     "status": "EROR",
                     "params": {
-                        "text": "Masukan text"    
+                        "text": "Masukan text"
                     }
                 }
             ]
