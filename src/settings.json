@@ -173,6 +173,24 @@
                     "params": {
                         "image_url": "Masukan Url Foto"
                     }
+                },
+                {
+                    "name": "Ghibli Style",
+                    "desc": "Yuk ubah foto kamu jadi ghibli di zelapioffciall.vercel.app",
+                    "path": "/imagecreator/toghibli?image_url=",
+                    "status": "READY",
+                    "params": {
+                        "image_url": "Masukan Url Foto"    
+                    }
+                },
+                {
+                    "name": "Ssweb",
+                    "desc": "Yuk ubah ssweb kamu di zelapioffciall.vercel.app",
+                    "path": "/imagecreator/ssweb?url=",
+                    "status": "READY",
+                    "params": {
+                       "url": "Masukan Url Foto"        
+                    }
                 }
             ]
         },
@@ -258,7 +276,7 @@
                 },
                 {
                     "name": "Search Jadwaltv",
-                    "desc": "Cari jadwal tv kesukaan kamu secara realtime dengan api dari api.siputzx.my.id",
+                    "desc": "Cari jadwal tv kesukaan kamu secara realtime dengan api dari zelapioffciall.vercel.app",
                     "path": "/search/jadwaltv?channel=",
                     "status": "READY",
                     "params": {
