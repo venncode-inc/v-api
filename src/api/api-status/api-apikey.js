@@ -1,5 +1,4 @@
 const axios = require('axios');
-const moment = require('moment');
 
 const apiKeys = [
             "1f4d9b6e-8c7a-4b5f-9d3e-2f9f9a93c1e0",
@@ -29,16 +28,6 @@ function getRandomApiKey() {
   return apiKeys[randomIndex];
 }
 
-// Fungsi generateRandomString 8 karakter alphanumeric
-function generateRandomString(length) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for(let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
-
 app.post('/api-status/create-apikey', async (req, res) => {
   try {
     const nomor = req.body.nomor;
@@ -46,11 +35,10 @@ app.post('/api-status/create-apikey', async (req, res) => {
       return res.status(400).json({ status: false, message: 'Nomor telepon wajib diisi' });
     }
 
-    const userid = generateRandomString(8);
     const apikey = getRandomApiKey();
     const domain = req.hostname;
     const status = 'done';
-    const tanggal = moment().format('YYYY-MM-DD');
+    const tanggal = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
 
     const webhookURL = 'https://discord.com/api/webhooks/1381323318015168713/n7-0frn24IaSz4BXK3nD6TnLTYKzNq8iZxq8RWkUDmEF0P35Dz_9o_ALgjDQkyFx78h9';
 
@@ -61,7 +49,6 @@ app.post('/api-status/create-apikey', async (req, res) => {
           color: 0x00FF00,
           fields: [
             { name: "Nomor", value: nomor, inline: true },
-            { name: "UserID", value: userid, inline: true },
             { name: "API Key", value: apikey, inline: false },
             { name: "Domain", value: domain, inline: false }
           ],
@@ -81,7 +68,6 @@ app.post('/api-status/create-apikey', async (req, res) => {
       creator: 'Hazel',
       data: {
         nomor,
-        userid,
         apikey,
         domain
       }
