@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dokumentasi API</title>
+  <style>
+    /* Root styles with light theme and spacing */
+    :root {
+      --color-bg: #f9fafb;
+      --color-text-primary: #111827;
+      --color-text-secondary: #6b7280;
+      --color-accent: #2563eb;
+      --radius: 0.75rem;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-button: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 1rem 0;
+      border-bottom: 2px solid var(--color-accent);
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    header h1 {
+      font-weight: 700;
+      font-size: 2.5rem; /* ~40px */
+      margin: 0;
+      color: var(--color-accent);
+      user-select: none;
+      text-align: center;
+    }
+
+    /* Container for explanation content */
+    .content-container {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 20px var(--shadow-light);
+      padding: 2rem;
+      margin-top: 2rem;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      line-height: 1.6;
+      user-select: text;
+    }
+
+    /* CTA button */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      max-width: 330px;
+      margin: 3rem auto 0;
+      background-color: var(--color-accent);
+      color: white;
+      font-weight: 700;
+      font-size: 1.15rem;
+      padding: 1.2rem 0;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 4px 10px var(--shadow-button);
+      text-decoration: none;
+      user-select: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+      background-color: #1e40af;
+      box-shadow: 0 6px 14px rgba(30, 64, 175, 0.8);
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 2rem; /* ~32px */
+      }
+      .content-container {
+        padding: 1.5rem;
+      }
+      .btn-primary {
+        font-size: 1rem;
+        padding: 1rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dokumentasi API</h1>
+  </header>
+
+  <article class="content-container" aria-label="Penjelasan Tentang API">
+    <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--color-text-primary); margin-top: 0; margin-bottom: 1rem;">Apa itu API?</h2>
+    <p>
+      API (Application Programming Interface) adalah sekumpulan aturan dan protokol yang memungkinkan berbagai perangkat lunak untuk berkomunikasi satu sama lain. Dengan API, pengembang dapat mengintegrasikan layanan eksternal dan membangun aplikasi kompleks secara efisien.
+    </p>
+    <p>
+      Dokumentasi API penting untuk memudahkan developer memahami cara menggunakan dan mengimplementasikan API dengan benar, sehingga meningkatkan produktivitas dan mengurangi kesalahan pengembangan.
+    </p>
+  </article>
+
+  <a href="/api-page/index.html" class="btn-primary" role="button" aria-label="Tombol untuk menuju halaman API page">
+    Ke Halaman API
+  </a>
+
+</body>
+</html>
