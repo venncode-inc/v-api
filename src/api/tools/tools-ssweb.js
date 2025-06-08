@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.get('/tools/ssweb', async (req, res) => {
     const { url } = req.query;
 
-    if (!image_url) {
+    if (!url) {
       return res.status(400).json({
         status: false,
         creator: 'Hazel',
