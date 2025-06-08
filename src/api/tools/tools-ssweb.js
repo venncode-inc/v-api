@@ -8,13 +8,13 @@ module.exports = function (app) {
       return res.status(400).json({
         status: false,
         creator: 'Hazel',
-        message: 'Parameter "image_url" wajib diisi. Contoh: /imagecreator/ssweb?url=https://example.com'
+        message: 'Parameter "url" wajib diisi. Contoh: /imagecreator/ssweb?url=https://example.com'
       });
     }
 
     try {
       // pakai layanan screenshot gratis (thum.io)
-      const screenshotUrl = `https://image.thum.io/get/fullpage/${encodeURIComponent(image_url)}`;
+      const screenshotUrl = `https://image.thum.io/get/fullpage/${encodeURIComponent(url)}`;
 
       // ambil data sebagai gambar (arraybuffer)
       const response = await axios.get(screenshotUrl, {
