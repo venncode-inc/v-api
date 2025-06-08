@@ -81,9 +81,9 @@
                     }
                 },
                 {
-                    "name": "AliciaAi",
-                    "desc": "See the list of supported AI models here: velyn.biz.id",
-                    "path": "/ai/hydromind?text=",
+                    "name": "IraaAi",
+                    "desc": "IraaAi adalah ai muslim dengan kecerdasan luar biasa tapi dia memiliki sifat lucu dan jahil",
+                    "path": "/ai/iraaai?text=",
                     "status": "READY",
                     "params": {
                         "text": "Masukan message"
