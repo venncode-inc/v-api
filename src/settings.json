@@ -110,20 +110,14 @@
                 {
                     "name": "Paptt",
                     "desc": "Paptt Random Images",
-                    "path": "/random/paptt?apikey=",
-                    "status": "READY",
-                    "params": {
-                        "apikey": "Masukan apikey kamu"
-                    }
+                    "path": "/random/paptt",
+                    "status": "READY"
                 },
                 {
                     "name": "Rule34",
                     "desc": "Rule Random Images",
-                    "path": "/random/rule34?apikey=",
-                    "status": "READY",
-                    "params": {
-                        "apikey": "Masukan apikey kamu"
-                    }
+                    "path": "/random/rule34",
+                    "status": "READY"
                 }
             ]
         },
@@ -199,7 +193,7 @@
                     "name": "Nulis",
                     "desc": "Kerjakan pekerjaan rumah kamu lebih cepat dengan fitur nulis",
                     "path": "/imagecreator/nulis?text=",
-                    "status": "EROR",
+                    "status": "READY",
                     "params": {
                         "text": "Masukan text"
                     }
@@ -208,7 +202,7 @@
                     "name": "Brat",
                     "desc": "Create sticker brat on whatsapp",
                     "path": "/imagecreator/bratv2?text=",
-                    "status": "EROR",
+                    "status": "READY",
                     "params": {
                         "text": "Masukan text"
                     }
