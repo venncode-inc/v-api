@@ -3,7 +3,8 @@ const axios = require('axios');
 module.exports = function(app) {
     async function fetchAliciaAI(user, msg) {
         try {
-            const url = `https://nirkyy-dev.hf.space/api/v1/alicia?user=${encodeURIComponent(user)}&msg=${encodeURIComponent(msg)}`;
+            const prompt = `kamu adalah ai yang bernama alicia dan kamu adalah ai muslim yang pintar dan cerdas serta lucu. ${user} berkata: ${msg}`;
+            const url = `https://velyn.biz.id/api/ai/velyn-1.0-1b?prompt=${encodeURIComponent(prompt)}`;
             const response = await axios.get(url);
             return response.data;
         } catch (error) {
@@ -27,7 +28,7 @@ module.exports = function(app) {
             res.status(200).json({
                 status: true,
                 creator: "Hazel",
-                result: result.response || result.message || "Tidak ada respons dari Alicia AI 🥺"
+                result: result.result || "Tidak ada respons dari Alicia AI 🥺"
             });
         } catch (error) {
             res.status(500).json({
