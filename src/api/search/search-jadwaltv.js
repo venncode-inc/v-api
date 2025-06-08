@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 module.exports = function (app) {
   app.get('/search/jadwaltv', async (req, res) => {
     const { channel } = req.query;
+
     if (!channel) {
       return res.status(400).json({
         status: false,
@@ -12,33 +13,37 @@ module.exports = function (app) {
     }
 
     try {
-      // URL target scrapping
       const url = `https://www.jadwaltv.net/channel/${channel.toLowerCase()}`;
-
       const response = await axios.get(url);
       const html = response.data;
-
       const $ = cheerio.load(html);
 
-      // Parsing jadwal acara, sesuaikan selector dengan struktur html target
       const jadwal = [];
-      
-      // Contoh struktur:
-      // <div class="tv-list">
-      //   <div class="tv-list-item">
-      //     <span class="tv-list-time">07:00</span>
-      //     <span class="tv-list-title">Berita</span>
-      //   </div>
-      // </div>
-      
-      $('.tv-list .tv-list-item').each((i, el) => {
-        const time = $(el).find('.tv-list-time').text().trim();
-        const title = $(el).find('.tv-list-title').text().trim();
 
-        if (time && title) {
-          jadwal.push({ time, title });
+      // Coba selector table tr > td dulu
+      $('table tbody tr').each((i, el) => {
+        const cols = $(el).find('td');
+        if (cols.length >= 2) {
+          const time = $(cols[0]).text().trim();
+          const title = $(cols[1]).text().trim();
+
+          if (time.toLowerCase() !== 'jam' && title.toLowerCase() !== 'acara') {
+            jadwal.push({ time, title });
+          }
         }
       });
+
+      // Jika selector pertama gagal, coba alternatif .tv-list
+      if (jadwal.length === 0) {
+        $('.tv-list .tv-list-item').each((i, el) => {
+          const time = $(el).find('.tv-list-time').text().trim();
+          const title = $(el).find('.tv-list-title').text().trim();
+
+          if (time && title) {
+            jadwal.push({ time, title });
+          }
+        });
+      }
 
       if (jadwal.length === 0) {
         return res.status(404).json({
