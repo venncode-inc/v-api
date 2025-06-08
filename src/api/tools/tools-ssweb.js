@@ -8,20 +8,17 @@ module.exports = function (app) {
       return res.status(400).json({
         status: false,
         creator: 'Hazel',
-        message: 'Parameter "url" wajib diisi. Contoh: /imagecreator/ssweb?url=https://example.com'
+        message: 'Parameter "url" wajib diisi. Contoh: /tools/ssweb?url=https://example.com'
       });
     }
 
     try {
-      // pakai layanan screenshot gratis (thum.io)
-      const screenshotUrl = `https://image.thum.io/get/fullpage/${encodeURIComponent(url)}`;
-
-      // ambil data sebagai gambar (arraybuffer)
-      const response = await axios.get(screenshotUrl, {
-        responseType: 'arraybuffer'
+      // API langsung hasilin gambar PNG
+      const apiUrl = `https://velyn.biz.id/api/tools/ssweb?url=${encodeURIComponent(url)}`;
+      const response = await axios.get(apiUrl, {
+        responseType: 'arraybuffer' // karena hasilnya gambar
       });
 
-      // kasih header image/png
       res.setHeader('Content-Type', 'image/png');
       res.send(response.data);
     } catch (err) {
