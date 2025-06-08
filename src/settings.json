@@ -186,7 +186,7 @@
                 {
                     "name": "Ssweb",
                     "desc": "Yuk ubah ssweb kamu di zelapioffciall.vercel.app",
-                    "path": "/imagecreator/ssweb?url=",
+                    "path": "/tools/ssweb?url=",
                     "status": "READY",
                     "params": {
                        "url": "Masukan Url Foto"        
