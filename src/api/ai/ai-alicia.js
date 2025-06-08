@@ -13,14 +13,17 @@ module.exports = function(app) {
     }
 
     app.get('/ai/alicia', async (req, res) => {
+        const { user = "Hazel", text } = req.query;
+
+        if (!text || text.trim() === '') {
+            return res.status(400).json({
+                status: false,
+                error: 'Parameter "text" wajib diisi.'
+            });
+        }
+
         try {
-            const { user = "Hazel", text } = req.query;
-            if (!text) {
-                return res.status(400).json({ status: false, error: 'Text is required' });
-            }
-
             const result = await fetchAliciaAI(user, text);
-
             res.status(200).json({
                 status: true,
                 creator: "Hazel",
