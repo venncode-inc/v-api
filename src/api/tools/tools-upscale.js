@@ -9,7 +9,7 @@ module.exports = function (app) {
       return res.status(400).json({
         status: false,
         creator: 'Hazel',
-        message: 'Parameter "image_url" wajib diisi. Contoh: /imagecreator/hdin?image_url=https://example.com/foto.jpg'
+        message: 'Parameter \"image_url\" wajib diisi. Contoh: /imagecreator/hdin?image_url=https://example.com/foto.jpg'
       });
     }
 
@@ -17,15 +17,15 @@ module.exports = function (app) {
       const apiUrl = `https://api.nekorinn.my.id/tools/pxpic-upscale?imageUrl=${encodeURIComponent(image_url)}`;
       const response = await axios.get(apiUrl);
 
-      // Gabungkan hasil dari API NekoRinn dengan creator
-      const result = {
+      // Ambil URL hasil upscale jika tersedia
+      const imageResult = response.data?.data?.url || null;
+
+      return res.json({
         status: response.data.status,
         creator: 'Hazel',
         message: response.data.message,
-        data: response.data.data
-      };
-
-      return res.json(result);
+        url: imageResult
+      });
 
     } catch (err) {
       return res.status(500).json({
