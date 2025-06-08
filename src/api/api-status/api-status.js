@@ -1,52 +1,37 @@
 const axios = require('axios');
 
-const ENDPOINT_URL = 'https://api.npoint.io/bf65c11b534bde0e3ad4'; // ganti sama punyamu
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 
+// Statistik global disimpan di RAM
+const statData = {
+  totalRequest: 0,
+  requestHarian: {},  // { "2025-06-08": 123 }
+  requestBulanan: {}, // { "2025-06": 4567 }
+};
+
 module.exports = function (app) {
-  app.use(async (req, res, next) => {
-    try {
-      // ambil data terkini dari npoint
-      const { data } = await axios.get(ENDPOINT_URL);
+  // Middleware untuk update statistik tiap request
+  app.use((req, res, next) => {
+    const now = new Date();
+    const hari = now.toISOString().split('T')[0];  // ex: "2025-06-08"
+    const bulan = now.toISOString().slice(0, 7);   // ex: "2025-06"
 
-      const now = new Date();
-      const hari = now.toISOString().split('T')[0];
-      const bulan = now.toISOString().slice(0, 7);
+    // Update total request global
+    statData.totalRequest++;
 
-      // update data di variabel
-      const totalRequest = (data.totalRequest || 0) + 1;
-      const requestHarian = data.requestHarian || {};
-      const requestBulanan = data.requestBulanan || {};
+    // Update request harian global
+    statData.requestHarian[hari] = (statData.requestHarian[hari] || 0) + 1;
 
-      requestHarian[hari] = (requestHarian[hari] || 0) + 1;
-      requestBulanan[bulan] = (requestBulanan[bulan] || 0) + 1;
+    // Update request bulanan global
+    statData.requestBulanan[bulan] = (statData.requestBulanan[bulan] || 0) + 1;
 
-      // update balik ke npoint
-      await axios.put(ENDPOINT_URL, {
-        totalRequest,
-        requestHarian,
-        requestBulanan
-      });
-
-      // simpan ke req biar bisa dipakai di route
-      req.statData = {
-        totalRequest,
-        requestHarian,
-        requestBulanan
-      };
-
-    } catch (err) {
-      console.log('⚠️ Gagal ambil/update npoint:', err.message);
-      req.statData = {
-        totalRequest: 0,
-        requestHarian: {},
-        requestBulanan: {}
-      };
-    }
+    // Simpan ke req biar bisa dipakai route
+    req.statData = statData;
 
     next();
   });
 
+  // Fungsi untuk hitung jumlah route di app
   function countRoutes() {
     let routeCount = 0;
     app._router.stack.forEach((middleware) => {
@@ -61,6 +46,7 @@ module.exports = function (app) {
     return routeCount;
   }
 
+  // Fungsi format waktu runtime
   function formatRuntime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const hrs = Math.floor(totalSeconds / 3600);
@@ -69,6 +55,7 @@ module.exports = function (app) {
     return `${hrs}j ${mins}m ${secs}d`;
   }
 
+  // Endpoint status
   app.get('/api-status/status', (req, res) => {
     try {
       const now = new Date();
