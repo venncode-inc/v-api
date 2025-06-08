@@ -188,6 +188,15 @@
                     "params": {
                         "text": "Masukan text"
                     }
+                },
+                {
+                    "name": "Bratanime",
+                    "desc": "Create sticker bratanime on whatsapp",
+                    "path": "/imagecreator/bratanime?text=",
+                    "status": "EROR",
+                    "params": {
+                        "text": "Masukan text"    
+                    }
                 }
             ]
         },
