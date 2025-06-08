@@ -82,12 +82,11 @@
                 },
                 {
                     "name": "AliciaAi",
-                    "desc": "See the list of supported AI models here: https://nirkyy-dev.hf.space",
-                    "path": "/ai/hydromind?user=&msg=",
+                    "desc": "See the list of supported AI models here: velyn.biz.id",
+                    "path": "/ai/hydromind?text=",
                     "status": "READY",
                     "params": {
-                        "user": "Masukan nama user",
-                        "msg": "Masukan message"
+                        "text": "Masukan message"
                     }
                 }
             ]
