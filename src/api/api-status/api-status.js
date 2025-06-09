@@ -1,26 +1,32 @@
 const axios = require('axios');
+const GUN = require('gun');
 
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 const jsonBlobUrl = 'https://jsonblob.com/api/jsonBlob/1381662714862166016';
+
+const gun = GUN();
+
+const statNode = gun.get('statData');
 
 let statData = {
   totalRequest: 0,
 };
 
-// load data dari JSONBlob saat server start
+// load dari JSONBlob saat start
 async function loadStatData() {
   try {
     const res = await axios.get(jsonBlobUrl);
-    if (res.data) {
+    if (res.data && typeof res.data.totalRequest === 'number') {
       statData = res.data;
-      console.log('StatData berhasil di-load dari JSONBlob');
+      statNode.put(statData);
+      console.log('StatData berhasil di-load dari JSONBlob dan disimpan di Gun');
     }
   } catch (err) {
     console.log('Gagal load data dari JSONBlob, pakai data default');
   }
 }
 
-// update data ke JSONBlob
+// update JSONBlob pakai axios PUT
 async function updateJsonBlob(data) {
   try {
     await axios.put(jsonBlobUrl, data, {
@@ -32,13 +38,22 @@ async function updateJsonBlob(data) {
   }
 }
 
-module.exports = function (app) {
+module.exports = function(app) {
   loadStatData();
 
   // middleware update totalRequest tiap request
-  app.use((req, res, next) => {
+  app.use(async (req, res, next) => {
     statData.totalRequest++;
     req.statData = statData;
+
+    // update Gun realtime lokal
+    statNode.put(statData);
+
+    // update JSONBlob secara async tapi jangan delay next()
+    updateJsonBlob(statData).catch(e => {
+      console.error('Error update JSONBlob async:', e.message);
+    });
+
     next();
   });
 
@@ -65,8 +80,8 @@ module.exports = function (app) {
     return `${hrs}j ${mins}m ${secs}d`;
   }
 
-  // endpoint status, update JSONBlob setelah respon
-  app.get('/api-status/status', async (req, res) => {
+  // endpoint status
+  app.get('/api-status/status', (req, res) => {
     try {
       const runtime = Date.now() - deployTimestamp.getTime();
       const domain = req.hostname;
@@ -88,7 +103,6 @@ module.exports = function (app) {
 
       res.json(result);
 
-      await updateJsonBlob(statData);
     } catch (e) {
       res.status(500).json({
         status: false,
