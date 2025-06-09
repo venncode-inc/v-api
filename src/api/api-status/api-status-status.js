@@ -1,14 +1,18 @@
-import axios from "axios";
-import Redis from "ioredis";
+const axios = require('axios');
+const Redis = require('ioredis');
 
-const redis = new Redis("rediss://default:Abr2AAIjcDFlNGZiYjEzNjhmNzc0MjljYjYzNzRmOTFkMWNmMjljMXAxMA@profound-ghost-47862.upstash.io:6379");
+// koneksi Redis Upstash
+const client = new Redis("rediss://default:Abr2AAIjcDFlNGZiYjEzNjhmNzc0MjljYjYzNzRmOTFkMWNmMjljMXAxMA@profound-ghost-47862.upstash.io:6379");
 
+// waktu deploy
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 
+// jumlah fitur (ubah sesuai endpoint asli kamu)
 function countRoutes() {
   return 1;
 }
 
+// format runtime API
 function formatRuntime(ms) {
   const totalSeconds = Math.floor(ms / 1000);
   const hrs = Math.floor(totalSeconds / 3600);
@@ -17,28 +21,26 @@ function formatRuntime(ms) {
   return `${hrs}j ${mins}m ${secs}d`;
 }
 
-export default async function handler(req, res) {
+// handler utama
+module.exports = async function handler(req, res) {
   if (req.method === 'GET' && req.url === '/api-status/status') {
     try {
-      // ambil & tambah totalRequest di Redis
-      const totalReq = await redis.incr('totalRequest');
+      await client.incr('totalRequest'); // tambah 1
+      const total = await client.get('totalRequest');
 
       const runtime = Date.now() - deployTimestamp.getTime();
 
-      const result = {
+      res.status(200).json({
         status: true,
         creator: 'Hazel',
         result: {
           status: 'Aktif',
-          totalrequest: totalReq.toString(),
+          totalrequest: total,
           totalfitur: countRoutes(),
           runtime: formatRuntime(runtime),
           domain: req.headers.host || 'unknown',
         }
-      };
-
-      res.status(200).json(result);
-
+      });
     } catch (err) {
       res.status(500).json({
         status: false,
@@ -46,11 +48,7 @@ export default async function handler(req, res) {
         error: err.message
       });
     }
-
   } else {
-    res.status(404).json({
-      status: false,
-      message: 'Endpoint tidak ditemukan'
-    });
+    res.status(404).json({ status: false, message: 'Endpoint tidak ditemukan' });
   }
-}
+};
