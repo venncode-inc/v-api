@@ -150,62 +150,22 @@ a:hover {
 /* Gradient Text */
 .gradient-text {
   position: relative;
-  margin: 0 auto;
-  display: flex;
-  max-width: fit-content;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1.25rem;
-  font-weight: 500;
-  backdrop-filter: blur(10px);
-  transition: box-shadow 0.5s ease-out;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.gradient-text::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  background-size: 300% 100%;
-  animation: gradient 8s ease infinite;
-  border-radius: inherit;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.gradient-text::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: calc(100% - 2px);
-  height: calc(100% - 2px);
-  transform: translate(-50%, -50%);
-  border-radius: inherit;
-  background-color: #060010;
-  z-index: -1;
-}
-
-.gradient-text span {
-  display: inline-block;
-  position: relative;
-  z-index: 2;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  background-size: 300% 100%;
-  background-clip: text;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   color: transparent;
-  animation: gradient 8s ease infinite;
+  animation: gradient-shift 8s ease infinite, shine 4s linear infinite;
+  display: inline-block;
+  filter: drop-shadow(0 0 3px #ffffff66); /* efek glow ringan */
 }
-  
-@keyframes gradient {
+
+@keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
   }
@@ -214,6 +174,15 @@ a:hover {
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }
 
