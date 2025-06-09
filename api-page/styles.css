@@ -1407,9 +1407,26 @@ input:checked + .slider:before {
 }
 
 .loading-dots {
-    display: inline-block;
-    width: 20px;
-    text-align: left;
+  display: inline-block;
+  width: 20px;
+  text-align: left;
+  background: linear-gradient(90deg, #00f0ff, #ff00cc);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: shine 5s linear infinite;
+  filter: drop-shadow(0 0 3px #ffffff66); 
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .fade-out {
