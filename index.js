@@ -4,6 +4,8 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
+const http = require('http');                // tambah ini
+const { Server } = require('socket.io');    // tambah socket.io
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -22,6 +24,32 @@ const WINDOW_TIME = 10 * 1000;
 const BAN_TIME = 5 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
+
+// === BUAT HTTP SERVER DARI EXPRESS ===
+const httpServer = http.createServer(app);
+
+// === INISIALISASI SOCKET.IO ===
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*", // sesuaikan origin jika perlu
+    methods: ["GET", "POST"]
+  }
+});
+
+// === SOCKET.IO EVENT HANDLER ===
+io.on('connection', (socket) => {
+  console.log(`Socket connected: ${socket.id}`);
+
+  socket.on('disconnect', () => {
+    console.log(`Socket disconnected: ${socket.id}`);
+  });
+
+  // contoh event custom, bisa kamu ganti sesuai kebutuhan
+  socket.on('pingServer', (data) => {
+    console.log('Ping dari client:', data);
+    socket.emit('pongServer', { msg: 'pong!', yourData: data });
+  });
+});
 
 // === FUNCTION: SEND ALERT KE DISCORD ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime }) {
@@ -188,8 +216,8 @@ app.use((err, req, res, next) => {
   res.status(500).sendFile(path.join(__dirname, "api-page", "500.html"));
 });
 
-// === START SERVER ===
-app.listen(PORT, () => {
+// === START HTTP SERVER (bukan app.listen) ===
+httpServer.listen(PORT, () => {
   console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Server is running on port ${PORT} `));
 });
 
