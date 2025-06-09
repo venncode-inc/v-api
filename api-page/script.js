@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }, 500);
 
+    // stop loading screen after 10 seconds
+    setTimeout(() => {
+        clearInterval(loadingDotsAnimation);
+        loadingScreen.style.display = "none";
+        body.classList.remove("no-scroll");
+    }, 10000);
+});
     // Side navigation functionality
     const sideNav = document.querySelector('.side-nav');
     const mainWrapper = document.querySelector('.main-wrapper');
