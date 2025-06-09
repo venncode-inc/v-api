@@ -359,6 +359,47 @@
             ]
         },
         {
+            "name": "Downloader",
+            "items": [
+                {
+                    "name": "Videy Download",
+                    "desc": "Download video dari videy.co jadi lebih mudah",
+                    "path": "/download/videy?url=",
+                    "status": "READY",
+                    "params": {
+                         "url": "Masukan url"
+                    }
+                },
+                {
+                    "name": "Download All",
+                    "desc": "Backend support with https://r-nozawa.hf.space",
+                    "path": "/download/all?url=",
+                    "status": "READY",
+                    "params": {
+                        "url": "Search query"
+                    }
+                },
+                {
+                    "name": "Threads Download",
+                    "desc": "Download video dari threads jadi lebih mudah",
+                    "path": "/dowmload/threads?url=",
+                    "status": "READY",
+                    "params": {
+                        "phone": "Search phone"
+                    }
+                },
+                {
+                    "name": "Instagram Donwload",
+                    "desc": "Download video dari instagram jadi lebih mudah",
+                    "path": "/download/instagram?url=",
+                    "status": "READY",
+                    "params": {
+                         "url": "Search phone"    
+                    }
+                }
+            ]
+        },
+        {
             "name": "Api Status",
             "items": [
                 {
