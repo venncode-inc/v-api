@@ -376,7 +376,7 @@
                     "path": "/download/all?url=",
                     "status": "READY",
                     "params": {
-                        "url": "Search query"
+                        "url": "Masukan url"
                     }
                 },
                 {
@@ -385,7 +385,7 @@
                     "path": "/dowmload/threads?url=",
                     "status": "READY",
                     "params": {
-                        "phone": "Search phone"
+                        "url": "Masukan Url"
                     }
                 },
                 {
@@ -394,7 +394,7 @@
                     "path": "/download/instagram?url=",
                     "status": "READY",
                     "params": {
-                         "url": "Search phone"    
+                       "url": "Masukan url"    
                     }
                 }
             ]
