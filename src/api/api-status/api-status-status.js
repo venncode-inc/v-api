@@ -1,69 +1,102 @@
 const axios = require('axios');
 
+const ENDPOINT_URL = 'https://api.npoint.io/abc1234567890'; // ganti dengan punyamu
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 
-// === Konfigurasi Redis Upstash (REST API) ===
-const REDIS_URL = 'https://profound-ghost-47862.upstash.io';
-const REDIS_AUTH = 'Basic ' + Buffer.from('default:Abr2AAIjcDFlNGZiYjEzNjhmNzc0MjljYjYzNzRmOTFkMWNmMjljMXAxMA').toString('base64');
-
-// === Fungsi Redis ===
-async function getTotalRequest() {
-  const res = await axios.get(`${REDIS_URL}/get/totalRequest`, {
-    headers: {
-      Authorization: REDIS_AUTH
-    }
-  });
-  return parseInt(res.data.result || '0');
-}
-
-async function incrementTotalRequest() {
-  const res = await axios.get(`${REDIS_URL}/incr/totalRequest`, {
-    headers: {
-      Authorization: REDIS_AUTH
-    }
-  });
-  return parseInt(res.data.result);
-}
-
-// === Fungsi format waktu ===
-function formatRuntime(ms) {
-  const totalSeconds = Math.floor(ms / 1000);
-  const hrs = Math.floor(totalSeconds / 3600);
-  const mins = Math.floor((totalSeconds % 3600) / 60);
-  const secs = totalSeconds % 60;
-  return `${hrs}j ${mins}m ${secs}d`;
-}
-
-function countRoutes() {
-  return 1; // ubah sesuai total route kamu
-}
-
-// === Handler ===
-module.exports = async function handler(req, res) {
-  if (req.method === 'GET' && req.url === '/api-status/status') {
+module.exports = function (app) {
+  app.use(async (req, res, next) => {
     try {
-      const totalRequest = await incrementTotalRequest();
-      const runtime = Date.now() - deployTimestamp.getTime();
+      // ambil data dari NPoint
+      const { data } = await axios.get(ENDPOINT_URL);
 
-      const result = {
+      const now = new Date();
+      const hari = now.toISOString().split('T')[0];
+      const bulan = now.toISOString().slice(0, 7);
+
+      const totalRequest = (data.totalRequest || 0) + 1;
+      const requestHarian = data.requestHarian || {};
+      const requestBulanan = data.requestBulanan || {};
+
+      requestHarian[hari] = (requestHarian[hari] || 0) + 1;
+      requestBulanan[bulan] = (requestBulanan[bulan] || 0) + 1;
+
+      // update ke NPoint
+      await axios.put(ENDPOINT_URL, {
+        totalRequest,
+        requestHarian,
+        requestBulanan
+      });
+
+      // simpan di req
+      req.statData = {
+        totalRequest,
+        requestHarian,
+        requestBulanan
+      };
+    } catch (err) {
+      console.log('⚠️ Gagal ambil/update npoint:', err.message);
+      req.statData = {
+        totalRequest: 0,
+        requestHarian: {},
+        requestBulanan: {}
+      };
+    }
+
+    next();
+  });
+
+  function countRoutes() {
+    let routeCount = 0;
+    app._router.stack.forEach((middleware) => {
+      if (middleware.route) {
+        routeCount++;
+      } else if (middleware.name === 'router') {
+        middleware.handle.stack.forEach((handler) => {
+          if (handler.route) routeCount++;
+        });
+      }
+    });
+    return routeCount;
+  }
+
+  function formatRuntime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+    return `${hrs}j ${mins}m ${secs}d`;
+  }
+
+  app.get('/api-status/status', (req, res) => {
+    try {
+      const now = new Date();
+      const hari = now.toISOString().split('T')[0];
+      const bulan = now.toISOString().slice(0, 7);
+      const runtime = Date.now() - deployTimestamp.getTime();
+      const domain = req.hostname;
+      const totalfitur = countRoutes();
+
+      const { totalRequest, requestHarian, requestBulanan } = req.statData;
+
+      res.json({
         status: true,
         creator: 'Hazel',
         result: {
           status: 'Aktif',
           totalrequest: totalRequest.toString(),
-          totalfitur: countRoutes(),
+          totalrequestharian: requestHarian[hari]?.toString() || "0",
+          totalrequestbulanan: requestBulanan[bulan]?.toString() || "0",
+          totalfitur,
           runtime: formatRuntime(runtime),
-          domain: req.headers.host || 'unknown',
+          domain
         }
-      };
-
-      res.status(200).json(result);
-
-    } catch (err) {
-      res.status(500).json({ status: false, message: 'Gagal akses Redis', error: err.message });
+      });
+    } catch (e) {
+      res.status(500).json({
+        status: false,
+        message: 'Gagal mengambil status',
+        error: e.message
+      });
     }
-
-  } else {
-    res.status(404).json({ status: false, message: 'Endpoint tidak ditemukan' });
-  }
+  });
 };
