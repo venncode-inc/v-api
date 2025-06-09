@@ -716,7 +716,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     // Enhanced loading animation
                     modalRefs.submitBtn.disabled = true;
-                    modalRefs.submitBtn.innerHTML = 'Send';
+                    modalRefs.submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
 
                     const apiUrlWithParams = `${window.location.origin}${apiPath.split('?')[0]}?${newParams.toString()}`;
                     
