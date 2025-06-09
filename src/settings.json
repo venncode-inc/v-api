@@ -198,7 +198,16 @@
                     "path": "/tools/cek-gmail?email=",
                     "status": "READY",
                     "params": {
-                      "email": "Masukan Url Foto"            
+                      "email": "Masukan Nama Gmail"           
+                   }
+                },
+                {
+                    "name": "Domain",
+                    "desc": "Cek domain kamu di zelapioffciall.vercel.app",
+                    "path": "/tools/domain?q=",
+                    "status": "READY",
+                    "params": {
+                           "q": "Masukan Nama Domain"             
                     }
                 }
             ]
