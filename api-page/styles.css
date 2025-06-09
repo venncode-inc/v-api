@@ -149,42 +149,63 @@ a:hover {
 
 /* Gradient Text */
 .gradient-text {
-  position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--accent-color)
-  );
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  animation: shine 5s linear infinite;
-  display: inline-block;
-  filter: drop-shadow(0 0 3px #ffffff66); /* efek glow ringan */
-}
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      var(--primary-color),
+      var(--accent-color)
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-shift 5s linear infinite;
+    display: inline-block;
+    filter: drop-shadow(0 0 3px #ffffff66);
+    font-weight: bold;
+    font-size: 2rem;
+  }
 
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
 
-@keyframes shine {
-  0% {
-    background-position: 200% 0;
+  .loading-dots {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #ee0979;
+    width: 1.2em; /* supaya gak geser waktu titik muncul */
   }
-  100% {
-    background-position: -200% 0;
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
   }
-}
+
+  @keyframes dots {
+    0%, 20% {
+      content: '';
+    }
+    40% {
+      content: '.';
+    }
+    60% {
+      content: '..';
+    }
+    80%, 100% {
+      content: '...';
+    }
+  }
 
 /* Buttons */
 .btn {
