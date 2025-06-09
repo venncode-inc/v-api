@@ -716,7 +716,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     // Enhanced loading animation
                     modalRefs.submitBtn.disabled = true;
-                    modalRefs.submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                    modalRefs.submitBtn.innerHTML = 'Send';
 
                     const apiUrlWithParams = `${window.location.origin}${apiPath.split('?')[0]}?${newParams.toString()}`;
                     
@@ -1042,7 +1042,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const notificationBell = document.querySelector('.notification-bell');
         if (notificationBell) {
             notificationBell.addEventListener('click', () => {
-                showToast('2 new updates available', 'info');
+                showToast('🎉 2 new updates available! Click to see more.', 'info');
             });
         }
         
@@ -1054,16 +1054,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     } finally {
         // Add enhanced animation to loading screen disappearance
         clearInterval(loadingDotsAnimation);
-        setTimeout(() => {
+          setTimeout(() => {
             loadingScreen.classList.add('fade-out');
-            
+
             setTimeout(() => {
-                loadingScreen.style.display = "none";
-                body.classList.remove("no-scroll");
-            }, 500);
-        }, 1000);
+          loadingScreen.style.display = "none";
+        body.classList.remove("no-scroll");
+          }, 500); // waktu animasi fade-out
+       }, 9500); // tunggu 9.5 detik dulu sebelum animasi
     }
-    
     // Animate in API items as they come into view
     const observeElements = () => {
         const observer = new IntersectionObserver((entries) => {
