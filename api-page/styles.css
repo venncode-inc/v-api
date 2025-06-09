@@ -160,7 +160,7 @@ a:hover {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
-  animation: gradient-shift 8s ease infinite, shine 4s linear infinite;
+  animation: gradient-shift 10s ease infinite, shine 5s linear infinite;
   display: inline-block;
   filter: drop-shadow(0 0 3px #ffffff66); /* efek glow ringan */
 }
