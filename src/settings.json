@@ -180,7 +180,7 @@
                     "path": "/imagecreator/toghibli?image_url=",
                     "status": "READY",
                     "params": {
-                        "image_url": "Masukan Url Foto"    
+                        "image_url": "Masukan Url Foto"
                     }
                 },
                 {
@@ -189,8 +189,8 @@
                     "path": "/tools/ssweb?url=",
                     "status": "READY",
                     "params": {
-                       "url": "Masukan Url Foto"        
-                   }
+                        "url": "Masukan Url Foto"
+                    }
                 },
                 {
                     "name": "Cek Gmail",
@@ -198,8 +198,8 @@
                     "path": "/tools/cek-gmail?email=",
                     "status": "READY",
                     "params": {
-                      "email": "Masukan Nama Gmail"           
-                   }
+                        "email": "Masukan Nama Gmail"
+                    }
                 },
                 {
                     "name": "Domain",
@@ -207,7 +207,7 @@
                     "path": "/tools/domain?q=",
                     "status": "READY",
                     "params": {
-                           "q": "Masukan Nama Domain"             
+                        "q": "Masukan Nama Domain"
                     }
                 }
             ]
@@ -347,6 +347,15 @@
                     }
                 },
                 {
+                    "name": "Search Spotify",
+                    "desc": "Cari music kesukaan kamu di spotify.com",
+                    "path": "/search/spotify?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Search spotify"
+                    }
+                },
+                {
                     "name": "Search xnxx",
                     "desc": "Cari hentai/bokep kesukaan kamu di xnxx",
                     "path": "/search/xnxx?q=&apikey=",
@@ -367,7 +376,7 @@
                     "path": "/download/videy?url=",
                     "status": "READY",
                     "params": {
-                         "url": "Masukan url"
+                        "url": "Masukan url"
                     }
                 },
                 {
@@ -394,7 +403,7 @@
                     "path": "/download/instagram?url=",
                     "status": "READY",
                     "params": {
-                       "url": "Masukan url"    
+                        "url": "Masukan url"
                     }
                 }
             ]
