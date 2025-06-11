@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = function(app) {
   async function getAnswer(q) {
-    // Step 1: Coba ambil dari database.json di GitHub
+    // Step 1: Ambil dari database.json di GitHub
     try {
       const dbRes = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/database.json');
       const database = dbRes.data;
@@ -20,37 +20,41 @@ module.exports = function(app) {
       console.warn("Gagal ambil database.json:", e.message);
     }
 
-    // Step 2: Coba dari Google Fonts API
+    // Step 2: Google Fonts API (limit 5)
     try {
       const fontsRes = await axios.get(`https://api.nekorinn.my.id/search/google-fonts?q=${encodeURIComponent(q)}`);
       if (fontsRes.status === 200) {
+        const results = fontsRes.data.result || fontsRes.data.message;
+        const limited = Array.isArray(results) ? results.slice(0, 5) : results;
         return {
           status: true,
           creator: "Hazel",
           source: "Google Fonts API",
-          result: fontsRes.data.result || fontsRes.data.message
+          result: limited
         };
       }
     } catch (e) {
       if (e.response?.status !== 500) throw e;
     }
 
-    // Step 3: Coba dari Google Search API
+    // Step 3: Google Search API (limit 5)
     try {
       const googleRes = await axios.get(`https://api.nekorinn.my.id/search/google?q=${encodeURIComponent(q)}`);
       if (googleRes.status === 200) {
+        const results = googleRes.data.result || googleRes.data.message;
+        const limited = Array.isArray(results) ? results.slice(0, 5) : results;
         return {
           status: true,
           creator: "Hazel",
           source: "Google Search API",
-          result: googleRes.data.result || googleRes.data.message
+          result: limited
         };
       }
     } catch (e) {
       if (e.response?.status !== 500) throw e;
     }
 
-    // Step 4: Terakhir, gunakan Gemini AI
+    // Step 4: Gemini AI
     try {
       const geminiRes = await axios.get(`https://api.nekorinn.my.id/ai/gemini?text=${encodeURIComponent(q)}`);
       if (geminiRes.status === 200) {
