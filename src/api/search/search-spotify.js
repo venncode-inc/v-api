@@ -15,9 +15,9 @@ module.exports = function (app) {
             const apiUrl = `https://api.nekorinn.my.id/search/spotify?q=${encodeURIComponent(q)}`;
             const response = await axios.get(apiUrl);
 
-            const results = response.data?.data;
+            const result = response.data?.result;
 
-            if (!results || results.length === 0) {
+            if (!result || result.length === 0) {
                 return res.json({
                     status: false,
                     creator: "Hazel",
@@ -28,7 +28,7 @@ module.exports = function (app) {
             res.json({
                 status: true,
                 creator: "Hazel",
-                result: results
+                result: result
             });
 
         } catch (error) {
