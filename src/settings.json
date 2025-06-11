@@ -87,6 +87,24 @@
                     "status": "READY",
                     "params": {
                         "text": "Masukan message"
+                   }
+                },
+                {
+                    "name": "Gemini",
+                    "desc": "Gunakan Ai dari gemini dengan backend dari firebase.com",
+                    "path": "/ai/gemini?text=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Masukan message"     
+                   }
+                },
+                {
+                    "name": "Vex [ Realtime ]",
+                    "desc": "Gunakan Ai dari Vex dengan data realtime dari berbagai platfrom",
+                    "path": "/ai/auto?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Masukan message"          
                     }
                 }
             ]
