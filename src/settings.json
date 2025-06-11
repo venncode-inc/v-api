@@ -202,21 +202,22 @@
                     }
                 },
                 {
-                    "name": "Ssweb",
-                    "desc": "Yuk ubah ssweb kamu di zelapioffciall.vercel.app",
-                    "path": "/tools/ssweb?url=",
+                    "name": "Text To Qr",
+                    "desc": "Yuk ubah text ke qr di zelapioffciall.vercel.app",
+                    "path": "/tools/text2qr?text=",
                     "status": "READY",
                     "params": {
-                        "url": "Masukan Url Foto"
+                        "text": "Masukan Url Foto"
                     }
                 },
                 {
-                    "name": "Cek Gmail",
-                    "desc": "Validasi gmail kamu di zelapioffciall.vercel.app",
-                    "path": "/tools/cek-gmail?email=",
+                    "name": "Ngl Spam",
+                    "desc": "Api spam ngl terpercaya anti rate limit",
+                    "path": "/tools/ngl?link=&text=",
                     "status": "READY",
                     "params": {
-                        "email": "Masukan Nama Gmail"
+                        "link": "Masukan Link Ngl",
+                        "text": "Masukan Pesan"
                     }
                 },
                 {
