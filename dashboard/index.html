@@ -33,7 +33,6 @@
     .ok {background-color: #d1fae5; color: #065f46;}
     .minor {background-color: #fef3c7; color: #92400e;}
     .major {background-color: #fecaca; color: #991b1b;}
-    .inactive {background-color: #e5e7eb; color: #374151;}
     .timeline {
       margin-top: 10px;
       display: flex;
@@ -62,71 +61,85 @@
 </head>
 <body>
 
-  <div class="status-box" id="statusContainer">
-    <h2>Status API <span class="status-label ok" id="statusLabel">Loading...</span></h2>
-    <p><strong>Total Request:</strong> <span id="totalRequest">-</span></p>
-    <p><strong>Total Fitur:</strong> <span id="totalFitur">-</span></p>
-    <p><strong>Runtime:</strong> <span id="runtime">-</span></p>
-    <p><strong>Speed:</strong> <span id="speed">-</span></p>
-    <p><strong>Region:</strong> <span id="region">-</span></p>
-    <p><strong>Domain:</strong> <span id="domain">-</span></p>
-    <div class="timeline" id="timelineBar">
-      <div class="bar green"></div>
-      <div class="bar green"></div>
-      <div class="bar green"></div>
-      <div class="bar green"></div>
-      <div class="bar green"></div>
-    </div>
+  <!-- contoh 1 -->
+  <div class="status-box">
+    <h2>Server Vercel <span class="status-label ok">Online</span></h2>
+    <p><strong>Total Request:</strong> 1203</p>
+    <p><strong>Speed:</strong> 100 ms</p>
+    <div class="timeline" id="barA"></div>
   </div>
 
+  <!-- contoh 2 -->
+  <div class="status-box">
+    <h2>Server Firebase <span class="status-label minor">Lemot</span></h2>
+    <p><strong>Total Request:</strong> 987</p>
+    <p><strong>Speed:</strong> 230 ms</p>
+    <div class="timeline" id="barB"></div>
+  </div>
+
+  <!-- contoh 3 -->
+  <div class="status-box">
+    <h2>Server All<span class="status-label major">Offline</span></h2>
+    <p><strong>Total Request:</strong> -</p>
+    <p><strong>Speed:</strong> Timeout</p>
+    <div class="timeline" id="barC"></div>
+  </div>
+
+  <div class="status-box">
+    <h2>Server Backup<span class="status-label major">Offline</span></h2>
+    <p><strong>Total Request:</strong> -</p>
+    <p><strong>Speed:</strong> Timeout</p>
+    <div class="timeline" id="barD"></div>
+  </div>
+
+  <div class="status-box">
+    <h2>Server Monitor<span class="status-label major">Offline</span></h2>
+    <p><strong>Total Request:</strong> -</p>
+    <p><strong>Speed:</strong> Timeout</p>
+    <div class="timeline" id="barE"></div>
+  </div>
+
+  <div class="status-box">
+    <h2>POST<span class="status-label major">Offline</span></h2>
+    <p><strong>Total Request:</strong> -</p>
+    <p><strong>Speed:</strong> Timeout</p>
+    <div class="timeline" id="barF"></div>
+  </div>
+
+  <div class="status-box">
+    <h2>GET<span class="status-label major">Offline</span></h2>
+    <p><strong>Total Request:</strong> -</p>
+    <p><strong>Speed:</strong> Timeout</p>
+    <div class="timeline" id="barG"></div>
+  </div>
+  
   <footer>© 2025 Zelapi's Systems — All rights reserved.</footer>
 
   <script>
-    async function loadStatus() {
-      try {
-        const res = await fetch('/api-status/status');
-        const data = await res.json();
+    // langsung set status per box
+    const statusList = [
+      { id: 'barA', status: 'online' },
+      { id: 'barB', status: 'online' },
+      { id: 'barC', status: 'online' },
+      { id: 'barD', status: 'lemot' },
+      { id: 'barE', status: 'online' },
+      { id: 'barF', status: 'online' },
+      { id: 'barH', status: 'online' }  
+    ];
 
-        if (data.status) {
-          const result = data.result;
+    statusList.forEach(server => {
+      const container = document.getElementById(server.id);
+      container.innerHTML = '';
+      let color = 'green';
+      if (server.status === 'lemot') color = 'yellow';
+      if (server.status === 'offline') color = 'red';
 
-          // update isi text
-          document.getElementById('statusLabel').textContent = result.status;
-          document.getElementById('totalRequest').textContent = result.totalrequest;
-          document.getElementById('totalFitur').textContent = result.totalfitur;
-          document.getElementById('runtime').textContent = result.runtime;
-          document.getElementById('speed').textContent = result.speed;
-          document.getElementById('region').textContent = result.region;
-          document.getElementById('domain').textContent = result.domain;
-
-          // update status label class
-          const label = document.getElementById('statusLabel');
-          label.className = 'status-label';
-          if (result.status.toLowerCase() === 'aktif') label.classList.add('ok');
-          else if (result.status.toLowerCase() === 'minor') label.classList.add('minor');
-          else label.classList.add('major');
-
-          // bar speed visualisasi
-          const timeline = document.getElementById('timelineBar');
-          timeline.innerHTML = '';
-          const latency = parseInt(result.speed.replace(' ms', ''));
-          let color = 'green';
-          if (latency > 150) color = 'yellow';
-          if (latency > 300) color = 'red';
-
-          for (let i = 0; i < 7; i++) {
-            const bar = document.createElement('div');
-            bar.className = `bar ${color}`;
-            timeline.appendChild(bar);
-          }
-        }
-      } catch (err) {
-        console.error('Gagal ambil status:', err);
+      for (let i = 0; i < 7; i++) {
+        const bar = document.createElement('div');
+        bar.className = `bar ${color}`;
+        container.appendChild(bar);
       }
-    }
-
-    loadStatus();
-    setInterval(loadStatus, 5000); // update tiap 5 detik
+    });
   </script>
 </body>
 </html>
