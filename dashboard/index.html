@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Status Zelapi</title>
   <style>
     body {
@@ -10,6 +11,16 @@
       color: #fff;
       margin: 0;
       padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
     }
 
     .status-box {
@@ -19,6 +30,14 @@
       padding: 1.5rem;
       margin-bottom: 2rem;
       max-width: 400px;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      animation: slideIn 0.5s ease-in-out;
+    }
+
+    .status-box:hover {
+      transform: scale(1.02);
     }
 
     h2 {
@@ -54,6 +73,7 @@
       flex: 1;
       height: 10px;
       border-radius: 4px;
+      transition: background-color 0.3s ease;
     }
 
     .bar.green {
@@ -70,6 +90,15 @@
 
     .legend {
       margin-bottom: 2rem;
+      text-align: left;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .legend-container {
+      background: #1e1e1e;
+      border-radius: 1rem;
+      padding: 1rem;
     }
 
     .legend-item {
@@ -97,11 +126,66 @@
     .dot.red {
       background-color: #dc3545;
     }
+
+    .toggle-button {
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle-button:hover {
+      background-color: #218838;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .status-box {
+        padding: 1rem;
+      }
+
+      .status-label {
+        font-size: 0.7rem;
+      }
+
+      .bar {
+        height: 8px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <h1>Status Monitor</h1>
+
+  <button class="toggle-button" id="toggleMode">Ubah Mode</button>
 
   <div class="status-box" data-id="barZelapi" data-url="https://zelapioffciall.vercel.app/api-status/status" data-interval="3600000">
     <h2>Zelapi API <span class="status-label ok">Online</span></h2>
@@ -113,9 +197,11 @@
   
   <div class="legend">
     <h3>Keterangan Status:</h3>
-    <div class="legend-item"><span class="dot green"></span>Frontend</div>
-    <div class="legend-item"><span class="dot yellow"></span>API</div>
-    <div class="legend-item"><span class="dot red"></span>Server</div>
+    <div class="legend-container">
+      <div class="legend-item"><span class="dot green"></span>Frontend</div>
+      <div class="legend-item"><span class="dot green"></span>API</div>
+      <div class="legend-item"><span class="dot green"></span>Server</div>
+    </div>
   </div>  
 
   <script>
@@ -180,6 +266,20 @@
 
       pingAPI();
       setInterval(pingAPI, interval);
+    });
+
+    const toggleButton = document.getElementById('toggleMode');
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      if (document.body.classList.contains('light-mode')) {
+        document.body.style.background = '#ffffff';
+        document.body.style.color = '#000000';
+        toggleButton.textContent = 'Ubah ke Mode Gelap';
+      } else {
+        document.body.style.background = '#121212';
+        document.body.style.color = '#ffffff';
+        toggleButton.textContent = 'Ubah ke Mode Terang';
+      }
     });
   </script>
 
