@@ -5,23 +5,38 @@ module.exports = function (app) {
         try {
             const { q } = req.query;
             if (!q) {
-                return res.json({ status: false, error: 'Query is required' });
+                return res.json({
+                    status: false,
+                    creator: "Hazel",
+                    error: "Query is required"
+                });
             }
 
-            const apiUrl = `https://nirkyy-dev.hf.space/api/v1/spotify-search-track?query=${encodeURIComponent(q)}`;
+            const apiUrl = `https://api.nekorinn.my.id/search/spotify?q=${encodeURIComponent(q)}`;
             const response = await axios.get(apiUrl);
 
-            if (!response.data || !response.data.result) {
-                return res.json({ status: false, error: 'No data found', creator: "Hazel" });
+            const results = response.data?.data;
+
+            if (!results || results.length === 0) {
+                return res.json({
+                    status: false,
+                    creator: "Hazel",
+                    error: "No data found"
+                });
             }
 
             res.json({
                 status: true,
                 creator: "Hazel",
-                result: response.data.result
+                result: results
             });
+
         } catch (error) {
-            res.status(500).json({ status: false, error: error.message, creator: "Hazel" });
+            res.status(500).json({
+                status: false,
+                creator: "Hazel",
+                error: error.message
+            });
         }
     });
 };
