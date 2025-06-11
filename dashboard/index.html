@@ -1,143 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Status API Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Status Zelapi</title>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
-      color: #111827;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
       margin: 0;
-      padding: 20px;
+      padding: 2rem;
     }
+
     .status-box {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      padding: 20px;
-      margin-bottom: 20px;
-      transition: transform 0.3s ease;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      max-width: 400px;
     }
-    .status-box:hover {
-      transform: scale(1.02);
-    }
-    .status-label {
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 0.9em;
-    }
-    .ok {background-color: #d1fae5; color: #065f46;}
-    .minor {background-color: #fef3c7; color: #92400e;}
-    .major {background-color: #fecaca; color: #991b1b;}
-    .timeline {
-      margin-top: 10px;
+
+    h2 {
+      margin-top: 0;
       display: flex;
-      gap: 5px;
+      justify-content: space-between;
+      align-items: center;
     }
+
+    .status-label {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-label.ok {
+      background-color: #28a745;
+    }
+
+    .status-label.major {
+      background-color: #dc3545;
+    }
+
+    .timeline {
+      display: flex;
+      gap: 4px;
+      margin-top: 1rem;
+    }
+
     .bar {
-      width: 12px;
-      height: 30px;
+      flex: 1;
+      height: 10px;
       border-radius: 4px;
-      animation: pulse 1s infinite ease-in-out alternate;
     }
-    @keyframes pulse {
-      0% { transform: scaleY(1); }
-      100% { transform: scaleY(1.3); }
+
+    .bar.green {
+      background-color: #28a745;
     }
-    .green {background-color: #10b981;}
-    .yellow {background-color: #f59e0b;}
-    .red {background-color: #ef4444;}
-    footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 0.9em;
-      color: #6b7280;
+
+    .bar.yellow {
+      background-color: #ffc107;
+    }
+
+    .bar.red {
+      background-color: #dc3545;
     }
   </style>
 </head>
 <body>
 
-  <div class="status-box">
-    <h2>Server Vercel <span class="status-label ok">Online</span></h2>
-    <p><strong>Total Request:</strong> 1203</p>
-    <p><strong>Speed:</strong> 100 ms</p>
-    <div class="timeline" id="barA"></div>
-  </div>
+  <h1>Status Monitor</h1>
 
-  <div class="status-box">
-    <h2>Server Firebase <span class="status-label ok">Online</span></h2>
-    <p><strong>Total Request:</strong> 987</p>
-    <p><strong>Speed:</strong> 230 ms</p>
-    <div class="timeline" id="barB"></div>
+  <div class="status-box" data-id="barZelapi" data-url="https://zelapioffciall.vercel.app/api-status/status" data-interval="3600000">
+    <h2>Zelapi API <span class="status-label ok">Online</span></h2>
+    <p><strong>Status:</strong> <span class="api-status">-</span></p>
+    <p><strong>Speed:</strong> <span class="speed">-</span></p>
+    <p><strong>Region:</strong> <span class="region">-</span></p>
+    <div class="timeline" id="barZelapi"></div>
   </div>
-
-  <div class="status-box">
-    <h2>Server All <span class="status-label ok">Online</span></h2>
-    <p><strong>Total Request:</strong> -</p>
-    <p><strong>Speed:</strong> Timeout</p>
-    <div class="timeline" id="barC"></div>
-  </div>
-
-  <div class="status-box">
-    <h2>Server Backup <span class="status-label minor">999MS</span></h2>
-    <p><strong>Total Request:</strong> -</p>
-    <p><strong>Speed:</strong> Timeout</p>
-    <div class="timeline" id="barD"></div>
-  </div>
-
-  <div class="status-box">
-    <h2>Server Monitor <span class="status-label ok">Online</span></h2>
-    <p><strong>Total Request:</strong> -</p>
-    <p><strong>Speed:</strong> Timeout</p>
-    <div class="timeline" id="barE"></div>
-  </div>
-
-  <div class="status-box">
-    <h2>POST <span class="status-label ok">Online</span></h2>
-    <p><strong>Total Request:</strong> -</p>
-    <p><strong>Speed:</strong> Timeout</p>
-    <div class="timeline" id="barF"></div>
-  </div>
-
-  <div class="status-box">
-    <h2>GET <span class="status-label ok">Online</span></h2>
-    <p><strong>Total Request:</strong> -</p>
-    <p><strong>Speed:</strong> Timeout</p>
-    <div class="timeline" id="barG"></div>
-  </div>
-
-  <footer>© 2025 Zelapi's Systems — All rights reserved.</footer>
 
   <script>
-    const statusList = [
-      { id: 'barA', status: 'online' },
-      { id: 'barB', status: 'online' },
-      { id: 'barC', status: 'online' },
-      { id: 'barD', status: 'lemot' },
-      { id: 'barE', status: 'online' },
-      { id: 'barF', status: 'online' },
-      { id: 'barG', status: 'online' }
-    ];
+    document.querySelectorAll('.status-box').forEach(box => {
+      const barId = box.dataset.id;
+      const url = box.dataset.url;
+      const interval = parseInt(box.dataset.interval);
+      const timeline = box.querySelector('.timeline');
+      const speedElem = box.querySelector('.speed');
+      const label = box.querySelector('.status-label');
+      const statusElem = box.querySelector('.api-status');
+      const regionElem = box.querySelector('.region');
 
-    statusList.forEach(server => {
-      const container = document.getElementById(server.id);
-      if (!container) return;
-      container.innerHTML = '';
-
-      let color = 'green';
-      if (server.status === 'lemot') color = 'yellow';
-      else if (server.status === 'offline') color = 'red';
-
-      for (let i = 0; i < 7; i++) {
-        const bar = document.createElement('div');
-        bar.className = `bar ${color}`;
-        container.appendChild(bar);
+      function setBars(color) {
+        timeline.innerHTML = '';
+        for (let i = 0; i < 7; i++) {
+          const bar = document.createElement('div');
+          bar.className = `bar ${color}`;
+          timeline.appendChild(bar);
+        }
       }
+
+      async function pingAPI() {
+        try {
+          const start = performance.now();
+          const res = await fetch(url);
+          const end = performance.now();
+          const data = await res.json();
+          const ms = Math.round(end - start);
+
+          const status = data?.result?.status || '-';
+          const speed = data?.result?.speed || ms + ' ms';
+          const region = data?.result?.region || 'unknown';
+
+          // update UI
+          statusElem.textContent = status;
+          speedElem.textContent = speed;
+          regionElem.textContent = region;
+
+          // bar color based on speed
+          let barColor = 'red';
+          if (ms <= 100) barColor = 'green';
+          else if (ms <= 300) barColor = 'yellow';
+
+          setBars(barColor);
+
+          // label
+          if (status.toLowerCase() === 'aktif') {
+            label.className = 'status-label ok';
+            label.textContent = 'Online';
+          } else {
+            label.className = 'status-label major';
+            label.textContent = 'Offline';
+          }
+
+        } catch (e) {
+          statusElem.textContent = 'Timeout';
+          speedElem.textContent = '-';
+          regionElem.textContent = '-';
+          label.className = 'status-label major';
+          label.textContent = 'Offline';
+          setBars('red');
+        }
+      }
+
+      pingAPI();
+      setInterval(pingAPI, interval);
     });
   </script>
+
 </body>
 </html>
