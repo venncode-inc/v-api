@@ -61,7 +61,6 @@
 </head>
 <body>
 
-  <!-- contoh 1 -->
   <div class="status-box">
     <h2>Server Vercel <span class="status-label ok">Online</span></h2>
     <p><strong>Total Request:</strong> 1203</p>
@@ -69,54 +68,51 @@
     <div class="timeline" id="barA"></div>
   </div>
 
-  <!-- contoh 2 -->
   <div class="status-box">
-    <h2>Server Firebase <span class="status-label minor">Lemot</span></h2>
+    <h2>Server Firebase <span class="status-label minor">Online</span></h2>
     <p><strong>Total Request:</strong> 987</p>
     <p><strong>Speed:</strong> 230 ms</p>
     <div class="timeline" id="barB"></div>
   </div>
 
-  <!-- contoh 3 -->
   <div class="status-box">
-    <h2>Server All<span class="status-label major">Offline</span></h2>
+    <h2>Server All <span class="status-label major">Online</span></h2>
     <p><strong>Total Request:</strong> -</p>
     <p><strong>Speed:</strong> Timeout</p>
     <div class="timeline" id="barC"></div>
   </div>
 
   <div class="status-box">
-    <h2>Server Backup<span class="status-label major">Offline</span></h2>
+    <h2>Server Backup <span class="status-label major">999MS</span></h2>
     <p><strong>Total Request:</strong> -</p>
     <p><strong>Speed:</strong> Timeout</p>
     <div class="timeline" id="barD"></div>
   </div>
 
   <div class="status-box">
-    <h2>Server Monitor<span class="status-label major">Offline</span></h2>
+    <h2>Server Monitor <span class="status-label major">Online</span></h2>
     <p><strong>Total Request:</strong> -</p>
     <p><strong>Speed:</strong> Timeout</p>
     <div class="timeline" id="barE"></div>
   </div>
 
   <div class="status-box">
-    <h2>POST<span class="status-label major">Offline</span></h2>
+    <h2>POST <span class="status-label major">Online</span></h2>
     <p><strong>Total Request:</strong> -</p>
     <p><strong>Speed:</strong> Timeout</p>
     <div class="timeline" id="barF"></div>
   </div>
 
   <div class="status-box">
-    <h2>GET<span class="status-label major">Offline</span></h2>
+    <h2>GET <span class="status-label major">Online</span></h2>
     <p><strong>Total Request:</strong> -</p>
     <p><strong>Speed:</strong> Timeout</p>
     <div class="timeline" id="barG"></div>
   </div>
-  
+
   <footer>© 2025 Zelapi's Systems — All rights reserved.</footer>
 
   <script>
-    // langsung set status per box
     const statusList = [
       { id: 'barA', status: 'online' },
       { id: 'barB', status: 'online' },
@@ -124,15 +120,17 @@
       { id: 'barD', status: 'lemot' },
       { id: 'barE', status: 'online' },
       { id: 'barF', status: 'online' },
-      { id: 'barH', status: 'online' }  
+      { id: 'barG', status: 'online' }
     ];
 
     statusList.forEach(server => {
       const container = document.getElementById(server.id);
+      if (!container) return;
       container.innerHTML = '';
+
       let color = 'green';
       if (server.status === 'lemot') color = 'yellow';
-      if (server.status === 'offline') color = 'red';
+      else if (server.status === 'offline') color = 'red';
 
       for (let i = 0; i < 7; i++) {
         const bar = document.createElement('div');
