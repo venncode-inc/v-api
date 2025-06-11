@@ -12,15 +12,16 @@ module.exports = function (app) {
             const response = await axios.get(apiUrl);
 
             if (!response.data || !response.data.result) {
-                return res.json({ status: false, error: 'No data found' });
+                return res.json({ status: false, error: 'No data found', creator: "Hazel" });
             }
 
             res.json({
                 status: true,
+                creator: "Hazel",
                 result: response.data.result
             });
         } catch (error) {
-            res.status(500).json({ status: false, error: error.message });
+            res.status(500).json({ status: false, error: error.message, creator: "Hazel" });
         }
     });
 };
