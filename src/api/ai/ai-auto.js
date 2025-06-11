@@ -2,12 +2,27 @@ const axios = require('axios');
 
 module.exports = function(app) {
   async function getAnswer(q) {
-    // Step 1: Ambil dari database.json di GitHub
+    // Step 1: Gemini AI dulu
+    try {
+      const geminiRes = await axios.get(`https://api.nekorinn.my.id/ai/gemini?text=${encodeURIComponent(q)}`);
+      if (geminiRes.status === 200 && geminiRes.data.result) {
+        return {
+          status: true,
+          creator: "Hazel",
+          source: "Gemini AI",
+          result: geminiRes.data.result
+        };
+      }
+    } catch (e) {
+      console.warn("Gagal dari Gemini AI:", e.message);
+    }
+
+    // Step 2: Cek dari database.json GitHub
     try {
       const dbRes = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/database.json');
       const database = dbRes.data;
-
       const matched = database.find(item => item.question?.toLowerCase() === q.toLowerCase());
+
       if (matched) {
         return {
           status: true,
@@ -20,54 +35,40 @@ module.exports = function(app) {
       console.warn("Gagal ambil database.json:", e.message);
     }
 
-    // Step 2: Google Fonts API (limit 5)
-    try {
-      const fontsRes = await axios.get(`https://api.nekorinn.my.id/search/google-fonts?q=${encodeURIComponent(q)}`);
-      if (fontsRes.status === 200) {
-        const results = fontsRes.data.result || fontsRes.data.message;
-        const limited = Array.isArray(results) ? results.slice(0, 5) : results;
-        return {
-          status: true,
-          creator: "Hazel",
-          source: "Google Fonts API",
-          result: limited
-        };
-      }
-    } catch (e) {
-      if (e.response?.status !== 500) throw e;
-    }
-
-    // Step 3: Google Search API (limit 5)
+    // Step 3: Cek Google Search (top 5)
     try {
       const googleRes = await axios.get(`https://api.nekorinn.my.id/search/google?q=${encodeURIComponent(q)}`);
-      if (googleRes.status === 200) {
-        const results = googleRes.data.result || googleRes.data.message;
-        const limited = Array.isArray(results) ? results.slice(0, 5) : results;
+      if (googleRes.status === 200 && Array.isArray(googleRes.data.result)) {
+        const top5 = googleRes.data.result.slice(0, 5);
         return {
           status: true,
           creator: "Hazel",
           source: "Google Search API",
-          result: limited
+          result: top5
         };
       }
     } catch (e) {
       if (e.response?.status !== 500) throw e;
     }
 
-    // Step 4: Gemini AI
+    // Step 4: Cek Google Fonts (top 5)
     try {
-      const geminiRes = await axios.get(`https://api.nekorinn.my.id/ai/gemini?text=${encodeURIComponent(q)}`);
-      if (geminiRes.status === 200) {
+      const fontsRes = await axios.get(`https://api.nekorinn.my.id/search/google-fonts?q=${encodeURIComponent(q)}`);
+      if (fontsRes.status === 200 && Array.isArray(fontsRes.data.result)) {
+        const top5Fonts = fontsRes.data.result.slice(0, 5);
         return {
           status: true,
           creator: "Hazel",
-          source: "Gemini AI",
-          result: geminiRes.data.result || geminiRes.data.message
+          source: "Google Fonts API",
+          result: top5Fonts
         };
       }
     } catch (e) {
-      throw new Error("Gagal mendapatkan respons dari semua sumber.");
+      if (e.response?.status !== 500) throw e;
     }
+
+    // Step terakhir: Semua gagal
+    throw new Error("Gagal mendapatkan respons dari semua sumber.");
   }
 
   app.get('/ai/auto', async (req, res) => {
