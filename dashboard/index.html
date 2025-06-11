@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Status Zelapi</title>
   <style>
     body {
@@ -11,16 +10,6 @@
       color: #fff;
       margin: 0;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      margin-bottom: 2rem;
-      font-size: 2rem;
-      text-align: center;
-      animation: fadeIn 0.5s ease-in-out;
     }
 
     .status-box {
@@ -30,14 +19,6 @@
       padding: 1.5rem;
       margin-bottom: 2rem;
       max-width: 400px;
-      width: 100%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
-      animation: slideIn 0.5s ease-in-out;
-    }
-
-    .status-box:hover {
-      transform: scale(1.02);
     }
 
     h2 {
@@ -73,7 +54,6 @@
       flex: 1;
       height: 10px;
       border-radius: 4px;
-      transition: background-color 0.3s ease;
     }
 
     .bar.green {
@@ -88,42 +68,34 @@
       background-color: #dc3545;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .legend {
+      margin-bottom: 2rem;
     }
 
-    @keyframes slideIn {
-      from {
-        transform: translateY(-20px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5rem;
-      }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
 
-      .status-box {
-        padding: 1rem;
-      }
+    .dot.green {
+      background-color: #28a745;
+    }
 
-      .status-label {
-        font-size: 0.7rem;
-      }
+    .dot.yellow {
+      background-color: #ffc107;
+    }
 
-      .bar {
-        height: 8px;
-      }
+    .dot.red {
+      background-color: #dc3545;
     }
   </style>
 </head>
@@ -138,6 +110,13 @@
     <p><strong>Region:</strong> <span class="region">-</span></p>
     <div class="timeline" id="barZelapi"></div>
   </div>
+  
+  <div class="legend">
+    <h3>Keterangan Status:</h3>
+    <div class="legend-item"><span class="dot green"></span>Frontend</div>
+    <div class="legend-item"><span class="dot yellow"></span>API</div>
+    <div class="legend-item"><span class="dot red"></span>Server</div>
+  </div>  
 
   <script>
     document.querySelectorAll('.status-box').forEach(box => {
@@ -171,19 +150,16 @@
           const speed = data?.result?.speed || ms + ' ms';
           const region = data?.result?.region || 'unknown';
 
-          // update UI
           statusElem.textContent = status;
           speedElem.textContent = speed;
           regionElem.textContent = region;
 
-          // bar color based on speed
           let barColor = 'red';
           if (ms <= 100) barColor = 'green';
           else if (ms <= 300) barColor = 'yellow';
 
           setBars(barColor);
 
-          // label
           if (status.toLowerCase() === 'aktif') {
             label.className = 'status-label ok';
             label.textContent = 'Online';
