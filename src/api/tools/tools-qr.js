@@ -1,22 +1,21 @@
 const axios = require('axios');
 
 module.exports = function (app) {
-  app.get('/tools/ssweb', async (req, res) => {
-    const { url } = req.query;
+  app.get('/tools/text2qr', async (req, res) => {
+    const { text } = req.query;
 
-    if (!url) {
+    if (!text) {
       return res.status(400).json({
         status: false,
         creator: 'Hazel',
-        message: 'Parameter "url" wajib diisi. Contoh: /tools/ssweb?url=https://example.com'
+        message: 'Parameter "text" wajib diisi. Contoh: /tools/text2qr?text=halo cipiti'
       });
     }
 
     try {
-      // API langsung hasilin gambar PNG
-      const apiUrl = `https://velyn.biz.id/api/tools/ssweb?url=${encodeURIComponent(url)}`;
+      const apiUrl = `https://api.siputzx.my.id/api/tools/text2qr?text=${encodeURIComponent(text)}`;
       const response = await axios.get(apiUrl, {
-        responseType: 'arraybuffer' // karena hasilnya gambar
+        responseType: 'arraybuffer' // karena hasilnya gambar QR
       });
 
       res.setHeader('Content-Type', 'image/png');
@@ -25,7 +24,7 @@ module.exports = function (app) {
       res.status(500).json({
         status: false,
         creator: 'Hazel',
-        message: 'Gagal mengambil screenshot',
+        message: 'Gagal menghasilkan QR Code',
         error: err.message
       });
     }
