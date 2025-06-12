@@ -2,9 +2,23 @@ const axios = require('axios');
 
 module.exports = function(app) {
     const rateLimit = {};
-    const LIMIT = 5; // 5 request
+    const LIMIT = 5; // max 5 request
     const WINDOW = 60 * 60 * 1000; // 1 jam
 
+    const sistemUrl = 'https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/sistem.json';
+
+    // 🔑 Validasi API Key dari sistem.json
+    async function isValidApiKey(apiKey) {
+        try {
+            const { data } = await axios.get(sistemUrl);
+            return data.some(entry => entry.apikey === apiKey && entry.status === "active");
+        } catch (err) {
+            console.error('Gagal ambil sistem.json:', err.message);
+            return false;
+        }
+    }
+
+    // 🧠 Rate limit berdasarkan IP
     function isRateLimited(ip) {
         const now = Date.now();
         if (!rateLimit[ip]) {
@@ -25,6 +39,7 @@ module.exports = function(app) {
         return false;
     }
 
+    // 📸 Ambil gambar random dari paptt.json
     async function paptt() {
         const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/paptt.json');
         const randomUrl = data[Math.floor(Math.random() * data.length)];
@@ -32,9 +47,22 @@ module.exports = function(app) {
         return Buffer.from(response.data);
     }
 
+    // 🚀 Endpoint utama
     app.get('/random/paptt', async (req, res) => {
         const ip = req.ip || req.connection.remoteAddress;
+        const apiKey = req.query.apikey;
 
+        // Cek API key
+        if (!apiKey) {
+            return res.status(400).json({ status: false, error: 'apikey diperlukan.' });
+        }
+
+        const valid = await isValidApiKey(apiKey);
+        if (!valid) {
+            return res.status(403).json({ status: false, error: 'apikey tidak valid atau tidak aktif.' });
+        }
+
+        // Cek rate limit
         if (isRateLimited(ip)) {
             return res.status(429).json({
                 status: false,
@@ -42,9 +70,9 @@ module.exports = function(app) {
             });
         }
 
+        // Proses kirim gambar
         try {
             const buffer = await paptt();
-
             res.writeHead(200, {
                 'Content-Type': 'image/png',
                 'Content-Length': buffer.length,
