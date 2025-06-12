@@ -6,38 +6,39 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseHeaders = {
   apikey: SUPABASE_KEY,
   Authorization: `Bearer ${SUPABASE_KEY}`,
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  Prefer: 'return=representation'
 };
 
 let totalRequest = 0;
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 let serverRegion = 'unknown';
 
+// Ambil lokasi server dari Cloudflare trace
 (async () => {
   try {
     const res = await axios.get('https://www.cloudflare.com/cdn-cgi/trace');
-    const data = Object.fromEntries(
-      res.data.trim().split('\n').map(line => line.split('='))
-    );
+    const data = Object.fromEntries(res.data.trim().split('\n').map(line => line.split('=')));
     serverRegion = data.loc || 'unknown';
   } catch {
     serverRegion = 'unknown';
   }
 })();
 
-// Ambil count awal dari Supabase
+// Inisialisasi total request dari Supabase
 (async () => {
   try {
-    const { data } = await axios.get(
-      `${SUPABASE_URL}/rest/v1/request_counter?id=eq.1&select=count`,
+    const res = await axios.get(
+      `${SUPABASE_URL}/rest/v1/request_counter?id=eq.1&select=data`,
       { headers: supabaseHeaders }
     );
-    if (data.length > 0) {
-      totalRequest = data[0].count;
+
+    if (res.data.length > 0 && res.data[0].data) {
+      totalRequest = res.data[0].data.count || 0;
     } else {
       await axios.post(
         `${SUPABASE_URL}/rest/v1/request_counter`,
-        { id: 1, count: 0 },
+        { id: 1, data: { count: 0 } },
         { headers: supabaseHeaders }
       );
     }
@@ -47,22 +48,22 @@ let serverRegion = 'unknown';
 })();
 
 module.exports = function (app) {
+  // Middleware hitung dan update count
   app.use(async (req, res, next) => {
     totalRequest++;
-
     try {
       await axios.patch(
         `${SUPABASE_URL}/rest/v1/request_counter?id=eq.1`,
-        { count: totalRequest },
+        { data: { count: totalRequest } },
         { headers: supabaseHeaders }
       );
     } catch (e) {
       console.error('Gagal update count ke Supabase:', e.message);
     }
-
     next();
   });
 
+  // Fungsi hitung jumlah route
   function countRoutes() {
     let routeCount = 0;
     app._router.stack.forEach((middleware) => {
@@ -77,14 +78,16 @@ module.exports = function (app) {
     return routeCount;
   }
 
+  // Format runtime
   function formatRuntime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const hrs = Math.floor(totalSeconds / 3600);
     const mins = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
-    return `${hrs}j ${mins}m ${secs}d`;
+    return `${hrs}j ${mins}m ${secs}s`;
   }
 
+  // Tes kecepatan internet
   async function testSpeed() {
     const start = Date.now();
     try {
@@ -95,6 +98,7 @@ module.exports = function (app) {
     }
   }
 
+  // Endpoint status
   app.get('/api-status/status', async (req, res) => {
     try {
       const runtime = Date.now() - deployTimestamp.getTime();
