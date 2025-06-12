@@ -87,7 +87,7 @@
                     "status": "READY",
                     "params": {
                         "text": "Masukan message"
-                   }
+                    }
                 },
                 {
                     "name": "Gemini",
@@ -95,8 +95,8 @@
                     "path": "/ai/gemini?text=",
                     "status": "READY",
                     "params": {
-                        "text": "Masukan message"     
-                   }
+                        "text": "Masukan message"
+                    }
                 },
                 {
                     "name": "Vex [ Realtime ]",
@@ -104,7 +104,7 @@
                     "path": "/ai/auto?q=",
                     "status": "READY",
                     "params": {
-                        "q": "Masukan message"          
+                        "q": "Masukan message"
                     }
                 }
             ]
@@ -127,8 +127,11 @@
                 {
                     "name": "Paptt",
                     "desc": "Paptt Random Images",
-                    "path": "/random/paptt",
-                    "status": "READY"
+                    "path": "/random/paptt?apikey=",
+                    "status": "READY",
+                    "params": {
+                        "apikey": "Masukan apikey kamu"
+                    }
                 },
                 {
                     "name": "Rule34",
