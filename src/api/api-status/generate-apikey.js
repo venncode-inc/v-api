@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = function(app) {
-    const RAW_URL = 'https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/sistem.json';
+    const RAW_URL = 'https://raw.githubusercontent.com/hazelnuttty/API/main/sistem.json';
 
     function getWaktuSekarang() {
         const now = new Date();
@@ -26,8 +26,7 @@ module.exports = function(app) {
         const waktu = getWaktuSekarang();
 
         try {
-            const { data: jsonText } = await axios.get(RAW_URL);
-            const list = JSON.parse(jsonText);
+            const { data: list } = await axios.get(RAW_URL);
             const selected = getRandomApiKey(list);
 
             if (!selected) {
