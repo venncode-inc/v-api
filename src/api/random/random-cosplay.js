@@ -47,7 +47,7 @@ module.exports = function(app) {
     }
 
     // 🚀 Endpoint utama
-    app.get('/random/paptt', async (req, res) => {
+    app.get('/random/cosplay', async (req, res) => {
         const ip = req.ip || req.connection.remoteAddress;
         const apiKey = req.query.apikey;
 
