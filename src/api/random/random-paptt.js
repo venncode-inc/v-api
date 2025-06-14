@@ -39,11 +39,10 @@ module.exports = function(app) {
         return false;
     }
 
-    // 📸 Ambil gambar random dari paptt.json
-    async function paptt() {
-        const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/paptt.json');
-        const randomUrl = data[Math.floor(Math.random() * data.length)];
-        const response = await axios.get(randomUrl, { responseType: 'arraybuffer' });
+    // 📸 Ambil gambar dari API nekorinn
+    async function getCosplayImage() {
+        const { data } = await axios.get('https://api.nekorinn.my.id/random/cosplay');
+        const response = await axios.get(data.url, { responseType: 'arraybuffer' });
         return Buffer.from(response.data);
     }
 
@@ -72,9 +71,9 @@ module.exports = function(app) {
 
         // Proses kirim gambar
         try {
-            const buffer = await paptt();
+            const buffer = await getCosplayImage();
             res.writeHead(200, {
-                'Content-Type': 'image/png',
+                'Content-Type': 'image/jpeg', // biasanya jpg
                 'Content-Length': buffer.length,
             });
             res.end(buffer);
