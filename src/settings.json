@@ -125,9 +125,9 @@
                     "status": "READY"
                 },
                 {
-                    "name": "Paptt",
-                    "desc": "Paptt Random Images",
-                    "path": "/random/paptt?apikey=",
+                    "name": "Cosplay",
+                    "desc": "Cosplay Random Images",
+                    "path": "/random/cosplay?apikey=",
                     "status": "READY",
                     "params": {
                         "apikey": "Masukan apikey kamu"
