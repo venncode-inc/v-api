@@ -5,7 +5,7 @@ module.exports = function(app) {
     const LIMIT = 5; // max 5 request
     const WINDOW = 60 * 60 * 1000; // 1 jam
 
-    const sistemUrl = 'https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/sistem.json';
+    const sistemUrl = 'https://raw.githubusercontent.com/hazelnuttty/API/main/sistem.json';
 
     // 🔑 Validasi API Key dari sistem.json
     async function isValidApiKey(apiKey) {
