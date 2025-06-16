@@ -1543,37 +1543,39 @@ input:checked + .slider:before {
 
 .spinner-wrapper {
     width: 120px;
-    height: 70px;
-    background: #fff;
+    height: 60px;
+    background: white;
     border-radius: 50px;
     position: relative;
-    animation: floatCloud 3s ease-in-out infinite;
-    box-shadow: 0 0 30px #00f0ff44;
+    animation: float 3s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    filter: drop-shadow(0 0 10px rgba(0, 170, 255, 0.6));
 }
 
 .spinner-wrapper::before,
 .spinner-wrapper::after {
     content: '';
     position: absolute;
-    background: #fff;
+    background: white;
     border-radius: 50%;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
 }
 
 .spinner-wrapper::before {
     width: 60px;
     height: 60px;
     top: -30px;
-    left: 10px;
+    left: 5px;
 }
 
 .spinner-wrapper::after {
     width: 70px;
     height: 70px;
     top: -35px;
-    right: 10px;
+    right: 5px;
 }
 
-@keyframes floatCloud {
+@keyframes float {
     0%, 100% {
         transform: translateY(0);
     }
