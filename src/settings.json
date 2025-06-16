@@ -78,6 +78,15 @@
                     "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
+                    }
+                },
+                {
+                    "name": "Quantum Ai",
+                    "desc": "Nikmatin ai dengan performa tinggi secara gratis.",
+                    "path": "/ai/quantum?text=",
+                    "status": "READY",
+                    "params": {   
+                        "text": "Masukan text"                  
                    }
                 },
                 {
