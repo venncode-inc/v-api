@@ -51,6 +51,15 @@
                     "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
+                   }
+                },
+                {
+                    "name": "Gpt Turbo",
+                    "desc": "Ai dari chatgpt",
+                    "path": "/ai/gpt-turbo?text=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Teks atau perintah untuk chat AI"     
                     }
                 },
                 {
@@ -66,15 +75,6 @@
                     "name": "OpenAi",
                     "desc": "Ai dari OpenAi yang siap membantu semua masalah kamu",
                     "path": "/ai/openai?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI"
-                    }
-                },
-                {
-                    "name": "TruecallerAi",
-                    "desc": "Ai dari truecaller yang siap membantu kamu",
-                    "path": "/ai/truecaller?text=",
                     "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
