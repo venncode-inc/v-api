@@ -1496,36 +1496,6 @@ input:checked + .slider:before {
     margin-top: 2px;
 }
 
-/* Loading Spinner - New Style */
-#apiResponseLoading {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 180px;
-    gap: 15px;
-}
-
-#apiResponseLoading p {
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-.spinner-logo {
-    animation: rotate-spinner 2s linear infinite;
-}
-
-.spinner-path {
-    stroke: var(--background-color);
-    stroke-linecap: round;
-}
-
-.spinner-animation {
-    stroke: var(--primary-color);
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
-}
-
 /* Loading Screen */
 #loadingScreen {
     position: fixed;
@@ -1543,6 +1513,44 @@ input:checked + .slider:before {
 
 .spinner-wrapper {
     text-align: center;
+}
+
+/* ini awan tapi namanya tetap loading-spinner */
+.loading-spinner {
+    width: 120px;
+    height: 60px;
+    background: #fff;
+    border-radius: 60px;
+    position: relative;
+    animation: floatCloud 3s ease-in-out infinite;
+    box-shadow: 0 0 30px #ffffff55;
+}
+
+.loading-spinner::before,
+.loading-spinner::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.loading-spinner::before {
+    width: 80px;
+    height: 80px;
+    top: -20px;
+    left: 10px;
+}
+
+.loading-spinner::after {
+    width: 100px;
+    height: 100px;
+    top: -40px;
+    left: 40px;
+}
+
+@keyframes floatCloud {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .spinner-wrapper p {
