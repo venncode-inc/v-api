@@ -5,8 +5,7 @@ module.exports = function (app) {
         { name: 'neural', url: 'https://api.nekorinn.my.id/ai/neural-chat?text=' },
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai?text=' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini?text=' },
-        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' },
-        { name: 'google', url: 'https://api.nekorinn.my.id/search/google?q=' }
+        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' }
     ];
 
     function getRandomSource() {
@@ -26,7 +25,7 @@ module.exports = function (app) {
                 headers: { 'User-Agent': 'QuantumAI/1.0 (Hazelnut)' }
             });
 
-            const result = response.data.result || response.data.message || response.data.results?.[0]?.title || 'no result';
+            const result = response.data.result || response.data.message || 'no result';
             const speed = Date.now() - start;
 
             return {
