@@ -78,6 +78,16 @@
                     "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
+                   }
+                },
+                {
+                    "name": "Trueping Analis",
+                    "desc": "AI analis profesional untuk crypto, saham, forex & trading. Jawaban berdasarkan data Google terbaru.",
+                    "path": "/ai/truepingai-google?q=&tipe=",
+                    "status": "READY",
+                    "params": {
+                        "tipe": "Jenis analisis: crypto, forex, saham, atau trading",     
+                          "q": "Kata kunci pencarian, misalnya: harga bitcoin hari ini"                        
                     }
                 },
                 {
