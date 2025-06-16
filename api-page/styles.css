@@ -1542,46 +1542,15 @@ input:checked + .slider:before {
 }
 
 .spinner-wrapper {
-    width: 120px;
-    height: 60px;
-    background: white;
-    border-radius: 50px;
-    position: relative;
-    animation: float 3s ease-in-out infinite;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-    filter: drop-shadow(0 0 10px rgba(0, 170, 255, 0.6));
+    text-align: center;
 }
 
-.spinner-wrapper::before,
-.spinner-wrapper::after {
-    content: '';
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-}
-
-.spinner-wrapper::before {
-    width: 60px;
-    height: 60px;
-    top: -30px;
-    left: 5px;
-}
-
-.spinner-wrapper::after {
-    width: 70px;
-    height: 70px;
-    top: -35px;
-    right: 5px;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+.spinner-wrapper p {
+    color: var(--text-color);
+    font-weight: 500;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
 }
 
 .loading-dots {
