@@ -9,62 +9,65 @@ module.exports = function (app) {
         { name: 'google', url: 'https://api.nekorinn.my.id/search/google?q=' }
     ];
 
-    async function quantumFastAI(text) {
+    function getRandomSource() {
+        const index = Math.floor(Math.random() * SOURCES.length);
+        return SOURCES[index];
+    }
+
+    async function quantumRandomAI(text) {
         if (!text) throw new Error('Teks tidak boleh kosong');
 
-        const startTime = Date.now();
-
-        const requests = SOURCES.map(source =>
-            axios.get(source.url + encodeURIComponent(text), {
-                timeout: 7000,
-                headers: { 'User-Agent': 'QuantumAI/1.0 (Hazelnut)' }
-            }).then(response => ({
-                name: source.name,
-                result: response.data.result || response.data.message || response.data.results?.[0]?.title || 'no result',
-                speed: Date.now() - startTime
-            }))
-        );
+        const chosen = getRandomSource();
+        const start = Date.now();
 
         try {
-            const fastest = await Promise.race(requests);
+            const response = await axios.get(chosen.url + encodeURIComponent(text), {
+                timeout: 7000,
+                headers: { 'User-Agent': 'QuantumAI/1.0 (Hazelnut)' }
+            });
+
+            const result = response.data.result || response.data.message || response.data.results?.[0]?.title || 'no result';
+            const speed = Date.now() - start;
+
             return {
                 status: true,
-                source: fastest.name,
-                result: fastest.result,
-                speed_ms: fastest.speed
+                result,
+                speed_ms: speed
             };
-        } catch {
+        } catch (error) {
             return {
                 status: false,
-                error: 'Semua AI gagal merespons 😭'
+                result: 'Gagal mengambil jawaban dari Quantum AI 😢'
             };
         }
     }
 
     app.get('/ai/quantum', async (req, res) => {
-        try {
-            const { text } = req.query;
-            if (!text) {
-                return res.status(400).json({
-                    status: false,
-                    error: 'Parameter ?text= wajib diisi.'
-                });
-            }
+        const { text } = req.query;
 
-            const result = await quantumFastAI(text);
+        if (!text) {
+            return res.status(400).json({
+                status: false,
+                error: 'Parameter ?text= wajib diisi yaa sayang 💔'
+            });
+        }
 
+        const result = await quantumRandomAI(text);
+
+        if (result.status) {
             res.status(200).json({
                 status: true,
                 creator: "Hazel",
-                source: result.source,
+                source: "Quantum AI",
                 speed_ms: result.speed_ms,
                 result: result.result
             });
-        } catch {
+        } else {
             res.status(500).json({
                 status: false,
                 creator: "Hazel",
-                result: "Semua AI gagal memberikan jawaban 🥲"
+                source: "Quantum AI",
+                result: result.result
             });
         }
     });
