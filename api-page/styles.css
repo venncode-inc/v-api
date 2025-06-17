@@ -1,3 +1,27 @@
+<div id="loadingScreen">  
+  <div class="spinner-wrapper">  
+    <!-- SVG Spinner -->
+    <svg class="spinner-logo" width="80" height="80" viewBox="0 0 100 100">  
+      <circle class="spinner-path" cx="50" cy="50" r="40" fill="none" stroke-width="8" />  
+      <circle class="spinner-animation" cx="50" cy="50" r="40" fill="none" stroke-width="8" />  
+    </svg>  
+
+    <!-- Atom Spinner -->
+    <div class="atom-spinner">
+      <div class="spinner-inner">
+        <div class="spinner-line"></div>
+        <div class="spinner-line"></div>
+        <div class="spinner-line"></div>
+        <div class="spinner-circle">&#9679;</div>
+      </div>
+    </div>
+
+    <p>Loading<span class="loading-dots">...</span></p>  
+  </div>  
+
+  <h5 class="copyright-text">© 2025 Zelapi Corp. All rights reserved.</h5>
+</div>
+
 :root {
     /* Color Palette - Purple Gradient Theme */
     --primary-color: #6c5ce7;
@@ -1530,71 +1554,48 @@ input:checked + .slider:before {
 #loadingScreen {
   position: fixed;
   inset: 0;
-  background-color: var(--background-color);
+  background: var(--background-color);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 9999;
 }
 
-.cloud-wrapper {
-  position: relative;
-  width: 200px;
-  height: 120px;
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.cloud {
-  position: absolute;
-  background: linear-gradient(to top, #ffffffcc, #ffffff99);
-  border-radius: 50%;
-  box-shadow: 60px 0 #fff, 30px -30px #fff, 90px -10px #fff;
-  width: 60px;
-  height: 60px;
-  animation: float 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 10px #ffffff88);
+.cloud-svg {
+  width: 100px;
+  height: 100px;
+  animation: pulse 2.5s ease-in-out infinite;
 }
 
-.cloud2 {
-  top: 40px;
-  left: -40px;
-  width: 50px;
-  height: 50px;
-  animation-delay: 1s;
-}
-
-.cloud3 {
-  top: 30px;
-  left: 100px;
-  width: 55px;
-  height: 55px;
-  animation-delay: 2s;
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px #00f0ff88);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 10px #ff00ccaa);
+  }
 }
 
 .loading-text {
-  color: var(--text-muted);
-  margin-top: 100px;
-  font-weight: 500;
+  margin-top: 20px;
   font-size: 1rem;
-  animation: blink 1.2s infinite;
+  color: var(--text-muted);
+  font-weight: 500;
+  animation: fadein 2s ease forwards;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes blink {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+@keyframes fadein {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 .copyright-text {
