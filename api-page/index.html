@@ -14,13 +14,22 @@
 <body>
     <!-- Loading Screen -->
     <div id="loadingScreen">
-  <div class="cloud-wrapper">
-    <div class="cloud"></div>
-    <div class="cloud cloud2"></div>
-    <div class="cloud cloud3"></div>
-    <p class="loading-text">Memuat awan...</p>
+  <div class="upload-container">
+    <svg class="cloud-svg" viewBox="0 0 64 64" width="100" height="100">
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <path d="M48,28a12,12 0 0 0 -22.9-4.6A8,8 0 0 0 16,32a8,8 0 0 0 0,16h32a8,8 0 0 0 0-16Z"
+        fill="var(--primary-color)" filter="url(#glow)">
+        <animate attributeName="fill" values="#00f0ff;#ff00cc;#00f0ff" dur="5s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+    <p class="loading-text">Sedang Menyalakan Cloud...</p>
   </div>
-  <div class="copyright-text">© 2025 Hazelnut Cloud</div>
 </div>
     <!-- Side Navigation -->
     <aside class="side-nav">
