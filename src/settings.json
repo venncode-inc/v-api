@@ -385,6 +385,24 @@
                     "status": "READY",
                     "params": {
                         "q": "Search tiktok"
+                   }
+                },
+                {
+                    "name": "Search Penerbangan",
+                    "desc": "Cari rute penerbangan secara realtime",
+                    "path": "/track/flight?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Masukan kode penerbangan"     
+                   }
+                },
+                {
+                    "name": "Search Google",
+                    "desc": "Cari informasi dari google search",
+                    "path": "/search/google?q=",
+                    "status": "READY",
+                    "params": {
+                        "q": "Masukan Yang Ingin Di Cari"          
                     }
                 },
                 {
