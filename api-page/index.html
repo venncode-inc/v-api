@@ -15,21 +15,25 @@
     <!-- Loading Screen -->
     <div id="loadingScreen">
   <div class="upload-container">
-    <svg class="cloud-svg" viewBox="0 0 64 64" width="100" height="100">
+    <svg class="cloud-svg" viewBox="0 0 64 64">
       <filter id="glow">
-        <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+        <feGaussianBlur stdDeviation="6" result="blur" />
         <feMerge>
-          <feMergeNode in="coloredBlur"/>
-          <feMergeNode in="SourceGraphic"/>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
         </feMerge>
       </filter>
       <path d="M48,28a12,12 0 0 0 -22.9-4.6A8,8 0 0 0 16,32a8,8 0 0 0 0,16h32a8,8 0 0 0 0-16Z"
         fill="var(--primary-color)" filter="url(#glow)">
-        <animate attributeName="fill" values="#00f0ff;#ff00cc;#00f0ff" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="#00f0ff;#ff00cc;#00f0ff" dur="4s" repeatCount="indefinite"/>
       </path>
     </svg>
-    <p class="loading-text">Sedang Menyalakan Cloud...</p>
+    <p class="loading-text">Menghidupkan Cloud<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></p>
   </div>
+
+  <h5 class="copyright-text">
+    © 2025 Hazel. All rights reserved.
+  </h5>
 </div>
     <!-- Side Navigation -->
     <aside class="side-nav">
