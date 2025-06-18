@@ -51,7 +51,7 @@
                     "status": "READY",
                     "params": {
                         "text": "Teks atau perintah untuk chat AI"
-                   }
+                    }
                 },
                 {
                     "name": "Gpt Turbo",
@@ -59,7 +59,7 @@
                     "path": "/ai/gpt-turbo?text=",
                     "status": "READY",
                     "params": {
-                        "text": "Teks atau perintah untuk chat AI"     
+                        "text": "Teks atau perintah untuk chat AI"
                     }
                 },
                 {
@@ -85,9 +85,9 @@
                     "desc": "Nikmatin ai dengan performa tinggi secara gratis.",
                     "path": "/ai/quantum?text=",
                     "status": "READY",
-                    "params": {   
-                        "text": "Masukan text"                  
-                   }
+                    "params": {
+                        "text": "Masukan text"
+                    }
                 },
                 {
                     "name": "Trueping Analis",
@@ -95,8 +95,8 @@
                     "path": "/ai/truepingai-google?q=&tipe=",
                     "status": "READY",
                     "params": {
-                        "tipe": "Jenis analisis: crypto, forex, saham, atau trading",     
-                          "q": "Kata kunci pencarian, misalnya: harga bitcoin hari ini"                        
+                        "tipe": "Jenis analisis: crypto, forex, saham, atau trading",
+                        "q": "Kata kunci pencarian, misalnya: harga bitcoin hari ini"
                     }
                 },
                 {
@@ -157,6 +157,20 @@
                     "desc": "Rule Random Images",
                     "path": "/random/rule34",
                     "status": "READY"
+                }
+            ]
+        },
+        {
+            "name": "Live",
+            "items": [
+                {
+                    "name": "Live jkt48",
+                    "desc": "Dapatkan informasi live jkt beserta foto dan url",
+                    "path": "/idnlive/jkt48?apikey=",
+                    "status": "READY",
+                    "params": {
+                        "apikey": "Masukan apikey kamu"
+                    }
                 }
             ]
         },
@@ -385,7 +399,7 @@
                     "status": "READY",
                     "params": {
                         "q": "Search tiktok"
-                   }
+                    }
                 },
                 {
                     "name": "Search Rumah Sakit",
@@ -393,8 +407,8 @@
                     "path": "/search/rs?kota=",
                     "status": "READY",
                     "params": {
-                      "kota": "Masukan kode penerbangan"     
-                   }
+                        "kota": "Masukan kode penerbangan"
+                    }
                 },
                 {
                     "name": "Search Google",
@@ -402,469 +416,7 @@
                     "path": "/search/google?q=",
                     "status": "READY",
                     "params": {
-                        "q": "Masukan Yang Ingin Di Cari"          
-                    }
-                },
-                {
-                    "name": "Search Spotify",
-                    "desc": "Cari music kesukaan kamu di spotify.com",
-                    "path": "/search/spotify?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search spotify"
-                    }
-                },
-                {
-                    "name": "Search xnxx",
-                    "desc": "Cari hentai/bokep kesukaan kamu di xnxx",
-                    "path": "/search/xnxx?q=&apikey=",
-                    "status": "READY",
-                    "params": {
-                        "apikey": "Masukan apikey kamu",
-                        "q": "Search xnxx"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Downloader",
-            "items": [
-                {
-                    "name": "Videy Download",
-                    "desc": "Download video dari videy.co jadi lebih mudah",
-                    "path": "/download/videy?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                },
-                {
-                    "name": "Download All",
-                    "desc": "Backend support with https://r-nozawa.hf.space",
-                    "path": "/download/all?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                },
-                {
-                    "name": "Threads Download",
-                    "desc": "Download video dari threads jadi lebih mudah",
-                    "path": "/dowmload/threads?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan Url"
-                    }
-                },
-                {
-                    "name": "Instagram Donwload",
-                    "desc": "Download video dari instagram jadi lebih mudah",
-                    "path": "/download/instagram?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Api Status",
-{
-    "name": "Hazel Api's",
-    "version": "v1.0.0",
-    "description": "Simple and easy to use API.",
-    "bannerImage": "/src/banner.jpg",
-    "header": {
-        "status": "Active!"
-    },
-    "apiSettings": {
-        "creator": "Hazel",
-        "apikey": [
-            "velin"
-        ]
-    },
-    "categories": [
-        {
-            "name": "Artificial Intelligence",
-            "items": [
-                {
-                    "name": "LuminAI",
-                    "desc": "Talk with luminai",
-                    "path": "/ai/luminai?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Text for luminai to respond to"
-                    }
-                },
-                {
-                    "name": "HydroMind",
-                    "desc": "See the list of supported AI models here: https://mind.hydrooo.web.id",
-                    "path": "/ai/hydromind?text=&model=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI",
-                        "model": "Masukan model ai"
-                    }
-                },
-                {
-                    "name": "TruepingAi",
-                    "desc": "Ai Bahasa indonesia dengan sikap yang lucu 🧸🎀",
-                    "path": "/ai/truepingai?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI"
-                    }
-                },
-                {
-                    "name": "TruecallerAi",
-                    "desc": "Ai dari truecaller yang siap membantu kamu",
-                    "path": "/ai/truecaller?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI"
-                   }
-                },
-                {
-                    "name": "Gpt Turbo",
-                    "desc": "Ai dari chatgpt",
-                    "path": "/ai/gpt-turbo?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI"     
-                    }
-                },
-                {
-                    "name": "CopilotAi",
-                    "desc": "Ai dari microsoft yang siap membantu pekerjaan kamu",
-                    "path": "/ai/copilotai?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI"
-                    }
-                },
-                {
-                    "name": "OpenAi",
-                    "desc": "Ai dari OpenAi yang siap membantu semua masalah kamu",
-                    "path": "/ai/openai?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Teks atau perintah untuk chat AI"
-                    }
-                },
-                {
-                    "name": "Quantum Ai",
-                    "desc": "Nikmatin ai dengan performa tinggi secara gratis.",
-                    "path": "/ai/quantum?text=",
-                    "status": "READY",
-                    "params": {   
-                        "text": "Masukan text"                  
-                   }
-                },
-                {
-                    "name": "Trueping Analis",
-                    "desc": "AI analis profesional untuk crypto, saham, forex & trading. Jawaban berdasarkan data Google terbaru.",
-                    "path": "/ai/truepingai-google?q=&tipe=",
-                    "status": "READY",
-                    "params": {
-                        "tipe": "Jenis analisis: crypto, forex, saham, atau trading",     
-                          "q": "Kata kunci pencarian, misalnya: harga bitcoin hari ini"                        
-                    }
-                },
-                {
-                    "name": "IraaAi",
-                    "desc": "IraaAi adalah ai muslim dengan kecerdasan luar biasa tapi dia memiliki sifat lucu dan jahil",
-                    "path": "/ai/iraaai?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan message"
-                    }
-                },
-                {
-                    "name": "Gemini",
-                    "desc": "Gunakan Ai dari gemini dengan backend dari firebase.com",
-                    "path": "/ai/gemini?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan message"
-                    }
-                },
-                {
-                    "name": "Vex [ Realtime ]",
-                    "desc": "Gunakan Ai dari Vex dengan data realtime dari berbagai platfrom",
-                    "path": "/ai/auto?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Masukan message"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Random",
-            "items": [
-                {
-                    "name": "Blue Archive",
-                    "desc": "Blue Archive Random Images",
-                    "path": "/random/ba",
-                    "status": "READY"
-                },
-                {
-                    "name": "Waifu",
-                    "desc": "Waifu Random Images",
-                    "path": "/random/waifu",
-                    "status": "READY"
-                },
-                {
-                    "name": "Cosplay",
-                    "desc": "Cosplay Random Images",
-                    "path": "/random/cosplay?apikey=",
-                    "status": "READY",
-                    "params": {
-                        "apikey": "Masukan apikey kamu"
-                    }
-                },
-                {
-                    "name": "Rule34",
-                    "desc": "Rule Random Images",
-                    "path": "/random/rule34",
-                    "status": "READY"
-                }
-            ]
-        },
-        {
-            "name": "Tools",
-            "items": [
-                {
-                    "name": "Cek Gempa",
-                    "desc": "Cek Gempa by bmkg",
-                    "path": "/tools/cekgempa",
-                    "status": "READY"
-                },
-                {
-                    "name": "Cek Kode Pos",
-                    "desc": "Cek Kode Pos Di Daerah Kamu",
-                    "path": "/tools/cekkodepos?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search query"
-                    }
-                },
-                {
-                    "name": "Tinyurl",
-                    "desc": "Ubah long link kamu jadi sortlink",
-                    "path": "/tools/tinyurl?url=",
-                    "status": "READY",
-                    "params": {
-                        "url": "Masukan url nya"
-                    }
-                },
-                {
-                    "name": "Texs to speech",
-                    "desc": "Ubah kamu jadi suara karakter",
-                    "path": "/tools/text-to-speech?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan Text Nya"
-                    }
-                },
-                {
-                    "name": "Jadwal Shalat",
-                    "desc": "Cek jadwal shalat di kota kamu",
-                    "path": "/tools/jadwalsholat?kota=",
-                    "status": "READY",
-                    "params": {
-                        "kota": "Masukan Text Nya"
-                    }
-                },
-                {
-                    "name": "Upscale",
-                    "desc": "Yuk hdin foto kamu yang ngeblur itu di zelapioffciall.vercel.app",
-                    "path": "/imagecreator/hdin?image_url=",
-                    "status": "READY",
-                    "params": {
-                        "image_url": "Masukan Url Foto"
-                    }
-                },
-                {
-                    "name": "Ghibli Style",
-                    "desc": "Yuk ubah foto kamu jadi ghibli di zelapioffciall.vercel.app",
-                    "path": "/imagecreator/toghibli?image_url=",
-                    "status": "READY",
-                    "params": {
-                        "image_url": "Masukan Url Foto"
-                    }
-                },
-                {
-                    "name": "Text To Qr",
-                    "desc": "Yuk ubah text ke qr di zelapioffciall.vercel.app",
-                    "path": "/tools/text2qr?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan Url Foto"
-                    }
-                },
-                {
-                    "name": "Ngl Spam",
-                    "desc": "Api spam ngl terpercaya anti rate limit",
-                    "path": "/tools/ngl?link=&text=",
-                    "status": "READY",
-                    "params": {
-                        "link": "Masukan Link Ngl",
-                        "text": "Masukan Pesan"
-                    }
-                },
-                {
-                    "name": "Domain",
-                    "desc": "Cek domain kamu di zelapioffciall.vercel.app",
-                    "path": "/tools/domain?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Masukan Nama Domain"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Image Generator",
-            "items": [
-                {
-                    "name": "Ghibli",
-                    "desc": "Create foto ghibli",
-                    "path": "/imagecreator/text2ghibli?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan Text Nya"
-                    }
-                },
-                {
-                    "name": "Nulis",
-                    "desc": "Kerjakan pekerjaan rumah kamu lebih cepat dengan fitur nulis",
-                    "path": "/imagecreator/nulis?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan text"
-                    }
-                },
-                {
-                    "name": "Brat",
-                    "desc": "Create sticker brat on whatsapp",
-                    "path": "/imagecreator/bratv2?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Masukan text"
-                    }
-                },
-                {
-                    "name": "Bratanime",
-                    "desc": "Create sticker bratanime on whatsapp",
-                    "path": "/imagecreator/bratanime?text=",
-                    "status": "EROR",
-                    "params": {
-                        "text": "Masukan text"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Search",
-            "items": [
-                {
-                    "name": "Search YouTube",
-                    "desc": "Video search",
-                    "path": "/search/youtube?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search query"
-                    }
-                },
-                {
-                    "name": "Search YTS",
-                    "desc": "Video search",
-                    "path": "/search/yts?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search query"
-                    }
-                },
-                {
-                    "name": "Search GsmArena",
-                    "desc": "Cari hape kamu di gsm arena",
-                    "path": "/search/gsmarena?phone=",
-                    "status": "READY",
-                    "params": {
-                        "phone": "Search phone"
-                    }
-                },
-                {
-                    "name": "Search Cookpad",
-                    "desc": "Cari resep masakan enak di cookpad",
-                    "path": "/search/cookpad?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search query"
-                    }
-                },
-                {
-                    "name": "Search Jadwaltv",
-                    "desc": "Cari jadwal tv kesukaan kamu secara realtime dengan api dari zelapioffciall.vercel.app",
-                    "path": "/search/jadwaltv?channel=",
-                    "status": "READY",
-                    "params": {
-                        "channel": "Search jadwtv"
-                    }
-                },
-                {
-                    "name": "Search Happymod",
-                    "desc": "Cari aplikasi mod di happymod.com",
-                    "path": "/search/cookpad?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search happymod"
-                    }
-                },
-                {
-                    "name": "Search Playstore",
-                    "desc": "Cari aplikasi di playstore dengan lebih cepat",
-                    "path": "/search/playstore?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search apk"
-                    }
-                },
-                {
-                    "name": "Search Bastation",
-                    "desc": "Cari anime kesukaan mu di aplikasi terpercaya",
-                    "path": "/search/bastation?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search bastation"
-                    }
-                },
-                {
-                    "name": "Search Npm",
-                    "desc": "Cari module node.js kamu di npm",
-                    "path": "/search/npm?text=",
-                    "status": "READY",
-                    "params": {
-                        "text": "Search npm"
-                    }
-                },
-                {
-                    "name": "Search TikTok",
-                    "desc": "Cari video lucu dan terpercaya di tiktok",
-                    "path": "/search/tiktok?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Search tiktok"                   
-                   }
-                },
-                {
-                    "name": "Search Google",
-                    "desc": "Cari informasi dari google search",
-                    "path": "/search/google?q=",
-                    "status": "READY",
-                    "params": {
-                        "q": "Masukan Yang Ingin Di Cari"          
+                        "q": "Masukan Yang Ingin Di Cari"
                     }
                 },
                 {
@@ -950,7 +502,7 @@
                     "path": "/generate/createapikey?name=",
                     "status": "READY",
                     "params": {
-                    "name": "Masukan Nama kamu"
+                        "name": "Masukan Nama kamu"
                     }
                 }
             ]
