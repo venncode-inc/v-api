@@ -388,12 +388,12 @@
                    }
                 },
                 {
-                    "name": "Search Penerbangan",
-                    "desc": "Cari rute penerbangan secara realtime",
-                    "path": "/track/flight?q=",
+                    "name": "Search Rumah Sakit",
+                    "desc": "Cari rumah sakit terdekat di kota mu",
+                    "path": "/search/rs?kota=",
                     "status": "READY",
                     "params": {
-                        "q": "Masukan kode penerbangan"     
+                      "kota": "Masukan kode penerbangan"     
                    }
                 },
                 {
