@@ -3,26 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Status Zelapi</title>
+  <title>Status</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center py-8 px-4 transition-colors duration-300">
+<body class="bg-white text-black min-h-screen flex flex-col items-center py-8 px-4">
 
-  <h1 class="text-3xl font-bold mb-6 text-center">📡 Status API Zelapi</h1>
+  <h1 class="text-3xl font-bold mb-6 text-center">📶 Ping ke ZelApi</h1>
 
-  <button id="toggleMode" class="mb-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-    Ubah ke Mode Terang
-  </button>
-
-  <div class="bg-gray-800 rounded-xl shadow-md p-6 w-full max-w-md mb-8">
+  <div class="bg-gray-100 rounded-xl shadow-md p-6 w-full max-w-md mb-8">
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold">Zelapi API</h2>
-      <span id="apiLabel" class="text-sm font-bold px-2 py-1 rounded bg-green-600">Online</span>
+      <h2 class="text-xl font-semibold">Status Jaringan</h2>
+      <span id="apiLabel" class="text-sm font-bold px-2 py-1 rounded bg-green-500 text-white">Online</span>
     </div>
     <p><strong>Status:</strong> <span id="apiStatus">-</span></p>
     <p><strong>Speed:</strong> <span id="apiSpeed">-</span></p>
-    <p><strong>Region:</strong> <span id="apiRegion">-</span></p>
+    <p><strong>Region:</strong> <span id="apiRegion">Google Global</span></p>
   </div>
 
   <div class="w-full max-w-2xl">
@@ -30,15 +26,13 @@
   </div>
 
   <script>
-    const apiUrl = "https://zelapioffciall.vercel.app/api-status/status";
     const apiStatusElem = document.getElementById("apiStatus");
     const apiSpeedElem = document.getElementById("apiSpeed");
-    const apiRegionElem = document.getElementById("apiRegion");
     const apiLabel = document.getElementById("apiLabel");
-    const toggleBtn = document.getElementById("toggleMode");
 
     let times = [];
     let speeds = [];
+
     const chart = new Chart(document.getElementById("statusChart"), {
       type: 'line',
       data: {
@@ -46,38 +40,36 @@
         datasets: [{
           label: 'Response Time (ms)',
           data: speeds,
-          borderColor: 'rgb(34, 197, 94)',
-          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.2)',
           tension: 0.4,
         }]
       },
       options: {
         responsive: true,
         plugins: {
-          legend: { labels: { color: '#fff' } },
+          legend: { labels: { color: '#000' } },
         },
         scales: {
-          x: { ticks: { color: '#ccc' }, grid: { color: '#333' } },
-          y: { ticks: { color: '#ccc' }, grid: { color: '#333' } }
+          x: { ticks: { color: '#555' }, grid: { color: '#ddd' } },
+          y: { ticks: { color: '#555' }, grid: { color: '#ddd' } }
         }
       }
     });
 
-    async function pingAPI() {
+    async function pingGoogle() {
+      const now = new Date().toLocaleTimeString();
+
       try {
         const start = performance.now();
-        const res = await fetch(apiUrl);
+        await fetch("https://www.google.com", {
+          method: "HEAD",
+          mode: "no-cors",
+        });
         const end = performance.now();
-        const data = await res.json();
         const ms = Math.round(end - start);
 
-        const status = data?.result?.status || '-';
-        const region = data?.result?.region || '-';
-        const speedText = data?.result?.speed || ms + ' ms';
-
-        const now = new Date().toLocaleTimeString();
-
-        if (times.length >= 10) {
+        if (times.length >= 20) {
           times.shift();
           speeds.shift();
         }
@@ -86,45 +78,25 @@
         speeds.push(ms);
         chart.update();
 
-        apiStatusElem.textContent = status;
-        apiRegionElem.textContent = region;
-        apiSpeedElem.textContent = speedText;
-
-        if (status.toLowerCase() === 'aktif') {
-          apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-green-600';
-          apiLabel.textContent = 'Online';
-        } else {
-          apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-600';
-          apiLabel.textContent = 'Offline';
-        }
-
-      } catch (e) {
-        const now = new Date().toLocaleTimeString();
+        apiStatusElem.textContent = "Online";
+        apiSpeedElem.textContent = ms + " ms";
+        apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-green-500 text-white';
+        apiLabel.textContent = 'Online';
+      } catch (err) {
         times.push(now);
         speeds.push(0);
         chart.update();
 
-        apiStatusElem.textContent = 'Timeout';
-        apiSpeedElem.textContent = '-';
-        apiRegionElem.textContent = '-';
-        apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-600';
+        apiStatusElem.textContent = "Offline";
+        apiSpeedElem.textContent = "-";
+        apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-500 text-white';
         apiLabel.textContent = 'Offline';
       }
     }
 
-    // Ping every 1 minute
-    pingAPI();
-    setInterval(pingAPI, 60000);
-
-    toggleBtn.addEventListener("click", () => {
-      document.body.classList.toggle("bg-white");
-      document.body.classList.toggle("text-black");
-      document.body.classList.toggle("bg-gray-900");
-      document.body.classList.toggle("text-white");
-      toggleBtn.textContent = document.body.classList.contains("bg-white")
-        ? "Ubah ke Mode Gelap"
-        : "Ubah ke Mode Terang";
-    });
+    // Mulai ping setiap 1 detik
+    pingGoogle();
+    setInterval(pingGoogle, 1000);
   </script>
 
 </body>
