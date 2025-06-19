@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const SUPABASE_URL = 'https://cxdjoetjwtpaflqgehig.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4ZGpvZXRqd3RwYWZscWdlaGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0ODkwNzksImV4cCI6MjA2NTA2NTA3OX0.LlHWi2YXeL9p_Juhz_FwPW_Vu2C958xZ02ybp_Cix80';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // [disingkat untuk keamanan]
 
 const supabaseHeaders = {
   apikey: SUPABASE_KEY,
@@ -11,10 +11,13 @@ const supabaseHeaders = {
 };
 
 let totalRequest = 0;
+let totalSuccess = 0;
+let totalError = 0;
+let totalResponseTime = 0;
+
 const deployTimestamp = new Date('2025-06-05T03:00:00Z');
 let serverRegion = 'unknown';
 
-// Ambil lokasi server dari Cloudflare trace
 (async () => {
   try {
     const res = await axios.get('https://www.cloudflare.com/cdn-cgi/trace');
@@ -28,10 +31,9 @@ let serverRegion = 'unknown';
 // Inisialisasi total request dari Supabase
 (async () => {
   try {
-    const res = await axios.get(
-      `${SUPABASE_URL}/rest/v1/request_counter?id=eq.1&select=data`,
-      { headers: supabaseHeaders }
-    );
+    const res = await axios.get(`${SUPABASE_URL}/rest/v1/request_counter?id=eq.1&select=data`, {
+      headers: supabaseHeaders,
+    });
 
     if (res.data.length > 0 && res.data[0].data) {
       totalRequest = res.data[0].data.count || 0;
@@ -48,22 +50,34 @@ let serverRegion = 'unknown';
 })();
 
 module.exports = function (app) {
-  // Middleware hitung dan update count
   app.use(async (req, res, next) => {
+    const startTime = Date.now();
     totalRequest++;
-    try {
-      await axios.patch(
-        `${SUPABASE_URL}/rest/v1/request_counter?id=eq.1`,
-        { data: { count: totalRequest } },
-        { headers: supabaseHeaders }
-      );
-    } catch (e) {
-      console.error('Gagal update count ke Supabase:', e.message);
-    }
+
+    res.on('finish', async () => {
+      const duration = Date.now() - startTime;
+      totalResponseTime += duration;
+
+      if (res.statusCode < 400) {
+        totalSuccess++;
+      } else {
+        totalError++;
+      }
+
+      try {
+        await axios.patch(
+          `${SUPABASE_URL}/rest/v1/request_counter?id=eq.1`,
+          { data: { count: totalRequest } },
+          { headers: supabaseHeaders }
+        );
+      } catch (e) {
+        console.error('Gagal update count ke Supabase:', e.message);
+      }
+    });
+
     next();
   });
 
-  // Fungsi hitung jumlah route
   function countRoutes() {
     let routeCount = 0;
     app._router.stack.forEach((middleware) => {
@@ -78,7 +92,6 @@ module.exports = function (app) {
     return routeCount;
   }
 
-  // Format runtime
   function formatRuntime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const hrs = Math.floor(totalSeconds / 3600);
@@ -87,7 +100,6 @@ module.exports = function (app) {
     return `${hrs}j ${mins}m ${secs}s`;
   }
 
-  // Tes kecepatan internet
   async function testSpeed() {
     const start = Date.now();
     try {
@@ -98,7 +110,6 @@ module.exports = function (app) {
     }
   }
 
-  // Endpoint status
   app.get('/api-status/status', async (req, res) => {
     try {
       const runtime = Date.now() - deployTimestamp.getTime();
@@ -106,17 +117,24 @@ module.exports = function (app) {
       const totalfitur = countRoutes();
       const speed = await testSpeed();
 
+      const avgResponseTime = totalRequest > 0 ? `${(totalResponseTime / totalRequest).toFixed(2)} ms` : '0 ms';
+      const successRate = totalRequest > 0 ? `${((totalSuccess / totalRequest) * 100).toFixed(2)}%` : '0%';
+      const errorRate = totalRequest > 0 ? `${((totalError / totalRequest) * 100).toFixed(2)}%` : '0%';
+
       res.json({
         status: true,
         creator: 'Hazel',
         result: {
           status: 'Aktif',
           totalrequest: totalRequest.toString(),
-          totalfitur: totalfitur,
+          totalfitur,
           runtime: formatRuntime(runtime),
-          speed: speed,
+          speed,
+          avgResponseTime,
+          successRate,
+          errorRate,
           region: serverRegion,
-          domain: domain
+          domain
         }
       });
     } catch (e) {
