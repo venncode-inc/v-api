@@ -39,41 +39,54 @@
 
     <!-- Statistik Utama -->
     <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4 scrollbar-hide overflow-x-auto">
-      <!-- Cards -->
-      <!-- contoh -->
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">385</p>
-        <p class="text-xs text-gray-500 mt-0.5">Total API</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">26.2K</p>
-        <p class="text-xs text-gray-500 mt-0.5">Total Users</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">11.9K</p>
-        <p class="text-xs text-gray-500 mt-0.5">Today Requests</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">8.5K</p>
-        <p class="text-xs text-gray-500 mt-0.5">Request Per Day</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">823.2K</p>
-        <p class="text-xs text-gray-500 mt-0.5">Total Requests</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">6022</p>
-        <p class="text-xs text-gray-500 mt-0.5">Avg Response (ms)</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">92.42%</p>
-        <p class="text-xs text-gray-500 mt-0.5">Success Rate</p>
-      </div>
-      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-        <p class="font-semibold text-sm text-gray-900">7.58%</p>
-        <p class="text-xs text-gray-500 mt-0.5">Error Rate</p>
-      </div>
-    </section>
+  <!-- Total API (dari API) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p id="totalApi" class="font-semibold text-sm text-gray-900">-</p>
+    <p class="text-xs text-gray-500 mt-0.5">Total API</p>
+  </div>
+
+  <!-- Total Users (static) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p class="font-semibold text-sm text-gray-900">26.2K</p>
+    <p class="text-xs text-gray-500 mt-0.5">Total Users</p>
+  </div>
+
+  <!-- Today Requests (static) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p class="font-semibold text-sm text-gray-900">11.9K</p>
+    <p class="text-xs text-gray-500 mt-0.5">Today Requests</p>
+  </div>
+
+  <!-- Request Per Day (static) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p class="font-semibold text-sm text-gray-900">8.5K</p>
+    <p class="text-xs text-gray-500 mt-0.5">Request Per Day</p>
+  </div>
+
+  <!-- Total Requests (dari API) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p id="totalRequests" class="font-semibold text-sm text-gray-900">-</p>
+    <p class="text-xs text-gray-500 mt-0.5">Total Requests</p>
+  </div>
+
+  <!-- Avg Response (dari API) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p id="avgResponse" class="font-semibold text-sm text-gray-900">-</p>
+    <p class="text-xs text-gray-500 mt-0.5">Avg Response (ms)</p>
+  </div>
+
+  <!-- Success Rate (dari API) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p id="successRate" class="font-semibold text-sm text-gray-900">-</p>
+    <p class="text-xs text-gray-500 mt-0.5">Success Rate</p>
+  </div>
+
+  <!-- Error Rate (dari API) -->
+  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+    <p id="errorRate" class="font-semibold text-sm text-gray-900">-</p>
+    <p class="text-xs text-gray-500 mt-0.5">Error Rate</p>
+  </div>
+</section>
 
     <!-- Grafik Ping -->
     <section aria-labelledby="request-traffic-title" class="border border-gray-200 rounded-md p-3 bg-white shadow-sm">
@@ -83,61 +96,91 @@
   </main>
 
   <!-- Script Ping -->
-  <script>
-    const ctx = document.getElementById('pingChart').getContext('2d');
-    const pingData = {
-      labels: [],
-      datasets: [{
-        label: 'Ping ke Google (ms)',
-        data: [],
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-        tension: 0.3
-      }]
-    };
+<script>
+  // ✅ Ambil data statistik dari API
+  async function updateAPICards() {
+    try {
+      const res = await fetch("https://zelapioffciall.vercel.app/api-status/status");
+      const data = await res.json();
 
-    const pingChart = new Chart(ctx, {
-      type: 'line',
-      data: pingData,
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: { display: true, text: 'Latency (ms)' }
-          },
-          x: {
-            title: { display: true, text: 'Waktu' }
+      document.getElementById("totalApi").textContent = data.totalApi ?? "-";
+      document.getElementById("totalRequests").textContent = data.totalRequests?.toLocaleString("en-US") ?? "-";
+      document.getElementById("avgResponse").textContent = data.avgResponse ?? "-";
+      document.getElementById("successRate").textContent = (data.successRate ?? 0).toFixed(2) + "%";
+      document.getElementById("errorRate").textContent = (data.errorRate ?? 0).toFixed(2) + "%";
+    } catch (err) {
+      console.error("Gagal ambil data dari API stats:", err);
+    }
+  }
+
+  updateAPICards();
+
+  // ✅ Grafik Ping ke Google (Realtime)
+  const ctx = document.getElementById('pingChart').getContext('2d');
+  const pingData = {
+    labels: [],
+    datasets: [{
+      label: 'Server Latency',
+      data: [],
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59, 130, 246, 0.2)',
+      tension: 0.3
+    }]
+  };
+
+  const pingChart = new Chart(ctx, {
+    type: 'line',
+    data: pingData,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Latency (ms)'
           }
         },
-        plugins: {
-          legend: {
-            labels: { font: { size: 10 } }
+        x: {
+          title: {
+            display: true,
+            text: 'Waktu'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 10
+            }
           }
         }
       }
-    });
-
-    function pingGoogle() {
-      const start = performance.now();
-      fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' })
-        .finally(() => {
-          const latency = Math.round(performance.now() - start);
-          const timeLabel = new Date().toLocaleTimeString();
-
-          if (pingData.labels.length >= 20) {
-            pingData.labels.shift();
-            pingData.datasets[0].data.shift();
-          }
-
-          pingData.labels.push(timeLabel);
-          pingData.datasets[0].data.push(latency);
-          pingChart.update();
-        });
     }
+  });
 
-    setInterval(pingGoogle, 3000);
-    pingGoogle();
-  </script>
+  function pingGoogle() {
+    const start = performance.now();
+    fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' })
+      .finally(() => {
+        const latency = Math.round(performance.now() - start);
+        const timeLabel = new Date().toLocaleTimeString();
+
+        if (pingData.labels.length >= 20) {
+          pingData.labels.shift();
+          pingData.datasets[0].data.shift();
+        }
+
+        pingData.labels.push(timeLabel);
+        pingData.datasets[0].data.push(latency);
+        pingChart.update();
+      });
+  }
+
+  // ⏱️ Jalankan ping tiap 3 detik
+  setInterval(pingGoogle, 3000);
+  pingGoogle();
+</script>
 </body>
 </html>
