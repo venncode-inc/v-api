@@ -1,165 +1,143 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Status Zelapi</title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>ZelApi Status's Stats</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center py-8 px-4 transition-colors duration-300">
-
-  <h1 class="text-3xl font-bold mb-6 text-center">📡 Status API Zelapi</h1>
-
-  <button id="toggleMode" class="mb-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-    Ubah ke Mode Terang
-  </button>
-
-  <div class="bg-gray-800 rounded-xl shadow-md p-6 w-full max-w-md mb-8">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold">Zelapi API</h2>
-      <span id="apiLabel" class="text-sm font-bold px-2 py-1 rounded bg-green-600">Online</span>
+<body class="bg-white text-gray-900 font-sans">
+  <header class="border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 py-1 text-xs text-gray-700 font-normal">
+      ZelApi Status
+      <a class="float-right text-gray-600 hover:text-gray-900" href="https://github.com/hazelnuttty" target="_blank" aria-label="GitHub link">
+        <i class="fab fa-github fa-lg"></i>
+      </a>
     </div>
-    <p><strong>Status:</strong> <span id="apiStatus">-</span></p>
-    <p><strong>Speed:</strong> <span id="apiSpeed">-</span></p>
-    <p><strong>Region:</strong> <span id="apiRegion">ID</span></p>
-  </div>
+  </header>
 
-  <div class="w-full max-w-4xl px-2">
-    <canvas id="statusChart"></canvas>
-  </div>
+    <main class="max-w-7xl mx-auto px-4 py-4">
+  <nav class="text-xs text-gray-500 mb-4 select-none">
+    <a href="https://zelapioffciall.vercel.app/" class="hover:text-blue-600 transition-colors">Home</a>
+    <span class="mx-1">›</span>
+    <a href="https://zelapioffciall.vercel.app/" class="hover:text-blue-600 transition-colors">Documentation</a>
+    <span class="mx-1">›</span>
+    <a href="https://zelapioffciall.vercel.app/dashboard/" class="hover:text-blue-600 transition-colors">Stats</a>
+  </nav>
+</main>
 
+    <!-- Statistik Utama -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4 scrollbar-hide overflow-x-auto">
+      <!-- Cards -->
+      <!-- contoh -->
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">385</p>
+        <p class="text-xs text-gray-500 mt-0.5">Total API</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">26.2K</p>
+        <p class="text-xs text-gray-500 mt-0.5">Total Users</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">11.9K</p>
+        <p class="text-xs text-gray-500 mt-0.5">Today Requests</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">8.5K</p>
+        <p class="text-xs text-gray-500 mt-0.5">Request Per Day</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">823.2K</p>
+        <p class="text-xs text-gray-500 mt-0.5">Total Requests</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">6022</p>
+        <p class="text-xs text-gray-500 mt-0.5">Avg Response (ms)</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">92.42%</p>
+        <p class="text-xs text-gray-500 mt-0.5">Success Rate</p>
+      </div>
+      <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
+        <p class="font-semibold text-sm text-gray-900">7.58%</p>
+        <p class="text-xs text-gray-500 mt-0.5">Error Rate</p>
+      </div>
+    </section>
+
+    <!-- Grafik Ping -->
+    <section aria-labelledby="request-traffic-title" class="border border-gray-200 rounded-md p-3 bg-white shadow-sm">
+      <h2 class="font-semibold text-xs text-gray-900 mb-2 select-none" id="request-traffic-title">Request Traffic</h2>
+      <canvas id="pingChart" class="w-full h-40"></canvas>
+    </section>
+  </main>
+
+  <!-- Script Ping -->
   <script>
-    const apiUrl = "https://zelapioffciall.vercel.app/api-status/status";
-    const apiStatusElem = document.getElementById("apiStatus");
-    const apiSpeedElem = document.getElementById("apiSpeed");
-    const apiRegionElem = document.getElementById("apiRegion");
-    const apiLabel = document.getElementById("apiLabel");
-    const toggleBtn = document.getElementById("toggleMode");
+    const ctx = document.getElementById('pingChart').getContext('2d');
+    const pingData = {
+      labels: [],
+      datasets: [{
+        label: 'Ping ke Google (ms)',
+        data: [],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        tension: 0.3
+      }]
+    };
 
-    let times = [];
-    let speeds = [];
-
-    const ctx = document.getElementById("statusChart").getContext("2d");
-    const chart = new Chart(ctx, {
+    const pingChart = new Chart(ctx, {
       type: 'line',
-      data: {
-        labels: times,
-        datasets: [{
-          label: 'Response Time (ms)',
-          data: speeds,
-          borderColor: 'rgb(34, 197, 94)',
-          backgroundColor: 'rgba(34, 197, 94, 0.2)',
-          fill: true,
-          tension: 0.4,
-          pointRadius: 3,
-          pointHoverRadius: 6
-        }]
-      },
+      data: pingData,
       options: {
         responsive: true,
-        maintainAspectRatio: false,
         scales: {
-          x: {
-            ticks: { color: '#ccc' },
-            grid: { color: '#444' }
-          },
           y: {
             beginAtZero: true,
-            ticks: { color: '#ccc' },
-            grid: { color: '#444' }
+            title: { display: true, text: 'Latency (ms)' }
+          },
+          x: {
+            title: { display: true, text: 'Waktu' }
           }
         },
         plugins: {
           legend: {
-            labels: { color: '#ccc' }
+            labels: { font: { size: 10 } }
           }
         }
       }
     });
 
-    async function pingAPI() {
-      try {
-        const start = performance.now();
-        const res = await fetch(apiUrl);
-        const end = performance.now();
-        const data = await res.json();
-        const ms = Math.round(end - start);
+    function pingGoogle() {
+      const start = performance.now();
+      fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' })
+        .finally(() => {
+          const latency = Math.round(performance.now() - start);
+          const timeLabel = new Date().toLocaleTimeString();
 
-        const status = data?.result?.status || '-';
-        const region = data?.result?.region || 'ID';
-        const speedText = data?.result?.speed || ms + ' ms';
+          if (pingData.labels.length >= 20) {
+            pingData.labels.shift();
+            pingData.datasets[0].data.shift();
+          }
 
-        const now = new Date().toLocaleTimeString();
-
-        if (times.length >= 20) {
-          times.shift();
-          speeds.shift();
-        }
-
-        times.push(now);
-        speeds.push(ms);
-        chart.update();
-
-        apiStatusElem.textContent = status;
-        apiSpeedElem.textContent = speedText;
-        apiRegionElem.textContent = region;
-
-        if (status.toLowerCase() === 'aktif') {
-          apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-green-600';
-          apiLabel.textContent = 'Online';
-        } else {
-          apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-600';
-          apiLabel.textContent = 'Offline';
-        }
-
-      } catch (e) {
-        const now = new Date().toLocaleTimeString();
-        times.push(now);
-        speeds.push(0);
-        chart.update();
-
-        apiStatusElem.textContent = 'Timeout';
-        apiSpeedElem.textContent = '-';
-        apiRegionElem.textContent = 'ID';
-        apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-600';
-        apiLabel.textContent = 'Offline';
-      }
+          pingData.labels.push(timeLabel);
+          pingData.datasets[0].data.push(latency);
+          pingChart.update();
+        });
     }
 
-    // Ping every 10 seconds (change if needed)
-    pingAPI();
-    setInterval(pingAPI, 10000);
-
-    // Toggle dark/light mode
-    toggleBtn.addEventListener("click", () => {
-      const body = document.body;
-      const dark = body.classList.contains("bg-gray-900");
-
-      if (dark) {
-        body.classList.remove("bg-gray-900", "text-white");
-        body.classList.add("bg-white", "text-black");
-        toggleBtn.textContent = "Ubah ke Mode Gelap";
-      } else {
-        body.classList.add("bg-gray-900", "text-white");
-        body.classList.remove("bg-white", "text-black");
-        toggleBtn.textContent = "Ubah ke Mode Terang";
-      }
-    });
+    setInterval(pingGoogle, 3000);
+    pingGoogle();
   </script>
-
-  <style>
-    /* Fix height for chart container */
-    #statusChart {
-      height: 300px !important;
-    }
-
-    @media (max-width: 640px) {
-      #statusChart {
-        height: 250px !important;
-      }
-    }
-  </style>
-
 </body>
 </html>
