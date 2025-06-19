@@ -213,10 +213,10 @@
                 {
                     "name": "Uploader",
                     "desc": "Upload File/Foto kamu secara cepat dengan berbagai api",
-                    "path": "/tools/uploader?url=",
+                    "path": "/tools/uploader?file=",
                     "status": "READY",
                     "params": {
-                        "url": "Masukan url file nya"   
+                        "file": "Masukan url file nya"   
                     }
                 },
                 {
