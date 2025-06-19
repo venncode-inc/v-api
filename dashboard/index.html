@@ -1,285 +1,129 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Status Zelapi</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: #fff;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      margin-bottom: 2rem;
-      font-size: 2rem;
-      text-align: center;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .status-box {
-      background: #1e1e1e;
-      border: 1px solid #333;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
-      animation: slideIn 0.5s ease-in-out;
-    }
-
-    .status-box:hover {
-      transform: scale(1.02);
-    }
-
-    h2 {
-      margin-top: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .status-label {
-      padding: 0.3rem 0.6rem;
-      font-size: 0.8rem;
-      border-radius: 0.5rem;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .status-label.ok {
-      background-color: #28a745;
-    }
-
-    .status-label.major {
-      background-color: #dc3545;
-    }
-
-    .timeline {
-      display: flex;
-      gap: 4px;
-      margin-top: 1rem;
-    }
-
-    .bar {
-      flex: 1;
-      height: 10px;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-
-    .bar.green {
-      background-color: #28a745;
-    }
-
-    .bar.yellow {
-      background-color: #ffc107;
-    }
-
-    .bar.red {
-      background-color: #dc3545;
-    }
-
-    .legend {
-      margin-bottom: 2rem;
-      text-align: left;
-      max-width: 400px;
-      width: 100%;
-    }
-
-    .legend-container {
-      background: #1e1e1e;
-      border-radius: 1rem;
-      padding: 1rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 4px 0;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .dot.green {
-      background-color: #28a745;
-    }
-
-    .dot.yellow {
-      background-color: #ffc107;
-    }
-
-    .dot.red {
-      background-color: #dc3545;
-    }
-
-    .toggle-button {
-      margin-bottom: 1rem;
-      padding: 0.5rem 1rem;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .toggle-button:hover {
-      background-color: #218838;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(-20px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      .status-box {
-        padding: 1rem;
-      }
-
-      .status-label {
-        font-size: 0.7rem;
-      }
-
-      .bar {
-        height: 8px;
-      }
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center py-8 px-4 transition-colors duration-300">
 
-  <h1>Status Monitor</h1>
+  <h1 class="text-3xl font-bold mb-6 text-center">📡 Status API Zelapi</h1>
 
-  <button class="toggle-button" id="toggleMode">Ubah Mode</button>
+  <button id="toggleMode" class="mb-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+    Ubah ke Mode Terang
+  </button>
 
-  <div class="status-box" data-id="barZelapi" data-url="https://zelapioffciall.vercel.app/api-status/status" data-interval="3600000">
-    <h2>Zelapi API <span class="status-label ok">Online</span></h2>
-    <p><strong>Status:</strong> <span class="api-status">-</span></p>
-    <p><strong>Speed:</strong> <span class="speed">-</span></p>
-    <p><strong>Region:</strong> <span class="region">-</span></p>
-    <div class="timeline" id="barZelapi"></div>
-  </div>
-  
-  <div class="legend">
-    <h3>Keterangan Status:</h3>
-    <div class="legend-container">
-      <div class="legend-item"><span class="dot green"></span>Frontend</div>
-      <div class="legend-item"><span class="dot green"></span>API</div>
-      <div class="legend-item"><span class="dot green"></span>Server</div>
+  <div class="bg-gray-800 rounded-xl shadow-md p-6 w-full max-w-md mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">Zelapi API</h2>
+      <span id="apiLabel" class="text-sm font-bold px-2 py-1 rounded bg-green-600">Online</span>
     </div>
-  </div>  
+    <p><strong>Status:</strong> <span id="apiStatus">-</span></p>
+    <p><strong>Speed:</strong> <span id="apiSpeed">-</span></p>
+    <p><strong>Region:</strong> <span id="apiRegion">-</span></p>
+  </div>
+
+  <div class="w-full max-w-2xl">
+    <canvas id="statusChart"></canvas>
+  </div>
 
   <script>
-    document.querySelectorAll('.status-box').forEach(box => {
-      const barId = box.dataset.id;
-      const url = box.dataset.url;
-      const interval = parseInt(box.dataset.interval);
-      const timeline = box.querySelector('.timeline');
-      const speedElem = box.querySelector('.speed');
-      const label = box.querySelector('.status-label');
-      const statusElem = box.querySelector('.api-status');
-      const regionElem = box.querySelector('.region');
+    const apiUrl = "https://zelapioffciall.vercel.app/api-status/status";
+    const apiStatusElem = document.getElementById("apiStatus");
+    const apiSpeedElem = document.getElementById("apiSpeed");
+    const apiRegionElem = document.getElementById("apiRegion");
+    const apiLabel = document.getElementById("apiLabel");
+    const toggleBtn = document.getElementById("toggleMode");
 
-      function setBars(color) {
-        timeline.innerHTML = '';
-        for (let i = 0; i < 7; i++) {
-          const bar = document.createElement('div');
-          bar.className = `bar ${color}`;
-          timeline.appendChild(bar);
+    let times = [];
+    let speeds = [];
+    const chart = new Chart(document.getElementById("statusChart"), {
+      type: 'line',
+      data: {
+        labels: times,
+        datasets: [{
+          label: 'Response Time (ms)',
+          data: speeds,
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+          tension: 0.4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#fff' } },
+        },
+        scales: {
+          x: { ticks: { color: '#ccc' }, grid: { color: '#333' } },
+          y: { ticks: { color: '#ccc' }, grid: { color: '#333' } }
         }
       }
-
-      async function pingAPI() {
-        try {
-          const start = performance.now();
-          const res = await fetch(url);
-          const end = performance.now();
-          const data = await res.json();
-          const ms = Math.round(end - start);
-
-          const status = data?.result?.status || '-';
-          const speed = data?.result?.speed || ms + ' ms';
-          const region = data?.result?.region || 'unknown';
-
-          statusElem.textContent = status;
-          speedElem.textContent = speed;
-          regionElem.textContent = region;
-
-          let barColor = 'red';
-          if (ms <= 100) barColor = 'green';
-          else if (ms <= 300) barColor = 'yellow';
-
-          setBars(barColor);
-
-          if (status.toLowerCase() === 'aktif') {
-            label.className = 'status-label ok';
-            label.textContent = 'Online';
-          } else {
-            label.className = 'status-label major';
-            label.textContent = 'Offline';
-          }
-
-        } catch (e) {
-          statusElem.textContent = 'Timeout';
-          speedElem.textContent = '-';
-          regionElem.textContent = '-';
-          label.className = 'status-label major';
-          label.textContent = 'Offline';
-          setBars('red');
-        }
-      }
-
-      pingAPI();
-      setInterval(pingAPI, interval);
     });
 
-    const toggleButton = document.getElementById('toggleMode');
-    toggleButton.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      if (document.body.classList.contains('light-mode')) {
-        document.body.style.background = '#ffffff';
-        document.body.style.color = '#000000';
-        toggleButton.textContent = 'Ubah ke Mode Gelap';
-      } else {
-        document.body.style.background = '#121212';
-        document.body.style.color = '#ffffff';
-        toggleButton.textContent = 'Ubah ke Mode Terang';
+    async function pingAPI() {
+      try {
+        const start = performance.now();
+        const res = await fetch(apiUrl);
+        const end = performance.now();
+        const data = await res.json();
+        const ms = Math.round(end - start);
+
+        const status = data?.result?.status || '-';
+        const region = data?.result?.region || '-';
+        const speedText = data?.result?.speed || ms + ' ms';
+
+        const now = new Date().toLocaleTimeString();
+
+        if (times.length >= 10) {
+          times.shift();
+          speeds.shift();
+        }
+
+        times.push(now);
+        speeds.push(ms);
+        chart.update();
+
+        apiStatusElem.textContent = status;
+        apiRegionElem.textContent = region;
+        apiSpeedElem.textContent = speedText;
+
+        if (status.toLowerCase() === 'aktif') {
+          apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-green-600';
+          apiLabel.textContent = 'Online';
+        } else {
+          apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-600';
+          apiLabel.textContent = 'Offline';
+        }
+
+      } catch (e) {
+        const now = new Date().toLocaleTimeString();
+        times.push(now);
+        speeds.push(0);
+        chart.update();
+
+        apiStatusElem.textContent = 'Timeout';
+        apiSpeedElem.textContent = '-';
+        apiRegionElem.textContent = '-';
+        apiLabel.className = 'text-sm font-bold px-2 py-1 rounded bg-red-600';
+        apiLabel.textContent = 'Offline';
       }
+    }
+
+    // Ping every 1 minute
+    pingAPI();
+    setInterval(pingAPI, 60000);
+
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("bg-white");
+      document.body.classList.toggle("text-black");
+      document.body.classList.toggle("bg-gray-900");
+      document.body.classList.toggle("text-white");
+      toggleBtn.textContent = document.body.classList.contains("bg-white")
+        ? "Ubah ke Mode Gelap"
+        : "Ubah ke Mode Terang";
     });
   </script>
 
