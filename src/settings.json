@@ -171,6 +171,15 @@
                     "params": {
                         "apikey": "Masukan apikey kamu"
                     }
+                 },
+                 {
+                    "name": "Live Radio",
+                    "desc": "Dapatkan informasi radio disekitar negara kamu",
+                    "path": "/live/radio?country=",
+                    "status": "READY",
+                    "params": {
+                        "country": "Masukan negara kamu"   
+                    }
                 }
             ]
         },
