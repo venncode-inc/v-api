@@ -208,15 +208,6 @@
                     "status": "READY",
                     "params": {
                         "url": "Masukan url nya"
-                     }
-                },
-                {
-                    "name": "Uploader",
-                    "desc": "Upload File/Foto kamu secara cepat dengan berbagai api",
-                    "path": "/tools/uploader?file=",
-                    "status": "READY",
-                    "params": {
-                        "file": "Masukan url file nya"   
                     }
                 },
                 {
