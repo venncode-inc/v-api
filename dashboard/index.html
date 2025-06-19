@@ -38,7 +38,7 @@
 </main>
 
     <!-- Statistik Utama -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4 scrollbar-hide overflow-x-auto">
+<section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4 scrollbar-hide overflow-x-auto">
   <!-- Total API (dari API) -->
   <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
     <p id="totalApi" class="font-semibold text-sm text-gray-900">-</p>
@@ -97,23 +97,25 @@
 
   <!-- Script Ping -->
 <script>
-  // ✅ Ambil data statistik dari API
+  // ✅ Ambil data statistik dari API kamu
   async function updateAPICards() {
     try {
       const res = await fetch("https://zelapioffciall.vercel.app/api-status/status");
-      const data = await res.json();
+      const json = await res.json();
+      const data = json.result;
 
-      document.getElementById("totalApi").textContent = data.totalApi ?? "-";
-      document.getElementById("totalRequests").textContent = data.totalRequests?.toLocaleString("en-US") ?? "-";
-      document.getElementById("avgResponse").textContent = data.avgResponse ?? "-";
-      document.getElementById("successRate").textContent = (data.successRate ?? 0).toFixed(2) + "%";
-      document.getElementById("errorRate").textContent = (data.errorRate ?? 0).toFixed(2) + "%";
+      document.getElementById("totalApi").textContent = data.totalfitur ?? "-";
+      document.getElementById("totalRequests").textContent = data.totalrequest ?? "-";
+      document.getElementById("avgResponse").textContent = data.avgResponseTime ?? "-";
+      document.getElementById("successRate").textContent = data.successRate ?? "-";
+      document.getElementById("errorRate").textContent = data.errorRate ?? "-";
     } catch (err) {
       console.error("Gagal ambil data dari API stats:", err);
     }
   }
 
   updateAPICards();
+  setInterval(updateAPICards, 60000); // refresh tiap 1 menit
 
   // ✅ Grafik Ping ke Google (Realtime)
   const ctx = document.getElementById('pingChart').getContext('2d');
@@ -178,7 +180,6 @@
       });
   }
 
-  // ⏱️ Jalankan ping tiap 3 detik
   setInterval(pingGoogle, 3000);
   pingGoogle();
 </script>
