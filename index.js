@@ -117,6 +117,7 @@ app.use(cors());
 app.use('/', express.static(path.join(__dirname, 'api-page')));
 app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 // === LOAD ROUTES DARI FOLDER API ===
 let totalRoutes = 0;
