@@ -12,13 +12,13 @@ module.exports = function(app) {
         }
     }
 
-    app.get('/random/kataislami', async (req, res) => {
+    app.get('/random/baskara', async (req, res) => {
         try {
             const result = await getRandomBaskara();
             res.json({
                 status: true,
                 creator: 'Hazel',
-                message: result
+                baskara: result
             });
         } catch (error) {
             res.status(500).json({
