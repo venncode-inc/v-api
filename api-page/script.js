@@ -126,22 +126,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Check for saved theme preference
-    const themeToggle = document.getElementById('themeToggle');
-    
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-        themeToggle.checked = true;
-    }
-
-    // Enhanced theme toggle functionality
-    themeToggle.addEventListener('change', () => {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDarkMode);
-        
-        // Show toast notification
-        showToast(`Switched to ${isDarkMode ? 'dark' : 'light'} mode`, 'success');
-    });
+     document.body.classList.remove('dark-mode');
+     localStorage.setItem('darkMode', 'false');
 
     // Improved clear search button functionality
     document.getElementById('clearSearch').addEventListener('click', () => {
