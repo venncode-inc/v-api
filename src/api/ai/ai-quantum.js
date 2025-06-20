@@ -5,9 +5,7 @@ module.exports = function (app) {
         { name: 'neural', url: 'https://api.nekorinn.my.id/ai/neural-chat?text=' },
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai?text=' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini?text=' },
-        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' },
-        { name: 'blackbox', url: 'https://api.siputzx.my.id/api/ai/blackboxai?content=' },
-        { name: 'luminai', url: 'https://api.siputzx.my.id/api/ai/luminai?content=' }
+        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' }
     ];
 
     function getRandomSource() {
