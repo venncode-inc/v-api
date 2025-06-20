@@ -1,87 +1,126 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ZelApi's Offciall Home</title>
+    <title>ZelApi's Official Home</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
+
+    <!-- Google Fonts -->
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
       body {
         font-family: "Inter", sans-serif;
       }
     </style>
+
+    <!-- AOS Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   </head>
-  <body class="bg-[#f8fafc] text-gray-800">
-    <main class="max-w-md mx-auto px-6 py-10">
-      <section class="mb-16">
+
+  <body class="bg-[#f8fafc] text-gray-800 overflow-x-hidden">
+    <main class="max-w-6xl mx-auto px-6 py-12 md:py-20">
+      <!-- Header -->
+      <section class="mb-16 text-center" data-aos="fade-down">
         <button
-          class="bg-[#1e293b] text-white text-sm font-semibold rounded px-4 py-2 mb-4 shadow-md hover:bg-[#0f172a] transition"
-          type="button"
+          class="bg-[#1e293b] text-white text-sm font-semibold rounded px-6 py-2 mb-4 shadow-lg hover:bg-[#0f172a] transition-all duration-500 transform hover:scale-105"
         >
           ZelAPI's
         </button>
         <h1
-          class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-3xl font-extrabold leading-tight rounded-md p-4 mb-4 shadow-sm"
+          class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-4xl md:text-5xl font-extrabold leading-tight rounded-md p-6 mb-4 shadow-md animate-pulse"
         >
           Simple, Fast, Flawless.
         </h1>
-        <p class="text-base leading-relaxed mb-6 text-gray-600">
-          Zel Api's Official provides fast, secure, and flexible API solutions for
-          developers. Designed for seamless integration with various platforms,
+        <p class="text-base md:text-lg leading-relaxed mb-6 text-gray-600 max-w-2xl mx-auto">
+          Zel Api's Official provides fast, secure, and flexible API solutions
+          for developers. Designed for seamless integration with various platforms,
           Zel Api helps accelerate your application development process.
         </p>
-        <section>
-          <button
-            onclick="location.href='/api-page'"
-            class="text-blue-600 underline font-semibold text-base hover:text-blue-800 transition"
-          >
-            Explore Documentation
-          </button>
-        </section>
+        <button
+          onclick="location.href='/api-page'"
+          class="text-blue-600 underline font-semibold text-base hover:text-blue-800 transition duration-500 transform hover:scale-105"
+        >
+          Explore Documentation
+        </button>
       </section>
 
-      <hr class="border-gray-300 mb-16" />
+      <!-- Divider -->
+      <hr class="border-gray-300 mb-16 w-full" data-aos="zoom-in" />
 
-      <section>
+      <!-- Contributors -->
+      <section data-aos="fade-up">
         <h2
-          class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-2xl font-extrabold rounded-md p-2 inline-block mb-3 shadow-sm"
+          class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-3xl font-extrabold rounded-md p-4 inline-block mb-6 shadow-sm animate-bounce"
         >
           Special Thx
         </h2>
-        <p class="text-base leading-relaxed mb-8 text-gray-600">
-          The incredible people who made Nekorinn API's possible.
+        <p class="text-base md:text-lg leading-relaxed mb-10 text-gray-600">
+          The incredible people who made Zel API's possible.
         </p>
-        <div class="grid grid-cols-2 gap-x-8 gap-y-6 max-w-md">
-          <div>
-            <h3 class="font-bold text-lg mb-1 text-[#1e293b]">Putu</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <!-- Contributor Card -->
+          <div
+            class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
+            data-aos="zoom-in"
+          >
+            <h3 class="font-bold text-xl text-[#1e293b] mb-2">Putu</h3>
             <p class="text-gray-500">api.siputzx.my.id</p>
           </div>
-          <div>
-            <h3 class="font-bold text-lg mb-1 text-[#1e293b]">NovHai</h3>
+          <div
+            class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
+            data-aos="zoom-in"
+          >
+            <h3 class="font-bold text-xl text-[#1e293b] mb-2">NovHai</h3>
             <p class="text-gray-500">velyn.biz.id</p>
           </div>
-          <div>
-            <h3 class="font-bold text-lg mb-1 text-[#1e293b]">Zen</h3>
+          <div
+            class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
+            data-aos="zoom-in"
+          >
+            <h3 class="font-bold text-xl text-[#1e293b] mb-2">Zen</h3>
             <p class="text-gray-500">zenz.biz.id</p>
           </div>
-          <div>
-            <h3 class="font-bold text-lg mb-1 text-[#1e293b]">Rickyy</h3>
+          <div
+            class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
+            data-aos="zoom-in"
+          >
+            <h3 class="font-bold text-xl text-[#1e293b] mb-2">Rickyy</h3>
             <p class="text-gray-500">nirkyy-dev.hf.space</p>
           </div>
-          <div>
-            <h3 class="font-bold text-lg mb-1 text-[#1e293b]">Nekorin</h3>
+          <div
+            class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
+            data-aos="zoom-in"
+          >
+            <h3 class="font-bold text-xl text-[#1e293b] mb-2">Nekorin</h3>
             <p class="text-gray-500">api.nekorinn.my.id</p>
           </div>
-          <div>
-            <h3 class="font-bold text-lg mb-1 text-[#1e293b]">Alfi</h3>
+          <div
+            class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
+            data-aos="zoom-in"
+          >
+            <h3 class="font-bold text-xl text-[#1e293b] mb-2">Alfi</h3>
             <p class="text-gray-500">cloudkuimages.guru</p>
           </div>
         </div>
       </section>
     </main>
+
+    <!-- Init AOS -->
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    </script>
   </body>
 </html>
