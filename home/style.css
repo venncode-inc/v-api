@@ -9,8 +9,12 @@
   margin-bottom: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background 0.3s ease;
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
 }
 
+/* Hover */
 #title-btn:hover {
   background-color: #0f172a;
 }
@@ -25,6 +29,7 @@
   border-radius: 0.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 /* Deskripsi */
@@ -32,6 +37,8 @@
   color: #4b5563;
   font-size: 1rem;
   line-height: 1.6;
+  text-align: center;
+  padding: 0 1rem;
 }
 
 /* Tombol link */
@@ -41,6 +48,8 @@
   text-decoration: underline;
   font-size: 1rem;
   transition: color 0.3s ease;
+  display: inline-block;
+  margin-top: 1rem;
 }
 
 #doc-btn:hover {
@@ -58,6 +67,7 @@
   display: inline-block;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 /* Nama & handle */
@@ -66,8 +76,43 @@
   font-size: 1.125rem;
   margin-bottom: 0.25rem;
   color: #1e293b;
+  text-align: center;
 }
 
 .handle {
   color: #6b7280;
+  text-align: center;
+}
+
+/* RESPONSIVE */
+@media (min-width: 768px) {
+  #main-title {
+    font-size: 2.25rem;
+  }
+
+  .desc {
+    font-size: 1.125rem;
+  }
+
+  .special-thx {
+    font-size: 1.75rem;
+  }
+
+  .name {
+    font-size: 1.25rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  body {
+    font-size: 0.875rem;
+  }
+
+  #main-title {
+    font-size: 1.5rem;
+  }
+
+  .desc {
+    font-size: 0.9rem;
+  }
 }
