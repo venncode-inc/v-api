@@ -1,90 +1,109 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
 
+/* Body Style */
 body {
   font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+  color: #1f2937; /* text-gray-800 */
 }
 
-.btn-primary {
+/* Main Button */
+button.main-btn {
   background-color: #1e293b;
   color: white;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600;     /* font-semibold */
   border-radius: 0.375rem;
   padding: 0.5rem 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  transition: background-color 0.3s;
 }
 
-.btn-primary:hover {
+button.main-btn:hover {
   background-color: #0f172a;
 }
 
-.link-docs {
-  color: #60a5fa;
+/* Heading 1 Style */
+h1.title {
+  background: linear-gradient(to right, #93c5fd, #60a5fa);
+  color: #0f172a;
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 800;
+  line-height: 1.25;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Paragraph */
+p.description {
+  font-size: 1rem;
+  line-height: 1.625;
+  margin-bottom: 1.5rem;
+  color: #4b5563; /* text-gray-600 */
+}
+
+/* Documentation Button */
+button.link-button {
+  color: #2563eb; /* text-blue-600 */
   text-decoration: underline;
   font-weight: 600;
   font-size: 1rem;
-  transition: color 0.3s ease;
+  transition: color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.link-docs:hover {
-  color: #3b82f6;
+button.link-button:hover {
+  color: #1e40af; /* text-blue-800 */
 }
 
-.header-title {
+/* Section Divider */
+hr.divider {
+  border-color: #d1d5db; /* border-gray-300 */
+  margin-bottom: 4rem;
+}
+
+/* Heading 2 */
+h2.section-title {
   background: linear-gradient(to right, #93c5fd, #60a5fa);
   color: #0f172a;
-  font-size: 2rem;
+  font-size: 1.5rem; /* text-2xl */
   font-weight: 800;
-  line-height: 1.25;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.description {
-  font-size: 1rem;
-  line-height: 1.75;
-  color: #64748b;
-  max-width: 32rem;
-  margin-bottom: 1.5rem;
-}
-
-.section-title {
-  background: linear-gradient(to right, #93c5fd, #60a5fa);
-  color: #0f172a;
-  font-size: 1.5rem;
-  font-weight: 800;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
   display: inline-block;
   margin-bottom: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.section-desc {
+/* Credits Text */
+p.credits {
   font-size: 1rem;
-  line-height: 1.75;
-  color: #64748b;
-  max-width: 28rem;
+  line-height: 1.625;
   margin-bottom: 2rem;
+  color: #4b5563; /* text-gray-600 */
 }
 
-.card {
-  background: white;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+/* Grid for names */
+.grid-contributors {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2rem; /* gap-y-6 gap-x-8 */
+  max-width: 28rem; /* max-w-md */
 }
 
-.card h3 {
-  font-weight: bold;
-  font-size: 1.125rem;
-  color: #1e293b;
+/* Individual Name Block */
+.contributor h3 {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 700;
   margin-bottom: 0.25rem;
+  color: #1e293b;
 }
 
-.card p {
-  color: #6b7280;
+.contributor p {
+  color: #6b7280; /* text-gray-500 */
 }
