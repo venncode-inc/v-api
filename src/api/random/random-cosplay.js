@@ -7,7 +7,7 @@ module.exports = function(app) {
 
     const sistemUrl = 'https://raw.githubusercontent.com/hazelnuttty/API/main/sistem.json';
 
-    // 🔑 Validasi API Key dari sistem.json
+    // 🔑 Cek API key
     async function isValidApiKey(apiKey) {
         try {
             const { data } = await axios.get(sistemUrl);
@@ -18,7 +18,7 @@ module.exports = function(app) {
         }
     }
 
-    // 🧠 Rate limit berdasarkan IP
+    // 🚦 Rate limiter
     function isRateLimited(ip) {
         const now = Date.now();
         if (!rateLimit[ip]) {
@@ -39,19 +39,11 @@ module.exports = function(app) {
         return false;
     }
 
-    // 📸 Ambil gambar dari API nekorinn
-    async function getCosplayImage() {
-        const { data } = await axios.get('https://api.nekorinn.my.id/random/cosplay');
-        const response = await axios.get(data.url, { responseType: 'arraybuffer' });
-        return Buffer.from(response.data);
-    }
-
-    // 🚀 Endpoint utama
+    // 🚀 Endpoint cosplay
     app.get('/random/cosplay', async (req, res) => {
         const ip = req.ip || req.connection.remoteAddress;
         const apiKey = req.query.apikey;
 
-        // Cek API key
         if (!apiKey) {
             return res.status(400).json({ status: false, error: 'apikey diperlukan.' });
         }
@@ -61,7 +53,6 @@ module.exports = function(app) {
             return res.status(403).json({ status: false, error: 'apikey tidak valid atau tidak aktif.' });
         }
 
-        // Cek rate limit
         if (isRateLimited(ip)) {
             return res.status(429).json({
                 status: false,
@@ -69,14 +60,16 @@ module.exports = function(app) {
             });
         }
 
-        // Proses kirim gambar
         try {
-            const buffer = await getCosplayImage();
-            res.writeHead(200, {
-                'Content-Type': 'image/jpeg', // biasanya jpg
-                'Content-Length': buffer.length,
+            const response = await axios.get('https://api.nekorinn.my.id/random/cosplay', {
+                responseType: 'arraybuffer'
             });
-            res.end(buffer);
+
+            res.writeHead(200, {
+                'Content-Type': response.headers['content-type'] || 'image/jpeg',
+                'Content-Length': response.data.length,
+            });
+            res.end(response.data);
         } catch (error) {
             res.status(500).send(`Error: ${error.message}`);
         }
