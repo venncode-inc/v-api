@@ -9,7 +9,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <!-- FONT Tetap Di HTML -->
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
       body {
@@ -19,15 +18,15 @@
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body class="bg-[#f8fafc] text-gray-800">
-    <main class="max-w-md mx-auto px-6 py-10">
-      <section class="mb-16">
-        <button id="title-btn" type="button">
+    <main class="max-w-4xl mx-auto px-6 py-10">
+      <section class="mb-16 text-center">
+        <button id="title-btn" type="button" class="w-full sm:w-auto mx-auto">
           Zel API's
         </button>
-        <h1 id="main-title">
+        <h1 id="main-title" class="text-xl sm:text-3xl md:text-4xl">
           Simple, Fast, Flawless.
         </h1>
-        <p class="desc">
+        <p class="desc text-base sm:text-lg mt-2">
           Zel provides fast, secure, and flexible API solutions for
           developers. Designed for seamless integration with various platforms,
           Zel helps accelerate your application development process.
@@ -41,18 +40,38 @@
 
       <hr class="border-gray-300 mb-16" />
 
-      <section>
-        <h2 class="special-thx">Special Thx</h2>
-        <p class="desc mb-8">
+      <section class="text-center">
+        <h2 class="special-thx text-lg sm:text-2xl">Special Thx</h2>
+        <p class="desc mb-8 text-base sm:text-lg">
           The incredible people who made Zel API's possible.
         </p>
-        <div class="grid grid-cols-2 gap-x-8 gap-y-6 max-w-md">
-          <div><h3 class="name">Putu</h3><p class="handle">api.siputzx.my.id</p></div>
-          <div><h3 class="name">Nekorinnn</h3><p class="handle">api.nekorin.my.id</p></div>
-          <div><h3 class="name">Zenn</h3><p class="handle">zenz.biz.id</p></div>
-          <div><h3 class="name">NovHai</h3><p class="handle">velyn.biz.id</p></div>
-          <div><h3 class="name">Rickyy</h3><p class="handle">nirkyy-dev.hf.space</p></div>
-          <div><h3 class="name">Alfi</h3><p class="handle">cloudkuimges.guru</p></div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6 max-w-3xl mx-auto"
+        >
+          <div>
+            <h3 class="name">Putu</h3>
+            <p class="handle">api.siputzx.my.id</p>
+          </div>
+          <div>
+            <h3 class="name">Nekorinnn</h3>
+            <p class="handle">api.nekorin.my.id</p>
+          </div>
+          <div>
+            <h3 class="name">Zenn</h3>
+            <p class="handle">zenz.biz.id</p>
+          </div>
+          <div>
+            <h3 class="name">NovHai</h3>
+            <p class="handle">velyn.biz.id</p>
+          </div>
+          <div>
+            <h3 class="name">Rickyy</h3>
+            <p class="handle">nirkyy-dev.hf.space</p>
+          </div>
+          <div>
+            <h3 class="name">Alfi</h3>
+            <p class="handle">cloudkuimges.guru</p>
+          </div>
         </div>
       </section>
     </main>
