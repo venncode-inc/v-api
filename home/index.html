@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Zel API</title>
-    <link rel="stylesheet" href="https://cdn.tailwindcss.com" />
-    <link rel="stylesheet" href="/styles.css"> </head>
+
+    <!-- Tailwind (gunakan <script>, bukan <link>) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS (akses dari root karena pakai express.static) -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
   <body class="bg-[#f8fafc] text-[#0f172a]">
     <main class="max-w-5xl mx-auto px-6 py-10">
       <section class="mb-16">
@@ -46,5 +52,7 @@
       </section>
     </main>
 
-    <script src="/script.js"></script> </body>
+    <!-- Custom JS -->
+    <script src="/script.js"></script>
+  </body>
 </html>
