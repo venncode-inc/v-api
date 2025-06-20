@@ -504,14 +504,6 @@
                     "desc": "Check your informasition",
                     "path": "/api-status/informasiuser",
                     "status": "READY"
-                },
-                {
-                    "name": "Create apikey",
-                    "desc": "Yuk buat apikey kamu secara gratis",
-                    "path": "/generate/createapikey?name=",
-                    "status": "READY",
-                    "params": {
-                        "name": "Masukan Nama kamu"
                     }
                 }
             ]
