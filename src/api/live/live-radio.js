@@ -24,6 +24,14 @@ module.exports = function (app) {
         return false;
     }
 
+    function toTitleCase(str) {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+
     async function getRadioByCountry(country) {
         const url = `https://de1.api.radio-browser.info/json/stations/search?country=${encodeURIComponent(country)}`;
         const { data } = await axios.get(url);
@@ -32,7 +40,7 @@ module.exports = function (app) {
 
     app.get('/live/radio', async (req, res) => {
         const ip = req.ip || req.connection.remoteAddress;
-        const country = req.query.country;
+        let country = req.query.country;
 
         if (!country) {
             return res.status(400).json({
@@ -41,6 +49,9 @@ module.exports = function (app) {
                 error: 'Parameter ?country= wajib diisi.'
             });
         }
+
+        // Ubah ke Title Case
+        country = toTitleCase(country);
 
         if (isRateLimited(ip)) {
             return res.status(429).json({
