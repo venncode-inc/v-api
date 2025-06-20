@@ -144,9 +144,36 @@
                     "status": "READY"
                 },
                 {
+                    "name": "Kata Islami",
+                    "desc": "Get random quote islami",
+                    "path": "/random/kataislami",
+                    "status": "READY"
+                },
+                {
+                    "name": "Quote sad",
+                    "desc": "Get random quote sad",
+                    "path": "/random/baskara",
+                    "status": "READY"
+                },
+                {
+                    "name": "Pic.re",
+                    "desc": "Get random picture from pic.re",
+                    "path": "/random/picre",
+                    "status": "READY"
+                },
+                {
                     "name": "Cosplay",
                     "desc": "Cosplay Random Images",
                     "path": "/random/cosplay?apikey=",
+                    "status": "READY",
+                    "params": {
+                        "apikey": "Masukan apikey kamu"
+                    }
+                },
+                {
+                    "name": "Paptt",
+                    "desc": "Random picture 18+",
+                    "path": "/random/paptt?apikey=",
                     "status": "READY",
                     "params": {
                         "apikey": "Masukan apikey kamu"
