@@ -5,12 +5,13 @@ module.exports = function (app) {
         { name: 'neural', url: 'https://api.nekorinn.my.id/ai/neural-chat?text=' },
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai?text=' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini?text=' },
-        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' }
+        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' },
+        { name: 'blackbox', url: 'https://api.siputzx.my.id/api/ai/blackboxai?content=' },
+        { name: 'luminai', url: 'https://api.siputzx.my.id/api/ai/luminai?content=' }
     ];
 
     function getRandomSource() {
-        const index = Math.floor(Math.random() * SOURCES.length);
-        return SOURCES[index];
+        return SOURCES[Math.floor(Math.random() * SOURCES.length)];
     }
 
     async function quantumRandomAI(text) {
@@ -22,10 +23,12 @@ module.exports = function (app) {
         try {
             const response = await axios.get(chosen.url + encodeURIComponent(text), {
                 timeout: 7000,
-                headers: { 'User-Agent': 'QuantumAI/1.0 (Hazelnut)' }
+                headers: {
+                    'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
+                }
             });
 
-            const result = response.data.result || response.data.message || 'no result';
+            const result = response.data?.result || response.data?.message || 'Tidak ada hasil';
             const speed = Date.now() - start;
 
             return {
@@ -51,22 +54,31 @@ module.exports = function (app) {
             });
         }
 
-        const result = await quantumRandomAI(text);
+        try {
+            const result = await quantumRandomAI(text);
 
-        if (result.status) {
-            res.status(200).json({
-                status: true,
-                creator: "Hazel",
-                source: "Quantum AI",
-                speed_ms: result.speed_ms,
-                result: result.result
-            });
-        } else {
-            res.status(500).json({
+            if (result.status) {
+                return res.status(200).json({
+                    status: true,
+                    creator: "Hazel",
+                    source: "Quantum AI",
+                    speed_ms: result.speed_ms,
+                    result: result.result
+                });
+            } else {
+                return res.status(500).json({
+                    status: false,
+                    creator: "Hazel",
+                    source: "Quantum AI",
+                    result: result.result
+                });
+            }
+        } catch (err) {
+            return res.status(500).json({
                 status: false,
                 creator: "Hazel",
                 source: "Quantum AI",
-                result: result.result
+                result: 'Terjadi kesalahan tak terduga 😵'
             });
         }
     });
