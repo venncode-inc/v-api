@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 module.exports = function (app) {
     const rateLimit = {};
     const LIMIT = 5;
-    const WINDOW = 60 * 60 * 1000;
+    const WINDOW = 60 * 60 * 1000; // 1 jam
 
     function isRateLimited(ip) {
         const now = Date.now();
@@ -25,20 +25,21 @@ module.exports = function (app) {
         return false;
     }
 
-    async function getGrowStockHTML() {
+    async function scrapeGrowStock() {
         const { data: html } = await axios.get('https://growagardenpro.com/stock/');
         const $ = cheerio.load(html);
         const stock = [];
 
         $('table tbody tr').each((i, el) => {
-            const tds = $(el).find('td');
-            const item = {
-                nama: $(tds[0]).text().trim(),
-                rarity: $(tds[1]).text().trim(),
-                stok: $(tds[2]).text().trim(),
-                waktu: $(tds[3]).text().trim()
-            };
-            stock.push(item);
+            const td = $(el).find('td');
+            const nama = $(td[0]).text().trim();
+            const rarity = $(td[1]).text().trim();
+            const stok = $(td[2]).text().trim();
+            const waktu = $(td[3]).text().trim();
+
+            if (nama && stok) {
+                stock.push({ nama, rarity, stok, waktu });
+            }
         });
 
         return stock;
@@ -56,7 +57,7 @@ module.exports = function (app) {
         }
 
         try {
-            const stockData = await getGrowStockHTML();
+            const stockData = await scrapeGrowStock();
 
             res.json({
                 status: true,
@@ -70,7 +71,7 @@ module.exports = function (app) {
             res.status(500).json({
                 status: false,
                 author: 'Hazel',
-                error: 'Gagal mengambil data dari halaman stock Grow A Garden',
+                error: 'Gagal mengambil data dari halaman Grow A Garden',
                 message: error.message
             });
         }
