@@ -30,33 +30,33 @@
   <body class="bg-[#f8fafc] text-[#0f172a]">
 
     <!-- WHATSAPP POPUP -->
-    <div id="popup" class="popup-overlay">
-      <div class="bg-[#111827] rounded-lg max-w-md w-full p-6 relative text-center text-white">
-        <button onclick="document.getElementById('popup').style.display='none'"
-          aria-label="Close"
-          class="absolute top-4 right-4 text-gray-400 hover:text-gray-300 text-2xl font-bold leading-none"
-        >
-          &times;
-        </button>
-        <div class="mb-4">
-          <div class="mx-auto w-14 h-14 border border-green-500 rounded-full flex items-center justify-center">
-            <i class="fab fa-whatsapp text-green-500 text-2xl"></i>
-          </div>
-        </div>
-        <h2 class="text-green-500 font-semibold text-xl md:text-2xl mb-2 leading-tight">
-          Gabung Saluran WhatsApp NirKyy!
-        </h2>
-        <p class="text-gray-300 text-sm md:text-base mb-6 px-2">
-          Dapatkan info API terbaru, tips & trik, dan diskusi seru langsung di genggamanmu.
-        </p>
-        <button onclick="window.open('https://chat.whatsapp.com/XXXXX','_blank')" class="w-full bg-green-600 hover:bg-green-700 transition-colors rounded-md py-3 text-white font-semibold text-lg flex items-center justify-center gap-2 mb-3">
-          <i class="fab fa-whatsapp text-xl"></i> Dapatkan Update Fitur
-        </button>
-        <button onclick="document.getElementById('popup').style.display='none'" class="w-full border border-gray-600 rounded-md py-3 text-white font-semibold text-lg hover:bg-gray-700 transition-colors">
-          Nanti Aja Deh
-        </button>
+<div id="popup" class="popup-overlay px-4 backdrop-blur-sm bg-black/40">
+  <div class="bg-[#1e293b]/90 backdrop-blur-md rounded-xl w-full max-w-sm p-5 relative text-center text-white shadow-xl border border-white/10">
+    <button onclick="document.getElementById('popup').style.display='none'"
+      aria-label="Close"
+      class="absolute top-3 right-4 text-gray-400 hover:text-gray-200 text-2xl font-bold leading-none"
+    >
+      &times;
+    </button>
+    <div class="mb-4">
+      <div class="mx-auto w-12 h-12 border border-green-500 rounded-full flex items-center justify-center">
+        <i class="fab fa-whatsapp text-green-500 text-xl"></i>
       </div>
     </div>
+    <h2 class="text-green-400 font-semibold text-lg md:text-xl mb-2 leading-tight">
+      Gabung Saluran WhatsApp NirKyy!
+    </h2>
+    <p class="text-gray-300 text-sm mb-5 px-2">
+      Dapatkan info API terbaru, tips & trik, dan diskusi seru langsung di genggamanmu.
+    </p>
+    <button onclick="window.open('https://chat.whatsapp.com/XXXXX','_blank')" class="w-full bg-green-600 hover:bg-green-700 transition-colors rounded-md py-2 text-white font-semibold text-base flex items-center justify-center gap-2 mb-3">
+      <i class="fab fa-whatsapp text-lg"></i> Dapatkan Update Fitur
+    </button>
+    <button onclick="document.getElementById('popup').style.display='none'" class="w-full border border-gray-600 rounded-md py-2 text-white font-semibold text-base hover:bg-gray-700 transition-colors">
+      Nanti Aja Deh
+    </button>
+  </div>
+</div>
 
     <!-- MAIN CONTENT -->
     <main class="max-w-5xl mx-auto px-6 py-10">
