@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 4000;
 app.enable("trust proxy");
 app.set("json spaces", 2);
 
-// === CONSTANTS & VARIABLES ===
+// === SETTINGS ===
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
@@ -22,49 +22,56 @@ const BAN_TIME = 5 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
-// === FUNCTION: SEND ALERT KE DISCORD ===
-function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime }) {
+// === WEBHOOK LOGGER ===
+function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   const embed = {
-    title: "DDOS ACTIVITY DETECTED",
+    title: "🚨 DDoS Detected",
     color: 0xff0000,
     fields: [
-      { name: "Alamat IP", value: ip, inline: true },
+      { name: "IP", value: ip, inline: true },
       { name: "Endpoint", value: endpoint, inline: true },
-      { name: "Waktu", value: ddosTime, inline: false },
-      { name: "Waktu Ban", value: banEndTime, inline: false },
+      { name: "Time", value: ddosTime, inline: false },
+      { name: "Ban Until", value: banEndTime, inline: false },
     ],
     timestamp: new Date().toISOString(),
-    footer: {
-      text: `Anti Ban | ${new Date().toLocaleString()}`
-    }
+    footer: { text: "Hazel Anti-DDoS System" }
   };
 
   return axios.post(discordWebhookURL, {
-    content: "@everyone",
+    content: "⚠️ Suspicious Traffic Detected",
     embeds: [embed]
   }).catch(err => {
-    console.error('Failed to send Discord webhook:', err.message);
+    console.error('[Webhook Failed]', err.message);
   });
 }
 
-// === MIDDLEWARE KOMBINASI (ANTI-DDOS + RESPONSE WRAPPER) ===
+function sendRawRequestLog({ ip, path, headers }) {
+  return axios.post(discordWebhookURL, {
+    content: `📩 Blocked Request:\nIP: ${ip}\nPath: ${path}\nHeaders:\n\`\`\`json\n${JSON.stringify(headers, null, 2)}\n\`\`\``
+  }).catch(() => {});
+}
+
+// === MIDDLEWARE UTAMA ===
 app.use((req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
   const endpoint = req.originalUrl;
   const now = Date.now();
 
+  // If banned, log every request to Discord, block it
   if (bannedIPs.has(ip)) {
     const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
+      sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
       return res.status(403).json({
         status: false,
-        message: "You are temporarily banned due to suspicious activity."
+        message: "🚫 Your access is restricted due to abnormal traffic.",
       });
     } else {
       bannedIPs.delete(ip);
     }
   }
 
+  // Rate limiting
   const requestData = ipRequests.get(ip) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
@@ -74,6 +81,7 @@ app.use((req, res, next) => {
   }
   ipRequests.set(ip, requestData);
 
+  // DDoS detected
   if (requestData.count > RATE_LIMIT) {
     const banEndTime = now + BAN_TIME;
     bannedIPs.set(ip, banEndTime);
@@ -82,34 +90,33 @@ app.use((req, res, next) => {
       ip,
       endpoint,
       ddosTime: new Date(now).toLocaleString(),
-      banEndTime: new Date(banEndTime).toLocaleString()
+      banEndTime: new Date(banEndTime).toLocaleString(),
+      headers: req.headers
     });
 
-    console.log(chalk.red(`🔥 [DROP] DDoS IP ${ip} diputus di ${endpoint}`));
-
-    req.destroy(); // Memutus koneksi langsung
+    console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
+    req.destroy(); // kill connection instantly
     return;
   }
 
-  // Wrap JSON response
+  // Wrap response
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
-      const responseData = {
+      const wrapped = {
         status: data.status ?? true,
         creator: settings.apiSettings.creator || "Hazel",
         ...data
       };
-      return originalJson.call(this, responseData);
+      return originalJson.call(this, wrapped);
     }
-
     return originalJson.call(this, data);
   };
 
   next();
 });
 
-// === PARSER & CORS ===
+// === MIDDLEWARE LAINNYA ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
@@ -121,7 +128,7 @@ app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// === LOAD ROUTES DARI FOLDER API ===
+// === LOAD ROUTES ===
 let totalRoutes = 0;
 const apiFolder = path.join(__dirname, './src/api');
 fs.readdirSync(apiFolder).forEach((subfolder) => {
@@ -132,33 +139,32 @@ fs.readdirSync(apiFolder).forEach((subfolder) => {
       if (path.extname(file) === '.js') {
         require(filePath)(app);
         totalRoutes++;
-        console.log(chalk.bgHex('#FFFF99').hex('#333').bold(` Loaded Route: ${path.basename(file)} `));
+        console.log(chalk.bgHex('#FFFF99').hex('#333')(` Loaded: ${file} `));
       }
     });
   }
 });
-console.log(chalk.bgHex('#90EE90').hex('#333').bold(' Load Complete! ✓ '));
-console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Total Routes Loaded: ${totalRoutes} `));
+console.log(chalk.bgGreen.hex('#000')(` ✅ Loaded ${totalRoutes} routes `));
 
-// === ROUTE HOME ===
+// === HOMEPAGE ===
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
 });
 
-// === 404 PAGE ===
+// === 404 ===
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "api-page", "404.html"));
+  res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
 });
 
 // === ERROR HANDLER ===
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).sendFile(path.join(__dirname, "api-page", "500.html"));
+  res.status(500).sendFile(path.join(__dirname, 'api-page', '500.html'));
 });
 
 // === START SERVER ===
 app.listen(PORT, () => {
-  console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Server is running on port ${PORT} `));
+  console.log(chalk.bgGreen.hex('#000')(` 🚀 Server Running at Port ${PORT} `));
 });
 
 module.exports = app;
