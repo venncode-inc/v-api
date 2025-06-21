@@ -211,6 +211,23 @@
             ]
         },
         {
+            "name": "Info",
+            "items": [
+                {
+                    "name": "Grow A Garden",
+                    "desc": "Dapatkan info dari grow a garden",
+                    "path": "/info/growagarden",
+                    "status": "READY"
+                },
+                {
+                    "name": "Block Fruits Stock",
+                    "desc": "Dapatkan info dari block fruits stock",
+                    "path": "/info/stock",
+                    "status": "READY"
+                }
+            ]
+        },
+        {
             "name": "Tools",
             "items": [
                 {
