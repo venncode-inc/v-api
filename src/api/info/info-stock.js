@@ -6,10 +6,10 @@ module.exports = function(app) {
             const response = await axios.get('https://zenzxz.dpdns.org/info/blockfruitsstock');
             const original = response.data;
 
-            // Susun ulang properti: status → author → count → data
+            // Ambil field yang dibutuhkan aja
             const modified = {
                 status: original.status,
-                author: 'Hazel',
+                author: 'Hazel', // ganti creator ke author
                 count: original.count,
                 data: original.data
             };
