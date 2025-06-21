@@ -5,7 +5,10 @@ module.exports = function (app) {
         { name: 'neural', url: 'https://api.nekorinn.my.id/ai/neural-chat?text=' },
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai?text=' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini?text=' },
-        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' }
+        { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' },
+        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo?text=' },
+        { name: 'truepingai', url: 'https://zelapioffciall.vercel.app/ai/truepingai?text=' },
+        { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai?text=' }
     ];
 
     function getRandomSource() {
