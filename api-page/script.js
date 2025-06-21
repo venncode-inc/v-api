@@ -389,91 +389,132 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Enhanced search functionality with improved UX
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
-        const apiContent = document.getElementById('apiContent'); // pastikan elemen ini ada
- 
-    searchInput.addEventListener('input', () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    
-    // tampilkan tombol clear jika ada input
-    clearSearchBtn.style.opacity = searchTerm.length > 0 ? '1' : '0';
-    clearSearchBtn.style.pointerEvents = searchTerm.length > 0 ? 'auto' : 'none';
-
-    const apiItems = document.querySelectorAll('.api-item');
-    const categorySections = document.querySelectorAll('.category-section');
-    const categoryHeaders = document.querySelectorAll('.category-header');
-    const categoryCount = {};
-
-    apiItems.forEach(item => {
-        const name = (item.getAttribute('data-name') || '').toLowerCase();
-        const desc = (item.getAttribute('data-desc') || '').toLowerCase();
-        const category = (item.getAttribute('data-category') || '').toLowerCase();
-
-        const match = name.includes(searchTerm) || desc.includes(searchTerm) || category.includes(searchTerm);
-
-        item.style.display = match ? '' : 'none';
-
-        if (match) {
-            item.classList.add('search-match');
-            setTimeout(() => item.classList.remove('search-match'), 800);
-
-            if (!categoryCount[category]) categoryCount[category] = 0;
-            categoryCount[category]++;
-        }
-    });
-
-    categorySections.forEach(section => {
-        const header = section.querySelector('.category-header');
-        const categoryName = (header?.textContent || '').toLowerCase();
-        const image = section.querySelector('.category-image');
-        const badge = header.querySelector('.count-badge');
-
-        if (categoryCount[categoryName]) {
-            section.style.display = '';
-            if (image) image.style.display = '';
-            if (!badge && searchTerm.length > 0) {
-                const newBadge = document.createElement('span');
-                newBadge.className = 'count-badge';
-                newBadge.textContent = `(${categoryCount[categoryName]} results)`;
-                header.appendChild(newBadge);
-            } else if (badge) {
-                badge.textContent = `(${categoryCount[categoryName]} results)`;
+        
+        searchInput.addEventListener('focus', () => {
+            // Add animation to search container on focus
+            searchInput.parentElement.classList.add('search-focused');
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('search-focused');
+        });
+        
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Show/hide clear button based on search input with animation
+            if (searchTerm.length > 0) {
+                clearSearchBtn.style.opacity = '1';
+                clearSearchBtn.style.pointerEvents = 'auto';
+            } else {
+                clearSearchBtn.style.opacity = '0';
+                clearSearchBtn.style.pointerEvents = 'none';
             }
-        } else {
-            section.style.display = 'none';
-            if (image) image.style.display = 'none';
-            if (badge) badge.remove();
-        }
-    });
+            
+            const apiItems = document.querySelectorAll('.api-item');
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            const categoryImages = document.querySelectorAll('.category-image');
+            const categoryCount = {};
 
-    const allHidden = Array.from(categorySections).every(sec => sec.style.display === 'none');
-
-    let noResults = document.getElementById('noResultsMessage');
-    if (allHidden && searchTerm.length > 0) {
-        if (!noResults) {
-            noResults = document.createElement('div');
-            noResults.id = 'noResultsMessage';
-            noResults.className = 'no-results-message fade-in';
-            noResults.innerHTML = `
-                <i class="fas fa-search"></i>
-                <p>No results found for "<span>${searchTerm}</span>"</p>
-                <button id="clearSearchFromMsg" class="btn btn-primary">
-                    <i class="fas fa-times"></i> Clear Search
-                </button>
-            `;
-            apiContent.appendChild(noResults);
-            document.getElementById('clearSearchFromMsg').addEventListener('click', () => {
-                searchInput.value = '';
-                searchInput.dispatchEvent(new Event('input'));
-                searchInput.focus();
+            apiItems.forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                const desc = item.getAttribute('data-desc').toLowerCase();
+                const category = item.getAttribute('data-category').toLowerCase();
+                
+                const matchesSearch = name.includes(searchTerm) || 
+                                     desc.includes(searchTerm) || 
+                                     category.includes(searchTerm);
+                
+                if (matchesSearch) {
+                    item.style.display = '';
+                    // Highlight what was found
+                    if (searchTerm !== '') {
+                        item.classList.add('search-match');
+                        setTimeout(() => item.classList.remove('search-match'), 800);
+                    }
+                    
+                    // Count visible items per category
+                    if (!categoryCount[category]) {
+                        categoryCount[category] = 0;
+                    }
+                    categoryCount[category]++;
+                } else {
+                    item.style.display = 'none';
+                }
             });
-        } else {
-            noResults.querySelector('span').textContent = searchTerm;
-            noResults.style.display = 'flex';
-        }
-    } else if (noResults) {
-        noResults.style.display = 'none';
-    }
-});
+
+            categoryHeaders.forEach((header, index) => {
+                const categorySection = header.closest('.category-section');
+                const categoryRow = categorySection.querySelector('.row');
+                const categoryName = header.textContent.toLowerCase();
+                
+                if (categoryCount[categoryName] > 0) {
+                    categorySection.style.display = '';
+                    if (categoryImages[index]) {
+                        categoryImages[index].style.display = '';
+                    }
+                    
+                    // Add counter badge to header for non-empty search
+                    if (searchTerm.length > 0) {
+                        let countBadge = header.querySelector('.count-badge');
+                        if (!countBadge) {
+                            countBadge = document.createElement('span');
+                            countBadge.className = 'count-badge';
+                            countBadge.style.fontSize = '14px';
+                            countBadge.style.marginLeft = '10px';
+                            countBadge.style.fontWeight = 'normal';
+                            countBadge.style.color = 'var(--text-muted)';
+                            header.appendChild(countBadge);
+                        }
+                        countBadge.textContent = `(${categoryCount[categoryName]} results)`;
+                    } else {
+                        const countBadge = header.querySelector('.count-badge');
+                        if (countBadge) {
+                            header.removeChild(countBadge);
+                        }
+                    }
+                } else {
+                    categorySection.style.display = 'none';
+                    if (categoryImages[index]) {
+                        categoryImages[index].style.display = 'none';
+                    }
+                }
+            });
+            
+            // Show enhanced no results message if needed
+            const noVisibleSections = Array.from(document.querySelectorAll('.category-section')).every(
+                section => section.style.display === 'none'
+            );
+            
+            let noResultsMsg = document.getElementById('noResultsMessage');
+            
+            if (noVisibleSections && searchTerm.length > 0) {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'noResultsMessage';
+                    noResultsMsg.className = 'no-results-message fade-in';
+                    noResultsMsg.innerHTML = `
+                        <i class="fas fa-search"></i>
+                        <p>No results found for "<span>${searchTerm}</span>"</p>
+                        <button id="clearSearchFromMsg" class="btn btn-primary">
+                            <i class="fas fa-times"></i> Clear Search
+                        </button>
+                    `;
+                    apiContent.appendChild(noResultsMsg);
+                    
+                    document.getElementById('clearSearchFromMsg').addEventListener('click', () => {
+                        searchInput.value = '';
+                        searchInput.dispatchEvent(new Event('input'));
+                        searchInput.focus();
+                    });
+                } else {
+                    noResultsMsg.querySelector('span').textContent = searchTerm;
+                    noResultsMsg.style.display = 'flex';
+                }
+            } else if (noResultsMsg) {
+                noResultsMsg.style.display = 'none';
+            }
+        });
 
         // Enhanced API Button click handler
         document.addEventListener('click', event => {
