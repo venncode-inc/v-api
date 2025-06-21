@@ -12,7 +12,7 @@ module.exports = function (app) {
     }
 
     try {
-      const apiURL = 'https://r-nozawa.hf.space/aio';
+      const apiURL = 'https://zenzxz.dpdns.org/downloader/all';
 
       const { data } = await axios.get(apiURL, {
         params: { url },
@@ -23,14 +23,15 @@ module.exports = function (app) {
 
       const modified = {
         ...data,
-        creator: 'Hazel'
+        creator: 'Hazel' // tambahkan author di output
       };
 
       res.json(modified);
     } catch (e) {
       res.status(500).json({
         status: false,
-        message: 'Gagal mengambil data dari r-nozawa.hf.space',
+        creator: 'Hazel',
+        message: 'Gagal mengambil data dari zenxz api',
         error: e.message
       });
     }
