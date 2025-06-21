@@ -1,3 +1,4 @@
+
 :root {
     /* Color Palette - Purple Gradient Theme */
     --primary-color: #6c5ce7;
@@ -9,12 +10,19 @@
     --warning-color: #fdcb6e;
     
     /* Light Mode */
-    --background-color: #f8f9fd;
-    --card-background: #ffffff;
-    --text-color: #2d3436;
-    --text-muted: #636e72;
-    --border-color: rgba(0, 0, 0, 0.08);
-    --highlight-color: rgba(108, 92, 231, 0.1);
+    --background-color: #f9fbff;     
+    --card-background: #ffffff;                
+    --text-color: #2c3e50;               
+    --text-muted: #7f8c8d;               
+    --border-color: rgba(0, 0, 0, 0.06);   
+    --highlight-color: rgba(127, 97, 255, 0.1);
+    --primary-color: #7f61ff;           
+    --primary-hover: #6e54e6;             
+    --secondary-color: #5ce1e6;         
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);   
+    --hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --background-color-rgb: 249, 251, 255;
     
     /* UI Elements */
     --border-radius-sm: 8px;
