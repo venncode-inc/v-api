@@ -6,64 +6,90 @@
     <title>ZelApi's Homepage</title>
     <link rel="icon" href="https://raw.githubusercontent.com/hazelnuttty/Hazel-Api/main/src/icon.png" type="image/png" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
       body {
         font-family: "Inter", sans-serif;
+      }
+
+      .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
       }
     </style>
   </head>
   <body class="bg-[#f8fafc] text-[#0f172a]">
+
+    <!-- WHATSAPP POPUP -->
+    <div id="popup" class="popup-overlay">
+      <div class="bg-[#111827] rounded-lg max-w-md w-full p-6 relative text-center text-white">
+        <button onclick="document.getElementById('popup').style.display='none'"
+          aria-label="Close"
+          class="absolute top-4 right-4 text-gray-400 hover:text-gray-300 text-2xl font-bold leading-none"
+        >
+          &times;
+        </button>
+        <div class="mb-4">
+          <div class="mx-auto w-14 h-14 border border-green-500 rounded-full flex items-center justify-center">
+            <i class="fab fa-whatsapp text-green-500 text-2xl"></i>
+          </div>
+        </div>
+        <h2 class="text-green-500 font-semibold text-xl md:text-2xl mb-2 leading-tight">
+          Gabung Saluran WhatsApp NirKyy!
+        </h2>
+        <p class="text-gray-300 text-sm md:text-base mb-6 px-2">
+          Dapatkan info API terbaru, tips & trik, dan diskusi seru langsung di genggamanmu.
+        </p>
+        <button onclick="window.open('https://chat.whatsapp.com/XXXXX','_blank')" class="w-full bg-green-600 hover:bg-green-700 transition-colors rounded-md py-3 text-white font-semibold text-lg flex items-center justify-center gap-2 mb-3">
+          <i class="fab fa-whatsapp text-xl"></i> Dapatkan Update Fitur
+        </button>
+        <button onclick="document.getElementById('popup').style.display='none'" class="w-full border border-gray-600 rounded-md py-3 text-white font-semibold text-lg hover:bg-gray-700 transition-colors">
+          Nanti Aja Deh
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
     <main class="max-w-5xl mx-auto px-6 py-10">
       <section class="mb-16" data-aos="fade-up">
-        <div
-          class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6"
-        >
-          <button
-            class="bg-[#1e293b] text-white text-sm font-semibold rounded px-4 py-2 shadow-md hover:bg-[#0f172a] transition"
-            type="button"
-          >
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <button class="bg-[#1e293b] text-white text-sm font-semibold rounded px-4 py-2 shadow-md hover:bg-[#0f172a] transition" type="button">
             Zel API's
           </button>
-          <button
-            onclick="location.href='/api-page'"
-            class="text-[#60a5fa] underline font-semibold text-base hover:text-[#3b82f6] transition"
-          >
+          <button onclick="location.href='/api-page'" class="text-[#60a5fa] underline font-semibold text-base hover:text-[#3b82f6] transition">
             Explore Documentation
           </button>
         </div>
 
-        <h1
-          class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-3xl sm:text-4xl font-extrabold leading-tight rounded-md p-4 mb-4 shadow"
-          data-aos="zoom-in"
-        >
+        <h1 class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-3xl sm:text-4xl font-extrabold leading-tight rounded-md p-4 mb-4 shadow" data-aos="zoom-in">
           Simple, Fast, Flawless.
         </h1>
-        <p
-          class="text-base leading-relaxed mb-6 text-gray-600 max-w-2xl"
-          data-aos="fade-right"
-        >
+        <p class="text-base leading-relaxed mb-6 text-gray-600 max-w-2xl" data-aos="fade-right">
           ZelApi's Official is a REST API with extremely low bandwidth usage,
           designed to support all types of software from lightweight scripts
           to complex applications.
+        </p>
       </section>
 
       <hr class="border-gray-300 mb-16" data-aos="fade-up" />
 
       <section data-aos="fade-up">
-        <h2
-          class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-2xl sm:text-3xl font-extrabold rounded-md p-3 inline-block mb-3 shadow"
-        >
+        <h2 class="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] text-[#0f172a] text-2xl sm:text-3xl font-extrabold rounded-md p-3 inline-block mb-3 shadow">
           Special Thx
         </h2>
         <p class="text-base leading-relaxed mb-8 text-gray-600 max-w-xl">
           The incredible people who made Zel API's possible.
         </p>
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-          data-aos="zoom-in-up"
-        >
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="zoom-in-up">
           <div class="bg-white rounded-lg shadow p-4">
             <h3 class="font-bold text-lg mb-1 text-[#1e293b]">Putu</h3>
             <p class="text-gray-500">api.siputzx.my.id</p>
@@ -92,13 +118,9 @@
       </section>
     </main>
 
-    <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
-      AOS.init({
-        duration: 800,
-        once: true,
-      });
+      AOS.init({ duration: 800, once: true });
     </script>
   </body>
 </html>
