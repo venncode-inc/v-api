@@ -85,12 +85,13 @@ app.use((req, res, next) => {
       banEndTime: new Date(banEndTime).toLocaleString()
     });
 
-    return res.status(429).json({
-      status: false,
-      message: "Too many requests. You are temporarily banned."
-    });
+    console.log(chalk.red(`🔥 [DROP] DDoS IP ${ip} diputus di ${endpoint}`));
+
+    req.destroy(); // Memutus koneksi langsung
+    return;
   }
 
+  // Wrap JSON response
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
