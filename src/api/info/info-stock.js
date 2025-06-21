@@ -4,15 +4,17 @@ module.exports = function(app) {
     app.get('/info/stock', async (req, res) => {
         try {
             const response = await axios.get('https://zenzxz.dpdns.org/info/blockfruitsstock');
+            const original = response.data;
 
-            const data = response.data;
+            // Susun ulang properti: status → author → count → data
+            const modified = {
+                status: original.status,
+                author: 'Hazel',
+                count: original.count,
+                data: original.data
+            };
 
-            // Paksa ubah author jadi Hazel, tanpa mengubah format data lainnya
-            if (typeof data === 'object') {
-                data.author = 'Hazel';
-            }
-
-            res.status(200).json(data);
+            res.status(200).json(modified);
         } catch (error) {
             res.status(500).json({
                 status: false,
