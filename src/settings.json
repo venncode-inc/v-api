@@ -180,9 +180,9 @@
                     }
                 },
                 {
-                    "name": "Rule34",
-                    "desc": "Rule Random Images",
-                    "path": "/random/rule34",
+                    "name": "Quoted Bucin",
+                    "desc": "Random quoted bucin",
+                    "path": "/random/katabucin",
                     "status": "READY"
                 }
             ]
