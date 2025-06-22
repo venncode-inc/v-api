@@ -9,11 +9,11 @@ module.exports = function (app) {
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai', param: 'text' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini', param: 'text' },
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
-        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' }, 
+        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' },
         { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita', param: 'q' },
         { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice', param: 'prompt' },
         { name: 'lilyai', url: 'https://velyn.biz.id/api/ai/LilyAI', param: 'prompt' },
-        { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },       
+        { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },
         { name: 'metaai', url: 'https://api.siputzx.my.id/api/ai/metaai', param: 'query' },
         { name: 'bard', url: 'https://api.siputzx.my.id/api/ai/bard-thinking', param: 'query' },
         { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
@@ -21,6 +21,28 @@ module.exports = function (app) {
 
     function getRandomSource() {
         return SOURCES[Math.floor(Math.random() * SOURCES.length)];
+    }
+
+    async function checkDatabase(text) {
+        try {
+            const res = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/quantumdatabase.json');
+            const data = res.data;
+
+            for (const item of data) {
+                const patterns = item.patterns.map(p => p.toLowerCase());
+                for (const pattern of patterns) {
+                    if (text.toLowerCase().includes(pattern)) {
+                        const responses = item.responses;
+                        return responses[Math.floor(Math.random() * responses.length)];
+                    }
+                }
+            }
+
+            return null;
+        } catch (err) {
+            console.error('Gagal mengambil database lokal:', err.message);
+            return null;
+        }
     }
 
     async function quantumRandomAI(userText) {
@@ -52,13 +74,13 @@ module.exports = function (app) {
                 status: true,
                 result,
                 speed_ms: speed,
-                source: chosen.name
+                source: "Quantum AI" // default name
             };
         } catch (error) {
             return {
                 status: false,
                 result: 'Gagal mengambil jawaban dari Quantum AI 😢',
-                source: chosen.name
+                source: "Quantum AI"
             };
         }
     }
@@ -74,8 +96,18 @@ module.exports = function (app) {
         }
 
         try {
-            const result = await quantumRandomAI(text);
+            const localResponse = await checkDatabase(text);
+            if (localResponse) {
+                return res.status(200).json({
+                    status: true,
+                    creator: "Hazel",
+                    source: "Quantum AI",
+                    speed_ms: 0,
+                    result: localResponse
+                });
+            }
 
+            const result = await quantumRandomAI(text);
             return res.status(result.status ? 200 : 500).json({
                 status: result.status,
                 creator: "Hazel",
