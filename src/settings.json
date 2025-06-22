@@ -184,20 +184,18 @@
                     "desc": "Random quoted bucin",
                     "path": "/random/katabucin",
                     "status": "READY"
-                   }
                 },
                 {
                     "name": "Quoted Motivasi",
                     "desc": "Random quoted motivasi, metadata by roox",
                     "path": "/random/motivasi",
-                    "status": "READY"     
-                   }
+                    "status": "READY"
                 },
                 {
                     "name": "Quoted Janganlah",
                     "desc": "Random quoted janganlah, metadata by roox",
                     "path": "/random/janganlah",
-                    "status": "READY"       
+                    "status": "READY"
                 }
             ]
         },
