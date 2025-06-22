@@ -48,14 +48,12 @@ module.exports = function (app) {
             return {
                 status: true,
                 result,
-                speed_ms: speed,
-                source: chosen.name
+                speed_ms: speed
             };
         } catch (error) {
             return {
                 status: false,
-                result: 'Gagal mengambil jawaban dari Quantum AI 😢',
-                source: chosen.name
+                result: 'Gagal mengambil jawaban dari Quantum AI 😢'
             };
         }
     }
@@ -76,7 +74,7 @@ module.exports = function (app) {
             return res.status(result.status ? 200 : 500).json({
                 status: result.status,
                 creator: "Hazel",
-                source: result.source,
+                source: "Quantum AI", 
                 speed_ms: result.speed_ms || null,
                 result: result.result
             });
