@@ -6,14 +6,13 @@ module.exports = function (app) {
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai', param: 'text' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini', param: 'text' },
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
-        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' },
-        { name: 'truepingai', url: 'https://zelapioffciall.vercel.app/ai/truepingai', param: 'text' },
+        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' }, 
         { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita', param: 'q' },
         { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice', param: 'prompt' },
         { name: 'lilyai', url: 'https://velyn.biz.id/api/ai/LilyAI', param: 'prompt' },
-        { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },
-        { name: 'iraaai', url: 'https://zelapioffciall.vercel.app/ai/iraaai', param: 'text' },
+        { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },       
         { name: 'metaai', url: 'https://api.siputzx.my.id/api/ai/metaai', param: 'query' },
+        { name: 'bard', url: 'https://api.siputzx.my.id/api/ai/bard-thinking?query=', param: 'query' },
         { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
     ];
 
