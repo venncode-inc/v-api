@@ -2,26 +2,21 @@ const axios = require('axios');
 
 module.exports = function (app) {
     const SOURCES = [
-        { name: 'mistralnemo', url: 'https://velyn.biz.id/api/ai/mistralNemo', param: 'prompt' },
-        { name: 'velyn', url: 'https://velyn.biz.id/api/ai/velyn-1.0-1b', param: 'prompt' },
-        { name: 'cloudflaredai', url: 'https://velyn.biz.id/api/ai/cloudflareAI', param: 'prompt' },
         { name: 'neural', url: 'https://api.nekorinn.my.id/ai/neural-chat', param: 'text' },
+        { name: 'aimath', url: 'https://api.nekorinn.my.id/ai/aimath', param: 'text' },
+        { name: 'zephyr', url: 'https://api.nekorinn.my.id/ai/zephyr', param: 'text' }, 
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai', param: 'text' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini', param: 'text' },
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
-        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' },
+        { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' }, 
         { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita', param: 'q' },
         { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice', param: 'prompt' },
         { name: 'lilyai', url: 'https://velyn.biz.id/api/ai/LilyAI', param: 'prompt' },
-        { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },
+        { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },       
         { name: 'metaai', url: 'https://api.siputzx.my.id/api/ai/metaai', param: 'query' },
         { name: 'bard', url: 'https://api.siputzx.my.id/api/ai/bard-thinking', param: 'query' },
         { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
     ];
-
-    function getRandomSource() {
-        return SOURCES[Math.floor(Math.random() * SOURCES.length)];
-    }
 
     async function checkDatabase(text) {
         try {
@@ -50,39 +45,44 @@ module.exports = function (app) {
             throw new Error('Teks tidak boleh kosong atau hanya spasi');
         }
 
-        const chosen = getRandomSource();
+        const shuffledSources = SOURCES.sort(() => Math.random() - 0.5);
         const start = Date.now();
 
-        const paramName = chosen.param || 'text';
-        const url = chosen.url;
+        for (const chosen of shuffledSources) {
+            const paramName = chosen.param || 'text';
+            const url = chosen.url;
 
-        const params = new URLSearchParams();
-        params.append(paramName, userText);
+            const params = new URLSearchParams();
+            params.append(paramName, userText);
 
-        try {
-            const response = await axios.get(`${url}?${params.toString()}`, {
-                timeout: 7000,
-                headers: {
-                    'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
-                }
-            });
+            try {
+                const response = await axios.get(`${url}?${params.toString()}`, {
+                    timeout: 5000,
+                    headers: {
+                        'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
+                    }
+                });
 
-            const result = response.data?.result || response.data?.message || 'Tidak ada hasil dari model';
-            const speed = Date.now() - start;
+                const result = response.data?.result || response.data?.message || 'Tidak ada hasil dari model';
+                const speed = Date.now() - start;
 
-            return {
-                status: true,
-                result,
-                speed_ms: speed,
-                source: "Quantum AI" // default name
-            };
-        } catch (error) {
-            return {
-                status: false,
-                result: 'Gagal mengambil jawaban dari Quantum AI 😢',
-                source: "Quantum AI"
-            };
+                return {
+                    status: true,
+                    result,
+                    speed_ms: speed,
+                    source: chosen.name
+                };
+            } catch (error) {
+                console.warn(`Gagal menggunakan ${chosen.name}, coba API berikutnya...`);
+                continue; // lanjut ke API berikutnya
+            }
         }
+
+        return {
+            status: false,
+            result: 'Semua sumber gagal merespons dalam batas waktu 😔',
+            source: 'Quantum AI'
+        };
     }
 
     app.get('/ai/quantum', async (req, res) => {
