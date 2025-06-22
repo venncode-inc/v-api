@@ -8,6 +8,8 @@ module.exports = function (app) {
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat?text=' },
         { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo?text=' },
         { name: 'truepingai', url: 'https://zelapioffciall.vercel.app/ai/truepingai?text=' },
+        { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita?q=' },
+        { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice?prompt=' },
         { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai?text=' }
     ];
 
@@ -15,14 +17,21 @@ module.exports = function (app) {
         return SOURCES[Math.floor(Math.random() * SOURCES.length)];
     }
 
+    function extractParamKey(apiUrl) {
+        const match = apiUrl.match(/\?(.*?)=/);
+        return match ? match[1] : 'text';
+    }
+
     async function quantumRandomAI(text) {
         if (!text) throw new Error('Teks tidak boleh kosong');
 
         const chosen = getRandomSource();
+        const paramKey = extractParamKey(chosen.url);
+        const baseUrl = chosen.url.split('?')[0];
         const start = Date.now();
 
         try {
-            const response = await axios.get(chosen.url + encodeURIComponent(text), {
+            const response = await axios.get(`${baseUrl}?${paramKey}=${encodeURIComponent(text)}`, {
                 timeout: 7000,
                 headers: {
                     'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
