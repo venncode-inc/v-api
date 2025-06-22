@@ -57,7 +57,7 @@ module.exports = function (app) {
 
             try {
                 const response = await axios.get(`${url}?${params.toString()}`, {
-                    timeout: 5000,
+                    timeout: 10000,
                     headers: {
                         'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
                     }
