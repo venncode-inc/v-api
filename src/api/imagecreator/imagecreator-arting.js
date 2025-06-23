@@ -17,15 +17,20 @@ module.exports = function (app) {
           prompt: text,
           apikey: apikey
         },
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
+        timeout: 20000 // Timeout 20 detik
       });
 
       res.set('Content-Type', 'image/png');
       res.send(response.data);
     } catch (err) {
+      const isTimeout = err.code === 'ECONNABORTED';
+
       res.status(500).json({
         status: false,
-        message: 'Gagal mengambil gambar dari API eksternal',
+        message: isTimeout
+          ? 'Permintaan ke API eksternal melebihi batas waktu (20 detik).'
+          : 'Gagal mengambil gambar dari API eksternal.',
         error: err.message
       });
     }
