@@ -10,27 +10,12 @@ module.exports = function (app) {
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
         { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' },
         { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita', param: 'q' },
-        { name: 'image2text', url: 'https://api.siputzx.my.id/api/ai/image2text', param: 'url' },
         { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice', param: 'prompt' },
         { name: 'lilyai', url: 'https://velyn.biz.id/api/ai/LilyAI', param: 'prompt' },
         { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },
         { name: 'metaai', url: 'https://api.siputzx.my.id/api/ai/metaai', param: 'query' },
         { name: 'bard', url: 'https://api.siputzx.my.id/api/ai/bard-thinking', param: 'query' },
         { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
-    ];
-
-    const GEOJSON_SOURCES = [
-        {
-            name: "kabupaten_indonesia",
-            url: "https://raw.githubusercontent.com/ardian28/GeoJson-Indonesia-38-Provinsi/refs/heads/main/Kabupaten/38%20Provinsi%20Indonesia%20-%20Kabupaten.json"
-        },
-        {
-            name: "provinsi_aceh",
-            url: "https://raw.githubusercontent.com/yusufsyaifudin/wilayah-indonesia/refs/heads/master/data/geojson/province/11.geojson"
-        },
-        {
-          name: "provinsi_bali",
-          url: "https://raw.githubusercontent.com/yusufsyaifudin/wilayah-indonesia/refs/heads/master/data/geojson/province/31.geojson"
     ];
 
     async function checkDatabase(text) {
@@ -55,32 +40,47 @@ module.exports = function (app) {
         }
     }
 
-    async function checkGeoJSON(text) {
-        const keyword = text.toLowerCase();
+    async function quantumRandomAI(userText) {
+        if (!userText || typeof userText !== 'string' || userText.trim().length === 0) {
+            throw new Error('Teks tidak boleh kosong atau hanya spasi');
+        }
 
-        for (const source of GEOJSON_SOURCES) {
+        const shuffledSources = SOURCES.sort(() => Math.random() - 0.5);
+        const start = Date.now();
+
+        for (const chosen of shuffledSources) {
+            const paramName = chosen.param || 'text';
+            const url = chosen.url;
+
+            const params = new URLSearchParams();
+            params.append(paramName, userText);
+
             try {
-                const res = await axios.get(source.url);
-                const features = res.data.features;
-
-                for (const item of features) {
-                    const name = (item.properties?.nama || item.properties?.NAME_2 || item.properties?.name || '').toLowerCase();
-
-                    if (name.includes(keyword)) {
-                        return `📍 Ditemukan: ${item.properties.nama || item.properties.NAME_2 || item.properties.name}`;
+                const response = await axios.get(`${url}?${params.toString()}`, {
+                    timeout: 10000,
+                    headers: {
+                        'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
                     }
-                }
-            } catch (err) {
-                console.warn(`Gagal mengambil data dari ${source.name}:`, err.message);
+                });
+
+                const result = response.data?.result || response.data?.message || 'Tidak ada hasil dari model';
+                const speed = Date.now() - start;
+
+                return {
+                    status: true,
+                    result,
+                    speed_ms: speed
+                };
+            } catch (error) {
+                console.warn(`Gagal menggunakan ${chosen.name}, coba API berikutnya...`);
                 continue;
             }
         }
 
-        return null;
-    }
-
-    async function quantumRandomAI(userText) {
-        // ... fungsi AI seperti biasa ...
+        return {
+            status: false,
+            result: 'Semua sumber gagal merespons dalam batas waktu 😔'
+        };
     }
 
     app.get('/ai/quantum', async (req, res) => {
@@ -105,22 +105,11 @@ module.exports = function (app) {
                 });
             }
 
-            const geoResponse = await checkGeoJSON(text);
-            if (geoResponse) {
-                return res.status(200).json({
-                    status: true,
-                    creator: "Hazel",
-                    source: "GeoJSON AI",
-                    speed_ms: 0,
-                    result: geoResponse
-                });
-            }
-
             const result = await quantumRandomAI(text);
             return res.status(result.status ? 200 : 500).json({
                 status: result.status,
                 creator: "Hazel",
-                source: "Quantum AI",
+                source: "Quantum AI", // fix here: always "Quantum AI"
                 speed_ms: result.speed_ms || null,
                 result: result.result
             });
