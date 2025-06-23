@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = function (app) {
-  app.get('/download/threads', async (req, res) => {
+  app.get('/download/thread', async (req, res) => {
     const { url } = req.query;
 
     if (!url) {
