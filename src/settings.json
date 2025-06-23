@@ -529,7 +529,7 @@
                 {
                     "name": "Threads Download",
                     "desc": "Download video dari threads jadi lebih mudah",
-                    "path": "/dowmload/threads?url=",
+                    "path": "/dowmload/thread?url=",
                     "status": "EROR",
                     "params": {
                         "url": "Masukan Url"
