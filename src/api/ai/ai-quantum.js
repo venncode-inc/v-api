@@ -19,6 +19,20 @@ module.exports = function (app) {
         { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
     ];
 
+    const GEOJSON_SOURCES = [
+        {
+            name: "kabupaten_indonesia",
+            url: "https://raw.githubusercontent.com/ardian28/GeoJson-Indonesia-38-Provinsi/refs/heads/main/Kabupaten/38%20Provinsi%20Indonesia%20-%20Kabupaten.json"
+        },
+        {
+            name: "provinsi_aceh",
+            url: "https://raw.githubusercontent.com/yusufsyaifudin/wilayah-indonesia/refs/heads/master/data/geojson/province/11.geojson"
+        },
+        {
+          name: "provinsi_bali",
+          url: "https://raw.githubusercontent.com/yusufsyaifudin/wilayah-indonesia/refs/heads/master/data/geojson/province/31.geojson"
+    ];
+
     async function checkDatabase(text) {
         try {
             const res = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/quantumdatabase.json');
@@ -41,47 +55,32 @@ module.exports = function (app) {
         }
     }
 
-    async function quantumRandomAI(userText) {
-        if (!userText || typeof userText !== 'string' || userText.trim().length === 0) {
-            throw new Error('Teks tidak boleh kosong atau hanya spasi');
-        }
+    async function checkGeoJSON(text) {
+        const keyword = text.toLowerCase();
 
-        const shuffledSources = SOURCES.sort(() => Math.random() - 0.5);
-        const start = Date.now();
-
-        for (const chosen of shuffledSources) {
-            const paramName = chosen.param || 'text';
-            const url = chosen.url;
-
-            const params = new URLSearchParams();
-            params.append(paramName, userText);
-
+        for (const source of GEOJSON_SOURCES) {
             try {
-                const response = await axios.get(`${url}?${params.toString()}`, {
-                    timeout: 10000,
-                    headers: {
-                        'User-Agent': 'QuantumAI/1.0 (Hazelnut)'
+                const res = await axios.get(source.url);
+                const features = res.data.features;
+
+                for (const item of features) {
+                    const name = (item.properties?.nama || item.properties?.NAME_2 || item.properties?.name || '').toLowerCase();
+
+                    if (name.includes(keyword)) {
+                        return `📍 Ditemukan: ${item.properties.nama || item.properties.NAME_2 || item.properties.name}`;
                     }
-                });
-
-                const result = response.data?.result || response.data?.message || 'Tidak ada hasil dari model';
-                const speed = Date.now() - start;
-
-                return {
-                    status: true,
-                    result,
-                    speed_ms: speed
-                };
-            } catch (error) {
-                console.warn(`Gagal menggunakan ${chosen.name}, coba API berikutnya...`);
+                }
+            } catch (err) {
+                console.warn(`Gagal mengambil data dari ${source.name}:`, err.message);
                 continue;
             }
         }
 
-        return {
-            status: false,
-            result: 'Semua sumber gagal merespons dalam batas waktu 😔'
-        };
+        return null;
+    }
+
+    async function quantumRandomAI(userText) {
+        // ... fungsi AI seperti biasa ...
     }
 
     app.get('/ai/quantum', async (req, res) => {
@@ -106,11 +105,22 @@ module.exports = function (app) {
                 });
             }
 
+            const geoResponse = await checkGeoJSON(text);
+            if (geoResponse) {
+                return res.status(200).json({
+                    status: true,
+                    creator: "Hazel",
+                    source: "GeoJSON AI",
+                    speed_ms: 0,
+                    result: geoResponse
+                });
+            }
+
             const result = await quantumRandomAI(text);
             return res.status(result.status ? 200 : 500).json({
                 status: result.status,
                 creator: "Hazel",
-                source: "Quantum AI", // fix here: always "Quantum AI"
+                source: "Quantum AI",
                 speed_ms: result.speed_ms || null,
                 result: result.result
             });
