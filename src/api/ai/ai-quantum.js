@@ -10,6 +10,7 @@ module.exports = function (app) {
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
         { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' }, 
         { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita', param: 'q' },
+        { name: 'image2text', url: 'https://api.siputzx.my.id/api/ai/image2text', param: 'url' },
         { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice', param: 'prompt' },
         { name: 'lilyai', url: 'https://velyn.biz.id/api/ai/LilyAI', param: 'prompt' },
         { name: 'google', url: 'https://velyn.biz.id/api/ai/google', param: 'prompt' },       
