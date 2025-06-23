@@ -8,7 +8,7 @@ module.exports = function (app) {
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai', param: 'text' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini', param: 'text' },
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
-        ( name: 'bing', url: 'https://api.nekorinn.my.id/search/bing-websearch', param: 'q' },
+        { name: 'bing', url: 'https://api.nekorinn.my.id/search/bing-websearch', param: 'q' },
         { name: 'search', url: 'https://api.nekorinn.my.id/search/google', param: 'q' },
         { name: 'pin', url: 'https://api.nekorinn.my.id/search/pinterest', param: 'q' },
         { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' }, 
