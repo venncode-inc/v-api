@@ -4,34 +4,35 @@ module.exports = function (app) {
   app.get('/download/threads', async (req, res) => {
     const { url } = req.query;
 
-    if (!url || !url.startsWith('https://www.threads.net/')) {
-      return res.json({
+    // Validasi URL Threads
+    if (!url || !/^https:\/\/(www\.)?threads\.net\//.test(url)) {
+      return res.status(400).json({
         status: false,
-        message: 'Gunakan link dari Threads. Contoh: ?url=https://www.threads.net/xxxxx'
+        message: 'Gunakan link Threads yang valid. Contoh: ?url=https://www.threads.net/xxxxx'
       });
     }
 
     try {
-      const apiURL = 'https://www.velyn.biz.id/api/downloader/threads';
-
-      const { data } = await axios.get(apiURL, {
+      const apiURL = 'https://velyn.biz.id/api/downloader/threads';
+      const response = await axios.get(apiURL, {
         params: { url },
         headers: {
           'User-Agent': 'Mozilla/5.0'
         }
       });
 
-      const modified = {
+      const data = response.data;
+
+      res.json({
         ...data,
         creator: 'Hazel'
-      };
+      });
 
-      res.json(modified);
-    } catch (e) {
+    } catch (err) {
       res.status(500).json({
         status: false,
-        message: 'Gagal mengambil data dari velyn.biz.id',
-        error: e.message
+        message: 'Gagal mengambil data dari API velyn.biz.id',
+        error: err.message
       });
     }
   });
