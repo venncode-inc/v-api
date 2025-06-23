@@ -354,6 +354,16 @@
                     }
                 },
                 {
+                    "name": "Arting",
+                    "desc": "Powered by velyn.biz.id, silahkan beli apikey di +50496609722",
+                    "path": "/imagecreator/arting?text=&apikey=",
+                    "status": "READY",
+                    "params": {
+                        "text": "Masukan text", 
+                        "apikey": "Masukan apikey"
+                    }
+                },
+                {
                     "name": "Brat",
                     "desc": "Create sticker brat on whatsapp",
                     "path": "/imagecreator/bratv2?text=",
