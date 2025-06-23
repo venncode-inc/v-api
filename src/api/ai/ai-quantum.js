@@ -8,6 +8,9 @@ module.exports = function (app) {
         { name: 'openai', url: 'https://api.nekorinn.my.id/ai/openai', param: 'text' },
         { name: 'gemini', url: 'https://api.nekorinn.my.id/ai/gemini', param: 'text' },
         { name: 'ai4chat', url: 'https://api.nekorinn.my.id/ai/ai4chat', param: 'text' },
+        ( name: 'bing', url: 'https://api.nekorinn.my.id/search/bing-websearch', param: 'q' },
+        { name: 'search', url: 'https://api.nekorinn.my.id/search/google', param: 'q' },
+        { name: 'pin', url: 'https://api.nekorinn.my.id/search/pinterest', param: 'q' },
         { name: 'gptturbo', url: 'https://zelapioffciall.vercel.app/ai/gpt-turbo', param: 'text' }, 
         { name: 'gita', url: 'https://api.siputzx.my.id/api/ai/gita', param: 'q' },
         { name: 'venice', url: 'https://api.siputzx.my.id/api/ai/venice', param: 'prompt' },
@@ -74,7 +77,7 @@ module.exports = function (app) {
                 };
             } catch (error) {
                 console.warn(`Gagal menggunakan ${chosen.name}, coba API berikutnya...`);
-                continue; // lanjut ke API berikutnya
+                continue; 
             }
         }
 
