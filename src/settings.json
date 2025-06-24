@@ -125,6 +125,17 @@
                     "params": {
                         "q": "Masukan message"
                     }
+                },
+                {
+                    "name": "Ai Custom",
+                    "desc": "Powered by velyn.biz.id, Beli apikey kamu di +50496609722",
+                    "path": "/ai/aicustom?prompt=&system=&apikey=",
+                    "status": "READY",
+                    "params": {
+                        "prompt": "Masukan prompt",
+                        "system": "Masukan ai yang mau kamu pakai",
+                        "apikey": "Masukan apikey"      
+                    }
                 }
             ]
         },
