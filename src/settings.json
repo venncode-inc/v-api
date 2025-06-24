@@ -132,9 +132,9 @@
                     "path": "/ai/aicustom?prompt=&system=&apikey=",
                     "status": "READY",
                     "params": {
-                        "prompt": "Masukan prompt",
-                        "system": "Masukan ai yang mau kamu pakai",
-                        "apikey": "Masukan apikey"      
+                    "prompt": "Masukan prompt",
+                    "system": "Masukan ai yang mau kamu pakai",
+                    "apikey": "Masukan apikey"      
                     }
                 }
             ]
