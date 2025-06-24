@@ -14,12 +14,12 @@ module.exports = function(app) {
 
     app.post('/ai/aicustom', async (req, res) => {
         try {
-            const { prompt, system = 'You are a helpful assistant.', apikey } = req.body;
+            const { prompt, system, apikey } = req.body;
 
-            if (!prompt || !apikey) {
+            if (!prompt || !apikey || !system) {
                 return res.status(400).json({
                     status: false,
-                    error: 'Parameter "prompt" dan "apikey" wajib diisi.'
+                    error: 'Parameter "prompt", "system", dan "apikey" wajib diisi.'
                 });
             }
 
