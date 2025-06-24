@@ -8,9 +8,7 @@
     },
     "apiSettings": {
         "creator": "Hazel",
-        "apikey": [
-            "velin"
-        ]
+        "apikey": ["velin"]
     },
     "categories": [
         {
@@ -130,7 +128,7 @@
                     "name": "Ai Custom",
                     "desc": "Powered by velyn.biz.id, Beli apikey kamu di +50496609722",
                     "path": "/ai/aicustom?prompt=&system=&apikey=",
-                    "status": "READY",
+                    "status": "EROR",
                     "params": {
                     "prompt": "Masukan prompt",
                     "system": "Masukan ai yang mau kamu pakai",
