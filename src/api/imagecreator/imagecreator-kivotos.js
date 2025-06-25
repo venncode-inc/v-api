@@ -21,16 +21,17 @@ module.exports = function (app) {
     }
 
     try {
-      const proxyListRes = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/proxy.json');
-      const proxies = proxyListRes.data;
+      const proxyRes = await axios.get('https://api.nekorinn.my.id/tools/freeproxy');
+      const proxies = proxyRes.data?.result;
 
       if (!Array.isArray(proxies) || proxies.length === 0) {
-        return res.status(500).json({ status: false, message: 'List proxy kosong/tidak valid' });
+        return res.status(500).json({ status: false, message: 'Gagal mendapatkan list proxy dari API' });
       }
 
-      const randomProxy = proxies[Math.floor(Math.random() * proxies.length)];
+      const picked = proxies[Math.floor(Math.random() * proxies.length)];
+      const proxyUrl = `http://${picked.ip}:${picked.port}`;
       const agent = {
-        httpsAgent: new HttpsProxyAgent(randomProxy),
+        httpsAgent: new HttpsProxyAgent(proxyUrl)
       };
 
       const session_hash = Math.random().toString(36).substring(2);
@@ -53,7 +54,7 @@ module.exports = function (app) {
         session_hash
       }, agent);
 
-
+      // 2. ambil hasil dari queue
       const queue = await axios.get(`${baseURL}/gradio_api/queue/data?session_hash=${session_hash}`, agent);
       const lines = queue.data.split('\n\n');
 
@@ -72,9 +73,10 @@ module.exports = function (app) {
         return res.status(500).json({ status: false, message: 'Gagal mendapatkan gambar dari model AI' });
       }
 
+      // 3. ambil gambar & kirim langsung
       const image = await axios.get(imageUrl, {
         responseType: 'arraybuffer',
-        httpsAgent: new HttpsProxyAgent(randomProxy)
+        httpsAgent: new HttpsProxyAgent(proxyUrl)
       });
 
       res.set('Content-Type', 'image/jpeg');
