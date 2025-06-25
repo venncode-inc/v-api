@@ -47,7 +47,7 @@ module.exports = function (app) {
         };
     }
 
-    app.get('/random/paptt', async (req, res) => {
+    app.get('/random/nsfw', async (req, res) => {
         const ip = req.ip || req.connection.remoteAddress;
         const apiKey = req.query.apikey;
 
