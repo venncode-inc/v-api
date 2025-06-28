@@ -256,7 +256,16 @@
                     "name": "Info Gempa",
                     "desc": "Cek Gempa by bmkg",
                     "path": "/info/cekgempa",
-                    "status": "Ready"           
+                    "status": "Ready"                        
+                },
+                {
+                    "name": "Info Cuaca",
+                    "desc": "Cek Cuaca by bmkg",
+                    "path": "/info/cuaca?kode=",
+                    "status": "Ready",
+                    "params": {
+                        "kode": "Masukan kota kamu contoh KAB.BOGOR"   
+                   }        
                 }
             ]
         },
