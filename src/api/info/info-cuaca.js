@@ -6,7 +6,7 @@ module.exports = function (app) {
     if (!kode) {
       return res.status(400).json({
         status: false,
-        creator: 'Hazelnut',
+        creator: 'Hazel',
         message: 'parameter ?kode wajib diisi',
       });
     }
