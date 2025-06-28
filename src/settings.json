@@ -369,13 +369,12 @@
                     }
                 },
                 {
-                    "name": "Arting",
-                    "desc": "Powered by velyn.biz.id, silahkan beli apikey di +50496609722",
-                    "path": "/imagecreator/arting?text=&apikey=",
+                    "name": "Nulis",
+                    "desc": "Powered by backend",
+                    "path": "/imagecreator/nulis?text=",
                     "status": "Ready",
                     "params": {
-                        "text": "Masukan text",
-                        "apikey": "Masukan apikey"
+                        "text": "Masukan text"                       
                     }
                 },
                 {
