@@ -10,7 +10,7 @@ async function getGempa() {
 }
 
 module.exports = function(app) {
-app.get('/tools/cekgempa', async (req, res) => {
+app.get('/info/cekgempa', async (req, res) => {
     try {
       const data = await getGempa();
       res.json({
