@@ -1,16 +1,54 @@
-/* style.css / body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #1f2937; / text-gray-900 */ margin: 0; padding: 0; }
+/* style.css */
 
-.scrollbar-hide::-webkit-scrollbar { display: none; } .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+/* ==== Global ==== */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  color: #1f2937; /* text-gray-900 */
+  margin: 0;
+  padding: 0;
+}
 
-.card { @apply border border-gray-200 rounded-xl p-4 bg-white shadow-md min-w-[160px] flex flex-col justify-center items-start; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+/* ==== Scrollbar Hide ==== */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-.card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+/* ==== Card Component ==== */
+.card {
+  @apply border border-gray-200 rounded-xl p-4 bg-white shadow-md 
+         min-w-[160px] flex flex-col justify-center items-start;
 
-.card p { @apply font-bold text-base text-gray-900; }
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-.card span { @apply text-sm text-gray-500 mt-1; }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
 
-@media (max-width: 640px) { .card { @apply min-w-full; } }
+.card p {
+  @apply font-bold text-base text-gray-900;
+}
 
-canvas { max-width: 100%; height: auto; border-radius: 0.5rem; }
+.card span {
+  @apply text-sm text-gray-500 mt-1;
+}
 
+/* Responsive Card */
+@media (max-width: 640px) {
+  .card {
+    @apply min-w-full;
+  }
+}
+
+/* ==== Canvas Styling ==== */
+canvas {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem; /* rounded-md */
+}
