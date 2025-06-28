@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ZelApi Status's Stats</title>
   <link rel="icon" href="https://raw.githubusercontent.com/hazelnuttty/Hazel-Api/main/src/icon.png" type="image/png" />
+  <link rel="stylesheet" href="/dashboard/style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <style>
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  </style>
 </head>
 <body class="bg-white text-gray-900 font-sans">
   <header class="border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 py-1 text-xs text-gray-700 font-normal">
+    <div class="max-w-7xl mx-auto px-4 py-2 text-xs text-gray-700 font-normal">
       ZelApi Status
       <a class="float-right text-gray-600 hover:text-gray-900" href="https://github.com/hazelnuttty" target="_blank" aria-label="GitHub link">
         <i class="fab fa-github fa-lg"></i>
@@ -28,161 +20,26 @@
     </div>
   </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-4">
-  <nav class="text-xs text-gray-500 mb-4 select-none">
-    <a href="https://zelapioffciall.vercel.app/" class="hover:text-blue-600 transition-colors">Home</a>
-    <span class="mx-1">›</span>
-    <a href="https://zelapioffciall.vercel.app/" class="hover:text-blue-600 transition-colors">Documentation</a>
-    <span class="mx-1">›</span>
-    <a href="https://zelapioffciall.vercel.app/dashboard/" class="hover:text-blue-600 transition-colors">Stats</a>
-  </nav>
-</main>
-
+  <main class="max-w-7xl mx-auto px-4 py-4">
     <!-- Statistik Utama -->
-<section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4 scrollbar-hide overflow-x-auto">
-  <!-- Total API (dari API) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p id="totalApi" class="font-semibold text-sm text-gray-900">-</p>
-    <p class="text-xs text-gray-500 mt-0.5">Total API</p>
-  </div>
+    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4 overflow-x-auto scrollbar-hide">
+      <div class="card"><p id="totalApi">-</p><span>Total API</span></div>
+      <div class="card"><p>26.2K</p><span>Total Users</span></div>
+      <div class="card"><p>11.9K</p><span>Today Requests</span></div>
+      <div class="card"><p>8.5K</p><span>Request Per Day</span></div>
+      <div class="card"><p id="totalRequests">-</p><span>Total Requests</span></div>
+      <div class="card"><p id="avgResponse">-</p><span>Avg Response (ms)</span></div>
+      <div class="card"><p id="successRate">-</p><span>Success Rate</span></div>
+      <div class="card"><p id="errorRate">-</p><span>Error Rate</span></div>
+    </section>
 
-  <!-- Total Users (static) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p class="font-semibold text-sm text-gray-900">26.2K</p>
-    <p class="text-xs text-gray-500 mt-0.5">Total Users</p>
-  </div>
-
-  <!-- Today Requests (static) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p class="font-semibold text-sm text-gray-900">11.9K</p>
-    <p class="text-xs text-gray-500 mt-0.5">Today Requests</p>
-  </div>
-
-  <!-- Request Per Day (static) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p class="font-semibold text-sm text-gray-900">8.5K</p>
-    <p class="text-xs text-gray-500 mt-0.5">Request Per Day</p>
-  </div>
-
-  <!-- Total Requests (dari API) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p id="totalRequests" class="font-semibold text-sm text-gray-900">-</p>
-    <p class="text-xs text-gray-500 mt-0.5">Total Requests</p>
-  </div>
-
-  <!-- Avg Response (dari API) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p id="avgResponse" class="font-semibold text-sm text-gray-900">-</p>
-    <p class="text-xs text-gray-500 mt-0.5">Avg Response (ms)</p>
-  </div>
-
-  <!-- Success Rate (dari API) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p id="successRate" class="font-semibold text-sm text-gray-900">-</p>
-    <p class="text-xs text-gray-500 mt-0.5">Success Rate</p>
-  </div>
-
-  <!-- Error Rate (dari API) -->
-  <div class="border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm">
-    <p id="errorRate" class="font-semibold text-sm text-gray-900">-</p>
-    <p class="text-xs text-gray-500 mt-0.5">Error Rate</p>
-  </div>
-</section>
-
-    <!-- Grafik Ping -->
-    <section aria-labelledby="request-traffic-title" class="border border-gray-200 rounded-md p-3 bg-white shadow-sm">
-      <h2 class="font-semibold text-xs text-gray-900 mb-2 select-none" id="request-traffic-title">Request Traffic</h2>
+    <!-- Grafik -->
+    <section class="border border-gray-200 rounded-md p-3 bg-white shadow-sm">
+      <h2 class="font-semibold text-xs text-gray-900 mb-2">Request Traffic</h2>
       <canvas id="pingChart" class="w-full h-40"></canvas>
     </section>
   </main>
 
-  <!-- Script Ping -->
-<script>
-  // ✅ Ambil data statistik dari API kamu
-  async function updateAPICards() {
-    try {
-      const res = await fetch("https://zelapioffciall.vercel.app/api-status/status");
-      const json = await res.json();
-      const data = json.result;
-
-      document.getElementById("totalApi").textContent = data.totalfitur ?? "-";
-      document.getElementById("totalRequests").textContent = data.totalrequest ?? "-";
-      document.getElementById("avgResponse").textContent = data.avgResponseTime ?? "-";
-      document.getElementById("successRate").textContent = data.successRate ?? "-";
-      document.getElementById("errorRate").textContent = data.errorRate ?? "-";
-    } catch (err) {
-      console.error("Gagal ambil data dari API stats:", err);
-    }
-  }
-
-  updateAPICards();
-  setInterval(updateAPICards, 60000); // refresh tiap 1 menit
-
-  // ✅ Grafik Ping ke Google (Realtime)
-  const ctx = document.getElementById('pingChart').getContext('2d');
-  const pingData = {
-    labels: [],
-    datasets: [{
-      label: 'Server Latency',
-      data: [],
-      borderColor: '#3b82f6',
-      backgroundColor: 'rgba(59, 130, 246, 0.2)',
-      tension: 0.3
-    }]
-  };
-
-  const pingChart = new Chart(ctx, {
-    type: 'line',
-    data: pingData,
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Latency (ms)'
-          }
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'Waktu'
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              size: 10
-            }
-          }
-        }
-      }
-    }
-  });
-
-  function pingGoogle() {
-    const start = performance.now();
-    fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' })
-      .finally(() => {
-        const latency = Math.round(performance.now() - start);
-        const timeLabel = new Date().toLocaleTimeString();
-
-        if (pingData.labels.length >= 20) {
-          pingData.labels.shift();
-          pingData.datasets[0].data.shift();
-        }
-
-        pingData.labels.push(timeLabel);
-        pingData.datasets[0].data.push(latency);
-        pingChart.update();
-      });
-  }
-
-  setInterval(pingGoogle, 3000);
-  pingGoogle();
-</script>
+  <script src="/dashboard/script.js"></script>
 </body>
 </html>
