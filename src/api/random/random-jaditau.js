@@ -5,7 +5,9 @@ module.exports = function(app) {
         try {
             const { data } = await axios.get('https://raw.githubusercontent.com/rooxJSphire/rawFitur/main/jadiTau.json');
 
-            if (!Array.isArray(data)) throw new Error("Format data bukan array!");
+            if (!Array.isArray(data)) {
+                throw new Error("Isi JSON bukan array! Harus [ ... ] yaa sayangg");
+            }
 
             const randomText = data[Math.floor(Math.random() * data.length)];
             return randomText;
