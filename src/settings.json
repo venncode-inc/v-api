@@ -256,13 +256,7 @@
                     "name": "Info Gempa",
                     "desc": "Cek Gempa by bmkg",
                     "path": "/info/cekgempa",
-                    "status": "Ready"
-                },
-                {
-                    "name": "Cek Gempa",
-                    "desc": "Cek Cuaca by bmkg",
-                    "path": "/info/cekgempa",
-                    "status": "Ready"
+                    "status": "Ready"           
                 }
             ]
         },
@@ -362,16 +356,7 @@
                     "path": "/imagecreator/text2ghibli?text=",
                     "status": "Ready",
                     "params": {
-                        "text": "Masukan Text Nya"
-                    }
-                },
-                {
-                    "name": "Nulis",
-                    "desc": "Kerjakan pekerjaan rumah kamu lebih cepat dengan fitur nulis",
-                    "path": "/imagecreator/nulis?text=",
-                    "status": "Ready",
-                    "params": {
-                        "text": "Masukan text"
+                        "text": "Masukan Text Nya"                    
                     }
                 },
                 {
