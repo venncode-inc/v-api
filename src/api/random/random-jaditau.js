@@ -4,8 +4,10 @@ module.exports = function(app) {
     async function getRandomJadiTau() {
         try {
             const { data } = await axios.get('https://raw.githubusercontent.com/rooxJSphire/rawFitur/main/jadiTau.json');
-            const list = Array.isArray(data) ? data : data.kata;
-            const randomText = list[Math.floor(Math.random() * list.length)];
+
+            if (!Array.isArray(data)) throw new Error("Format data bukan array!");
+
+            const randomText = data[Math.floor(Math.random() * data.length)];
             return randomText;
         } catch (error) {
             throw error;
@@ -23,6 +25,7 @@ module.exports = function(app) {
         } catch (error) {
             res.status(500).json({
                 status: false,
+                creator: 'Hazel',
                 message: `Error: ${error.message}`
             });
         }
