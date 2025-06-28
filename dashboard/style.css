@@ -1,29 +1,16 @@
-body {
-  font-family: sans-serif;
-}
+/* style.css / body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #1f2937; / text-gray-900 */ margin: 0; padding: 0; }
 
-/* Hide scrollbar for better mobile feel */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+.scrollbar-hide::-webkit-scrollbar { display: none; } .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Card styling */
-.card {
-  @apply border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
+.card { @apply border border-gray-200 rounded-xl p-4 bg-white shadow-md min-w-[160px] flex flex-col justify-center items-start; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 
-.card p {
-  @apply font-semibold text-sm text-gray-900;
-}
+.card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
 
-.card span {
-  @apply text-xs text-gray-500 mt-0.5;
-}
+.card p { @apply font-bold text-base text-gray-900; }
+
+.card span { @apply text-sm text-gray-500 mt-1; }
+
+@media (max-width: 640px) { .card { @apply min-w-full; } }
+
+canvas { max-width: 100%; height: auto; border-radius: 0.5rem; }
+
