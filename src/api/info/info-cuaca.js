@@ -23,7 +23,7 @@ async function getNamaWilayah(kode) {
 }
 
 module.exports = function (app) {
-  app.get('/info/cekgempa', async (req, res) => {
+  app.get('/info/cuaca', async (req, res) => {
     const kode = req.query.kode;
     if (!kode) return res.status(400).json({ status: false, message: 'parameter ?kode wajib diisi' });
 
