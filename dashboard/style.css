@@ -1,0 +1,29 @@
+body {
+  font-family: sans-serif;
+}
+
+/* Hide scrollbar for better mobile feel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Card styling */
+.card {
+  @apply border border-gray-200 rounded-md p-3 min-w-[160px] bg-white shadow-sm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card p {
+  @apply font-semibold text-sm text-gray-900;
+}
+
+.card span {
+  @apply text-xs text-gray-500 mt-0.5;
+}
