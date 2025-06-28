@@ -1,64 +1,47 @@
 const axios = require('axios');
 
-// ambil json gempa
-async function getGempa() {
-  try {
-    const response = await axios.get('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
-    return response.data.Infogempa.gempa;
-  } catch (e) {
-    throw new Error('gagal ambil data gempa');
-  }
-}
-
-// ambil nama wilayah dari kode wilayah
-async function getNamaWilayah(kode) {
-  try {
-    const wilayah = await axios.get('https://ibnux.github.io/BMKG-importer/cuaca/wilayah.json');
-    const data = wilayah.data.find(item => item.id === kode);
-    if (!data) throw new Error('kode wilayah tidak ditemukan');
-    return data.kota;
-  } catch (e) {
-    throw new Error('gagal ambil data wilayah');
-  }
-}
-
 module.exports = function (app) {
   app.get('/info/cuaca', async (req, res) => {
     const kode = req.query.kode;
-    if (!kode) return res.status(400).json({ status: false, message: 'parameter ?kode wajib diisi' });
+    if (!kode) {
+      return res.status(400).json({
+        status: false,
+        creator: 'Hazelnut',
+        message: 'parameter ?kode wajib diisi',
+      });
+    }
 
     try {
-      const namaWilayah = await getNamaWilayah(kode);
-      const gempa = await getGempa();
+      const response = await axios.get(`https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=${kode}`);
+      const data = response.data;
 
-      // cek apakah wilayah cocok
-      const wilayahGempa = gempa.Wilayah.toLowerCase();
-      const cocok = wilayahGempa.includes(namaWilayah.toLowerCase());
-
-      if (!cocok) {
-        return res.json({
-          status: true,
-          message: `tidak ada gempa terbaru yang tercatat di wilayah ${namaWilayah}`,
+      if (!data || !data.length) {
+        return res.status(404).json({
+          status: false,
+          creator: 'Hazel',
+          message: 'Data cuaca tidak ditemukan untuk kode ini',
         });
       }
 
       res.json({
         status: true,
-        result: {
-          wilayah: gempa.Wilayah,
-          waktu: `${gempa.Tanggal} ${gempa.Jam}`,
-          magnitude: gempa.Magnitude,
-          kedalaman: gempa.Kedalaman,
-          koordinat: gempa.Coordinates,
-          potensi: gempa.Potensi,
-          dirasakan: gempa.Dirasakan || 'tidak ada info dirasakan',
-          peta: gempa.Shakemap
-            ? `https://data.bmkg.go.id/DataMKG/TEWS/${gempa.Shakemap}`
-            : null,
-        },
+        creator: 'Hazel',
+        wilayah: data[0].adm4,
+        provinsi: data[0].adm1,
+        prakiraan: data.map(item => ({
+          waktu: item.time,
+          cuaca: item.weather,
+          suhu: `${item.tempC}°C`,
+          kelembapan: `${item.humidity}%`,
+        })),
       });
     } catch (e) {
-      res.status(500).json({ status: false, message: e.message });
+      res.status(500).json({
+        status: false,
+        creator: 'Hazel',
+        message: 'Gagal mengambil data dari BMKG',
+        error: e.message,
+      });
     }
   });
 };
