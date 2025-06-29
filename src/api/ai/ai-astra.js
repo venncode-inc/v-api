@@ -1,5 +1,3 @@
-https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/quantumdatabase.json
-
 const axios = require('axios');
 
 module.exports = function (app) {
