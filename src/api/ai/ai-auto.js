@@ -1,136 +1,114 @@
 const axios = require('axios');
 
-module.exports = function(app) {
-  async function getAnswer(q) {
-    const lowerQ = q.toLowerCase();
+module.exports = function (app) {
+    const SOURCES = [        
+        { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
+    ];
 
-    // Jika mengandung kata "font" → Google Fonts API
-    if (lowerQ.includes("font")) {
-      try {
-        const fontsRes = await axios.get(`https://api.nekorinn.my.id/search/google-fonts?q=${encodeURIComponent(q)}`);
-        if (fontsRes.status === 200 && Array.isArray(fontsRes.data.result)) {
-          return {
-            status: true,
-            creator: "Hazel",
-            source: "Google Fonts API",
-            result: fontsRes.data.result.slice(0, 5)
-          };
+    async function checkDatabase(text) {
+        try {
+            const [resAstraAI, resDatabase] = await Promise.all([
+                axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/local.json'),
+                axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/database.json')
+            ]);
+            
+            const data = [...resAstraAI.data, ...resDatabase.data];
+
+            for (const item of data) {
+                const patterns = item.patterns.map(p => p.toLowerCase());
+                for (const pattern of patterns) {
+                    if (text.toLowerCase().includes(pattern)) {
+                        const responses = item.responses;
+                        return responses[Math.floor(Math.random() * responses.length)];
+                    }
+                }
+            }
+
+            return null;
+        } catch (err) {
+            console.error('Gagal mengambil database lokal:', err.message);
+            return null;
         }
-      } catch (e) {
-        console.warn("Gagal dari Google Fonts:", e.message);
-      }
     }
 
-    // Jika mengandung "search" atau "cari" → Google Search API
-    if (lowerQ.includes("search") || lowerQ.includes("cari")) {
-      try {
-        const googleRes = await axios.get(`https://api.nekorinn.my.id/search/google?q=${encodeURIComponent(q)}`);
-        if (googleRes.status === 200 && Array.isArray(googleRes.data.result)) {
-          return {
-            status: true,
-            creator: "Hazel",
-            source: "Google Search API",
-            result: googleRes.data.result.slice(0, 5)
-          };
+    async function AstraAIRandomAI(userText) {
+        if (!userText || typeof userText !== 'string' || userText.trim().length === 0) {
+            throw new Error('Teks tidak boleh kosong atau hanya spasi');
         }
-      } catch (e) {
-        console.warn("Gagal dari Google Search:", e.message);
-      }
-    }
 
-    // Step 1: Gemini AI (default)
-    try {
-      const geminiRes = await axios.get(`https://api.nekorinn.my.id/ai/gemini?text=${encodeURIComponent(q)}`);
-      if (geminiRes.status === 200) {
+        const shuffledSources = [...SOURCES].sort(() => Math.random() - 0.5);
+        const start = Date.now();
+
+        for (const chosen of shuffledSources) {
+            const paramName = chosen.param || 'text';
+            const url = chosen.url;
+
+            const params = new URLSearchParams();
+            params.append(paramName, userText);
+
+            try {
+                const response = await axios.get(`${url}?${params.toString()}`, {
+                    timeout: 10000,
+                    headers: {
+                        'User-Agent': 'AstraAI/1.0 (Hazel)'
+                    }
+                });
+
+                const result = response.data?.result || response.data?.message || 'Tidak ada hasil dari model';
+                const speed = Date.now() - start;
+
+                return {
+                    status: true,
+                    result,
+                    speed_ms: speed
+                };
+            } catch (error) {
+                console.warn(`Gagal menggunakan ${chosen.name}, coba API berikutnya...`);
+                continue;
+            }
+        }
+
         return {
-          status: true,
-          creator: "Hazel",
-          source: "Gemini AI",
-          result: geminiRes.data.result || geminiRes.data.message
+            status: false,
+            result: 'Semua sumber gagal merespons dalam batas waktu 😔'
         };
-      }
-    } catch (e) {
-      console.warn("Gagal dari Gemini:", e.message);
     }
 
-    // Step 2: Cek database.json di GitHub
-    try {
-      const dbRes = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/database.json');
-      const database = dbRes.data;
+    app.get('/ai/astraai', async (req, res) => {
+        const text = (req.query.text || '').trim();
 
-      const matched = database.find(item => item.question?.toLowerCase() === q.toLowerCase());
-      if (matched) {
-        return {
-          status: true,
-          creator: "Hazel",
-          source: "GitHub Database",
-          result: matched.answer
-        };
-      }
-    } catch (e) {
-      console.warn("Gagal ambil database.json:", e.message);
-    }
+        if (!text) {
+            return res.status(400).json({
+                status: false,
+                error: 'Parameter ?text= wajib diisi yaa sayangg 💔'
+            });
+        }
 
-    // Step 3: Google Search cadangan
-    try {
-      const googleRes = await axios.get(`https://api.nekorinn.my.id/search/google?q=${encodeURIComponent(q)}`);
-      if (googleRes.status === 200 && Array.isArray(googleRes.data.result)) {
-        return {
-          status: true,
-          creator: "Hazel",
-          source: "Google Search API",
-          result: googleRes.data.result.slice(0, 5)
-        };
-      }
-    } catch (e) {
-      console.warn("Gagal dari Google Search (fallback):", e.message);
-    }
+        try {
+            const localResponse = await checkDatabase(text);
+            if (localResponse) {
+                return res.status(200).json({
+                    status: true,
+                    creator: "Hazel",
+                    source: "Astra AI",
+                    result: localResponse
+                });
+            }
 
-    // Step 4: Google Fonts cadangan
-    try {
-      const fontsRes = await axios.get(`https://api.nekorinn.my.id/search/google-fonts?q=${encodeURIComponent(q)}`);
-      if (fontsRes.status === 200 && Array.isArray(fontsRes.data.result)) {
-        return {
-          status: true,
-          creator: "Hazel",
-          source: "Google Fonts API",
-          result: fontsRes.data.result.slice(0, 5)
-        };
-      }
-    } catch (e) {
-      console.warn("Gagal dari Google Fonts (fallback):", e.message);
-    }
-
-    // Gagal semua
-    return {
-      status: false,
-      creator: "Hazel",
-      source: null,
-      result: "Maaf, tidak bisa menemukan jawaban untuk pertanyaan tersebut."
-    };
-  }
-
-  app.get('/ai/auto', async (req, res) => {
-    try {
-      const { q } = req.query;
-      if (!q) {
-        return res.status(400).json({
-          status: false,
-          creator: "Hazel",
-          source: null,
-          result: 'Parameter "q" diperlukan'
-        });
-      }
-
-      const result = await getAnswer(q);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(500).json({
-        status: false,
-        creator: "Hazel",
-        source: null,
-        result: "Maaf, terjadi kesalahan saat memproses permintaan Anda."
-      });
-    }
-  });
+            const result = await AstraAIRandomAI(text);
+            return res.status(result.status ? 200 : 500).json({
+                status: result.status,
+                creator: "Hazel",
+                source: "Astra AI",
+                result: result.result
+            });
+        } catch (err) {
+            return res.status(500).json({
+                status: false,
+                creator: "Hazel",
+                source: "Astra AI",
+                result: 'Terjadi kesalahan tak terduga 😵'
+            });
+        }
+    });
 };
