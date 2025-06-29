@@ -118,12 +118,12 @@
                     }
                 },
                 {
-                    "name": "Vex [ Realtime ]",
-                    "desc": "Gunakan Ai dari Vex dengan data realtime dari berbagai platfrom",
-                    "path": "/ai/auto?q=",
+                    "name": "Astra AI",
+                    "desc": "Astra Ai adalah ai simple yang super power",
+                    "path": "/ai/astraai?text=",
                     "status": "Ready",
                     "params": {
-                        "q": "Masukan message"
+                      "text": "Masukan message"
                     }
                 }
             ]
