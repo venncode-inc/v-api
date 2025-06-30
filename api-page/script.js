@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             copyEndpointBtn: document.getElementById('copyEndpoint'),
             copyResponseBtn: document.getElementById('copyResponse')
         },
-        // Elemen yang diisi dari settings.json
+        // Elemen yang diisi dari 
         pageTitle: document.getElementById('page'),
         wm: document.getElementById('wm'),
         appName: document.getElementById('name'),
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         apiLinksContainer: document.getElementById('apiLinks')
     };
 
-    let settings = {}; // Untuk menyimpan data dari settings.json
+    let settings = {}; // Untuk menyimpan data dari 
     let currentApiData = null; // Untuk menyimpan data API yang sedang ditampilkan di modal
     let allNotifications = []; // Untuk menyimpan semua notifikasi dari JSON
 
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const creator = settings.apiSettings?.creator || 'Zelapi';
 
         setPageContent(DOM.pageTitle, settings.name, "Zelapi");
-        setPageContent(DOM.wm, `© ${currentYear} ${creator} Zelapi's Corp. All rights reversed.`);
+        setPageContent(DOM.wm, `© ${currentYear} Zelapi's Corp. All rights reversed.`);
         setPageContent(DOM.appName, settings.name, "Zelapi");
         setPageContent(DOM.sideNavName, settings.name || "API");
         setPageContent(DOM.versionBadge, settings.version, "v1.0");
