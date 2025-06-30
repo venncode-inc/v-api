@@ -1,17 +1,9 @@
 const axios = require('axios');
 
 module.exports = function (app) {
-    const AI_SOURCE = {
-        name: 'luminai',
-        url: 'https://zelapioffciall.vercel.app/ai/luminai?text={logic}'
-    };
-
-    const DEFAULT_PROMPT = (userText) => `
-Kamu adalah Astra AI, asisten virtual pintar yang dibuat oleh Hazel.
-Jawabanmu harus sopan, detail, dan fokus pada isi pertanyaan.
-Berikut pertanyaan dari user:
-${userText}
-`.trim();
+    const GEMINI_API_URL = 'https://api.siputzx.my.id/api/ai/gemini';
+    const GEMINI_COOKIE = 'g.a000xgjZzrQfaZEtfrx6RTCW0Q2eNdm21jCoqu6_6gbIG_5BW1UqEWHMHU14F9OS04MFWXsY7gACgYKAYQSARESFQHGX2MidwdmCRTP1XVih97lZJXIcBoVAUF8yKrcN4up_gHiXrkm5wXkr5eG0076';
+    const SYSTEM_PROMPT = 'kamu adalah ai bahasa indonesia, nama kamu adalah astra Ai, kamu diciptakan oleh hazelnut dan team NepTune, Tugas kamu adalah menjawab semua pertanyaan dengan sopan dan baik dengan emoji dan text lucu';
 
     async function checkDatabase(text) {
         try {
@@ -25,12 +17,10 @@ ${userText}
 
             for (const item of data) {
                 const patterns = (item.patterns || []).map(p => p.toLowerCase());
-                for (const pattern of patterns) {
-                    if (lowerText.includes(pattern)) {
-                        const responses = item.responses || [];
-                        if (responses.length > 0) {
-                            return responses[Math.floor(Math.random() * responses.length)];
-                        }
+                if (patterns.some(p => lowerText.includes(p))) {
+                    const responses = item.responses || [];
+                    if (responses.length > 0) {
+                        return responses[Math.floor(Math.random() * responses.length)];
                     }
                 }
             }
@@ -42,17 +32,15 @@ ${userText}
         }
     }
 
-    async function callAstraAI(userText) {
-        if (!userText || typeof userText !== 'string' || userText.trim().length === 0) {
-            throw new Error('Teks tidak boleh kosong atau hanya spasi');
-        }
-
-        const prompt = DEFAULT_PROMPT(userText);
-        const finalUrl = AI_SOURCE.url.replace('{logic}', encodeURIComponent(prompt));
-        const start = Date.now();
-
+    async function callGeminiAI(userText) {
         try {
-            const response = await axios.get(finalUrl, {
+            const start = Date.now();
+            const response = await axios.get(GEMINI_API_URL, {
+                params: {
+                    text: userText,
+                    cookie: GEMINI_COOKIE,
+                    promptSystem: SYSTEM_PROMPT
+                },
                 timeout: 10000,
                 headers: {
                     'User-Agent': 'AstraAI/1.0 (Hazel)'
@@ -68,7 +56,7 @@ ${userText}
                 speed_ms: speed
             };
         } catch (error) {
-            console.warn(`Gagal menggunakan ${AI_SOURCE.name}: ${error.message}`);
+            console.warn(`Gagal menggunakan Astra: ${error.message}`);
             return {
                 status: false,
                 result: `AI gagal merespons: ${error.message}`
@@ -84,7 +72,7 @@ ${userText}
                 status: false,
                 creator: "Hazel",
                 source: "Astra AI",
-                result: 'Parameter ?text= wajib diisi yaa sayangg 💔'
+                result: 'Parameter ?text= wajib diisi ya'
             });
         }
 
@@ -94,17 +82,18 @@ ${userText}
                 return res.status(200).json({
                     status: true,
                     creator: "Hazel",
-                    source: "Astra AI (Database)",
+                    source: "Astra AI",
                     result: localResponse
                 });
             }
 
-            const result = await callAstraAI(text);
+            const result = await callGeminiAI(text);
             return res.status(result.status ? 200 : 500).json({
                 status: result.status,
                 creator: "Hazel",
-                source: "Astra AI (Prompt)",
-                result: result.result
+                source: "Astra AI",
+                result: result.result,
+                speed_ms: result.speed_ms || undefined
             });
         } catch (err) {
             console.error('Internal Error:', err);
