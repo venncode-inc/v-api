@@ -842,7 +842,14 @@ a:hover {
 .footer-link i {
   font-size: 1rem;
 }
-
+#loadingScreen .copyright-text {
+    position: absolute;
+    bottom: 20px;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.6;
+    text-align: center;
+}
 /* Footer */
 .main-footer {
     margin-top: auto;
