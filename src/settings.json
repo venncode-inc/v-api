@@ -268,7 +268,7 @@
                     "name": "Info Cuaca",
                     "desc": "Cek Cuaca by bmkg",
                     "path": "/info/cuaca?kode=",
-                    "status": "Ready",
+                    "status": "Eror",
                     "params": {
                         "kode": "Masukan kota kamu contoh KAB.BOGOR"   
                    }        
@@ -300,7 +300,7 @@
                     "name": "Texs to speech",
                     "desc": "Ubah kamu jadi suara karakter",
                     "path": "/tools/text-to-speech?text=",
-                    "status": "Ready",
+                    "status": "Eror",
                     "params": {
                         "text": "Masukan Text Nya"
                     }
@@ -309,7 +309,7 @@
                     "name": "Jadwal Shalat",
                     "desc": "Cek jadwal shalat di kota kamu",
                     "path": "/tools/jadwalsholat?kota=",
-                    "status": "Ready",
+                    "status": "Eror",
                     "params": {
                         "kota": "Masukan Text Nya"
                     }
@@ -369,7 +369,7 @@
                     "name": "Ghibli",
                     "desc": "Create foto ghibli",
                     "path": "/imagecreator/text2ghibli?text=",
-                    "status": "Ready",
+                    "status": "Eror",
                     "params": {
                         "text": "Masukan Text Nya"                    
                     }
@@ -551,7 +551,7 @@
                     "name": "Download All",
                     "desc": "Backend support with https://r-nozawa.hf.space",
                     "path": "/download/all?url=",
-                    "status": "Ready",
+                    "status": "Eror",
                     "params": {
                         "url": "Masukan url"
                     }
@@ -569,7 +569,7 @@
                     "name": "Instagram Donwload",
                     "desc": "Download video dari instagram jadi lebih mudah",
                     "path": "/download/instagram?url=",
-                    "status": "Ready",
+                    "status": "Eror",
                     "params": {
                         "url": "Masukan url"
                     }
