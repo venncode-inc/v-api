@@ -22,28 +22,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navCollapseBtn = document.querySelector('.nav-collapse-btn');
     const menuToggle = document.querySelector('.menu-toggle');
     
-    navCollapseBtn.addEventListener('click', () => {
-        sideNav.classList.toggle('collapsed');
-        mainWrapper.classList.toggle('nav-collapsed');
-    });
+    if (navCollapseBtn) {
+        navCollapseBtn.addEventListener('click', () => {
+            sideNav.classList.toggle('collapsed');
+            mainWrapper.classList.toggle('nav-collapsed');
+        });
+    }
     
-    menuToggle.addEventListener('click', () => {
-        sideNav.classList.toggle('active');
-    });
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            sideNav.classList.toggle('active');
+        });
+    }
     
     // Close side nav when clicking outside on mobile
     document.addEventListener('click', (e) => {
         if (window.innerWidth < 992 && 
             !e.target.closest('.side-nav') && 
             !e.target.closest('.menu-toggle') && 
-            sideNav.classList.contains('active')) {
+            sideNav && sideNav.classList.contains('active')) {
             sideNav.classList.remove('active');
         }
     });
     
     // Smooth scrolling for anchor links
     document.querySelectorAll('.side-nav-link').forEach(link => {
-        if (link.getAttribute('href').startsWith('#')) {
+        if (link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
@@ -61,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     this.classList.add('active');
                     
                     // Close side nav on mobile
-                    if (window.innerWidth < 992) {
+                    if (window.innerWidth < 992 && sideNav) {
                         sideNav.classList.remove('active');
                     }
                 }
@@ -92,92 +96,118 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Toast notification system
     const showToast = (message, type = 'info') => {
         const toast = document.getElementById('notificationToast');
+        if (!toast) return;
+        
         const toastBody = toast.querySelector('.toast-body');
         const toastTitle = toast.querySelector('.toast-title');
         const toastIcon = toast.querySelector('.toast-icon');
         
-        toastBody.textContent = message;
+        if (toastBody) toastBody.textContent = message;
         
         // Set toast appearance based on type
-        toast.style.borderLeftColor = type === 'success' 
-            ? 'var(--success-color)' 
-            : type === 'error' 
-                ? 'var(--error-color)' 
-                : 'var(--primary-color)';
-        
-        toastIcon.className = `toast-icon fas fa-${
-            type === 'success' 
-                ? 'check-circle' 
+        if (toast) {
+            toast.style.borderLeftColor = type === 'success' 
+                ? 'var(--success-color)' 
                 : type === 'error' 
-                    ? 'exclamation-circle' 
-                    : 'info-circle'
-        } me-2`;
+                    ? 'var(--error-color)' 
+                    : 'var(--primary-color)';
+        }
         
-        toastIcon.style.color = type === 'success' 
-            ? 'var(--success-color)' 
-            : type === 'error' 
-                ? 'var(--error-color)' 
-                : 'var(--primary-color)';
+        if (toastIcon) {
+            toastIcon.className = `toast-icon fas fa-${
+                type === 'success' 
+                    ? 'check-circle' 
+                    : type === 'error' 
+                        ? 'exclamation-circle' 
+                        : 'info-circle'
+            } me-2`;
+            
+            toastIcon.style.color = type === 'success' 
+                ? 'var(--success-color)' 
+                : type === 'error' 
+                    ? 'var(--error-color)' 
+                    : 'var(--primary-color)';
+        }
         
-        toastTitle.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+        if (toastTitle) {
+            toastTitle.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+        }
         
-        const bsToast = new bootstrap.Toast(toast);
-        bsToast.show();
+        if (typeof bootstrap !== 'undefined') {
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+        }
     };
 
     // Check for saved theme preference
-     document.body.classList.remove('dark-mode');
-     localStorage.setItem('darkMode', 'false');
+    document.body.classList.remove('dark-mode');
+    localStorage.setItem('darkMode', 'false');
 
     // Improved clear search button functionality
-    document.getElementById('clearSearch').addEventListener('click', () => {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput.value.length > 0) {
-            searchInput.value = '';
-            searchInput.focus();
-            // Trigger input event to update the search results
-            searchInput.dispatchEvent(new Event('input'));
-            // Add haptic feedback animation
-            searchInput.classList.add('shake-animation');
-            setTimeout(() => {
-                searchInput.classList.remove('shake-animation');
-            }, 400);
-        }
-    });
+    const clearSearchBtn = document.getElementById('clearSearch');
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', () => {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && searchInput.value.length > 0) {
+                searchInput.value = '';
+                searchInput.focus();
+                // Trigger input event to update the search results
+                searchInput.dispatchEvent(new Event('input'));
+                // Add haptic feedback animation
+                searchInput.classList.add('shake-animation');
+                setTimeout(() => {
+                    searchInput.classList.remove('shake-animation');
+                }, 400);
+            }
+        });
+    }
 
     // Enhanced copy to clipboard functionality
     const copyToClipboard = (elementId) => {
         const element = document.getElementById(elementId);
+        if (!element) return;
+        
         const text = element.textContent;
         
-        navigator.clipboard.writeText(text).then(() => {
-            const btn = elementId === 'apiEndpoint' ? 
-                document.getElementById('copyEndpoint') : 
-                document.getElementById('copyResponse');
-            
-            // Show enhanced success animation
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            btn.classList.add('copy-success');
-            
-            // Show toast
-            showToast('Copied to clipboard successfully!', 'success');
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class="far fa-copy"></i>';
-                btn.classList.remove('copy-success');
-            }, 1500);
-        }).catch(err => {
-            showToast('Failed to copy text: ' + err, 'error');
-        });
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = elementId === 'apiEndpoint' ? 
+                    document.getElementById('copyEndpoint') : 
+                    document.getElementById('copyResponse');
+                
+                if (btn) {
+                    // Show enhanced success animation
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    btn.classList.add('copy-success');
+                    
+                    // Show toast
+                    showToast('Copied to clipboard successfully!', 'success');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="far fa-copy"></i>';
+                        btn.classList.remove('copy-success');
+                    }, 1500);
+                }
+            }).catch(err => {
+                showToast('Failed to copy text: ' + err, 'error');
+            });
+        }
     };
     
-    document.getElementById('copyEndpoint').addEventListener('click', () => {
-        copyToClipboard('apiEndpoint');
-    });
+    const copyEndpointBtn = document.getElementById('copyEndpoint');
+    const copyResponseBtn = document.getElementById('copyResponse');
     
-    document.getElementById('copyResponse').addEventListener('click', () => {
-        copyToClipboard('apiResponseContent');
-    });
+    if (copyEndpointBtn) {
+        copyEndpointBtn.addEventListener('click', () => {
+            copyToClipboard('apiEndpoint');
+        });
+    }
+    
+    if (copyResponseBtn) {
+        copyResponseBtn.addEventListener('click', () => {
+            copyToClipboard('apiResponseContent');
+        });
+    }
 
     try {
         // Fetch settings with improved error handling
@@ -208,10 +238,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Set banner image with improved error handling
         const dynamicImage = document.getElementById('dynamicImage');
-        if (dynamicImage) {
-            if (settings.bannerImage) {
-                dynamicImage.src = settings.bannerImage;
-            }
+        if (dynamicImage && settings.bannerImage) {
+            dynamicImage.src = settings.bannerImage;
             
             // Add loading animation and error handling
             dynamicImage.onerror = () => {
@@ -253,6 +281,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Create API content with enhanced UI and animations
         const apiContent = document.getElementById('apiContent');
+        if (!apiContent) {
+            console.error('API Content container not found');
+            return;
+        }
+
         if (!settings.categories || !settings.categories.length) {
             apiContent.innerHTML = `
                 <div class="no-results-message">
@@ -266,7 +299,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             settings.categories.forEach((category, categoryIndex) => {
                 // Sort items alphabetically
-                const sortedItems = category.items.sort((a, b) => a.name.localeCompare(b.name));
+                const sortedItems = category.items ? category.items.sort((a, b) => a.name.localeCompare(b.name)) : [];
                 
                 const categoryElement = document.createElement('div');
                 categoryElement.className = 'category-section';
@@ -301,9 +334,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 sortedItems.forEach((item, index) => {
                     const itemCol = document.createElement('div');
                     itemCol.className = 'col-md-6 col-lg-4 api-item';
-                    itemCol.dataset.name = item.name;
-                    itemCol.dataset.desc = item.desc;
-                    itemCol.dataset.category = category.name;
+                    itemCol.dataset.name = item.name || '';
+                    itemCol.dataset.desc = item.desc || '';
+                    itemCol.dataset.category = category.name || '';
                     itemCol.style.animationDelay = `${index * 0.05 + 0.3}s`;
                     
                     const heroSection = document.createElement('div');
@@ -313,11 +346,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     const itemTitle = document.createElement('h5');
                     itemTitle.className = 'mb-0';
-                    itemTitle.textContent = item.name;
+                    itemTitle.textContent = item.name || '';
                     
                     const itemDesc = document.createElement('p');
                     itemDesc.className = 'text-muted mb-0';
-                    itemDesc.textContent = item.desc;
+                    itemDesc.textContent = item.desc || '';
                     
                     infoDiv.appendChild(itemTitle);
                     infoDiv.appendChild(itemDesc);
@@ -328,9 +361,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const getBtn = document.createElement('button');
                     getBtn.className = 'btn get-api-btn';
                     getBtn.innerHTML = '<i class="fas fa-code"></i> GET';
-                    getBtn.dataset.apiPath = item.path;
-                    getBtn.dataset.apiName = item.name;
-                    getBtn.dataset.apiDesc = item.desc;
+                    getBtn.dataset.apiPath = item.path || '';
+                    getBtn.dataset.apiName = item.name || '';
+                    getBtn.dataset.apiDesc = item.desc || '';
                     getBtn.setAttribute('aria-label', `Get ${item.name} API`);
                     
                     // Add API status indicator with enhanced styling
@@ -386,135 +419,146 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Enhanced search functionality with improved UX
+        // FIXED: Enhanced search functionality with improved UX and error handling
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
         
-        searchInput.addEventListener('focus', () => {
-            // Add animation to search container on focus
-            searchInput.parentElement.classList.add('search-focused');
-        });
-        
-        searchInput.addEventListener('blur', () => {
-            searchInput.parentElement.classList.remove('search-focused');
-        });
-        
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.toLowerCase();
-            
-            // Show/hide clear button based on search input with animation
-            if (searchTerm.length > 0) {
-                clearSearchBtn.style.opacity = '1';
-                clearSearchBtn.style.pointerEvents = 'auto';
-            } else {
-                clearSearchBtn.style.opacity = '0';
-                clearSearchBtn.style.pointerEvents = 'none';
-            }
-            
-            const apiItems = document.querySelectorAll('.api-item');
-            const categoryHeaders = document.querySelectorAll('.category-header');
-            const categoryImages = document.querySelectorAll('.category-image');
-            const categoryCount = {};
-
-            apiItems.forEach(item => {
-                const name = item.getAttribute('data-name').toLowerCase();
-                const desc = item.getAttribute('data-desc').toLowerCase();
-                const category = item.getAttribute('data-category').toLowerCase();
-                
-                const matchesSearch = name.includes(searchTerm) || 
-                                     desc.includes(searchTerm) || 
-                                     category.includes(searchTerm);
-                
-                if (matchesSearch) {
-                    item.style.display = '';
-                    // Highlight what was found
-                    if (searchTerm !== '') {
-                        item.classList.add('search-match');
-                        setTimeout(() => item.classList.remove('search-match'), 800);
-                    }
-                    
-                    // Count visible items per category
-                    if (!categoryCount[category]) {
-                        categoryCount[category] = 0;
-                    }
-                    categoryCount[category]++;
-                } else {
-                    item.style.display = 'none';
-                }
+        if (searchInput) {
+            searchInput.addEventListener('focus', () => {
+                // Add animation to search container on focus
+                const parent = searchInput.parentElement;
+                if (parent) parent.classList.add('search-focused');
             });
-
-            categoryHeaders.forEach((header, index) => {
-                const categorySection = header.closest('.category-section');
-                const categoryRow = categorySection.querySelector('.row');
-                const categoryName = header.textContent.toLowerCase();
+            
+            searchInput.addEventListener('blur', () => {
+                const parent = searchInput.parentElement;
+                if (parent) parent.classList.remove('search-focused');
+            });
+            
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
                 
-                if (categoryCount[categoryName] > 0) {
-                    categorySection.style.display = '';
-                    if (categoryImages[index]) {
-                        categoryImages[index].style.display = '';
-                    }
-                    
-                    // Add counter badge to header for non-empty search
+                // Show/hide clear button based on search input with animation
+                if (clearSearchBtn) {
                     if (searchTerm.length > 0) {
-                        let countBadge = header.querySelector('.count-badge');
-                        if (!countBadge) {
-                            countBadge = document.createElement('span');
-                            countBadge.className = 'count-badge';
-                            countBadge.style.fontSize = '14px';
-                            countBadge.style.marginLeft = '10px';
-                            countBadge.style.fontWeight = 'normal';
-                            countBadge.style.color = 'var(--text-muted)';
-                            header.appendChild(countBadge);
-                        }
-                        countBadge.textContent = `(${categoryCount[categoryName]} results)`;
+                        clearSearchBtn.style.opacity = '1';
+                        clearSearchBtn.style.pointerEvents = 'auto';
                     } else {
-                        const countBadge = header.querySelector('.count-badge');
-                        if (countBadge) {
-                            header.removeChild(countBadge);
+                        clearSearchBtn.style.opacity = '0';
+                        clearSearchBtn.style.pointerEvents = 'none';
+                    }
+                }
+                
+                const apiItems = document.querySelectorAll('.api-item');
+                const categoryHeaders = document.querySelectorAll('.category-header');
+                const categoryImages = document.querySelectorAll('.category-image');
+                const categoryCount = {};
+
+                apiItems.forEach(item => {
+                    const name = (item.getAttribute('data-name') || '').toLowerCase();
+                    const desc = (item.getAttribute('data-desc') || '').toLowerCase();
+                    const category = (item.getAttribute('data-category') || '').toLowerCase();
+                    
+                    const matchesSearch = name.includes(searchTerm) || 
+                                         desc.includes(searchTerm) || 
+                                         category.includes(searchTerm);
+                    
+                    if (matchesSearch) {
+                        item.style.display = '';
+                        // Highlight what was found
+                        if (searchTerm !== '') {
+                            item.classList.add('search-match');
+                            setTimeout(() => item.classList.remove('search-match'), 800);
+                        }
+                        
+                        // Count visible items per category
+                        if (!categoryCount[category]) {
+                            categoryCount[category] = 0;
+                        }
+                        categoryCount[category]++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                categoryHeaders.forEach((header, index) => {
+                    const categorySection = header.closest('.category-section');
+                    if (!categorySection) return;
+                    
+                    const categoryName = (header.textContent || '').toLowerCase();
+                    
+                    if (categoryCount[categoryName] > 0) {
+                        categorySection.style.display = '';
+                        if (categoryImages[index]) {
+                            categoryImages[index].style.display = '';
+                        }
+                        
+                        // Add counter badge to header for non-empty search
+                        if (searchTerm.length > 0) {
+                            let countBadge = header.querySelector('.count-badge');
+                            if (!countBadge) {
+                                countBadge = document.createElement('span');
+                                countBadge.className = 'count-badge';
+                                countBadge.style.fontSize = '14px';
+                                countBadge.style.marginLeft = '10px';
+                                countBadge.style.fontWeight = 'normal';
+                                countBadge.style.color = 'var(--text-muted)';
+                                header.appendChild(countBadge);
+                            }
+                            countBadge.textContent = `(${categoryCount[categoryName]} results)`;
+                        } else {
+                            const countBadge = header.querySelector('.count-badge');
+                            if (countBadge) {
+                                header.removeChild(countBadge);
+                            }
+                        }
+                    } else {
+                        categorySection.style.display = 'none';
+                        if (categoryImages[index]) {
+                            categoryImages[index].style.display = 'none';
                         }
                     }
-                } else {
-                    categorySection.style.display = 'none';
-                    if (categoryImages[index]) {
-                        categoryImages[index].style.display = 'none';
+                });
+                
+                // Show enhanced no results message if needed
+                const noVisibleSections = Array.from(document.querySelectorAll('.category-section')).every(
+                    section => section.style.display === 'none'
+                );
+                
+                let noResultsMsg = document.getElementById('noResultsMessage');
+                
+                if (noVisibleSections && searchTerm.length > 0) {
+                    if (!noResultsMsg) {
+                        noResultsMsg = document.createElement('div');
+                        noResultsMsg.id = 'noResultsMessage';
+                        noResultsMsg.className = 'no-results-message fade-in';
+                        noResultsMsg.innerHTML = `
+                            <i class="fas fa-search"></i>
+                            <p>No results found for "<span>${searchTerm}</span>"</p>
+                            <button id="clearSearchFromMsg" class="btn btn-primary">
+                                <i class="fas fa-times"></i> Clear Search
+                            </button>
+                        `;
+                        apiContent.appendChild(noResultsMsg);
+                        
+                        const clearFromMsgBtn = document.getElementById('clearSearchFromMsg');
+                        if (clearFromMsgBtn) {
+                            clearFromMsgBtn.addEventListener('click', () => {
+                                searchInput.value = '';
+                                searchInput.dispatchEvent(new Event('input'));
+                                searchInput.focus();
+                            });
+                        }
+                    } else {
+                        const searchSpan = noResultsMsg.querySelector('span');
+                        if (searchSpan) searchSpan.textContent = searchTerm;
+                        noResultsMsg.style.display = 'flex';
                     }
+                } else if (noResultsMsg) {
+                    noResultsMsg.style.display = 'none';
                 }
             });
-            
-            // Show enhanced no results message if needed
-            const noVisibleSections = Array.from(document.querySelectorAll('.category-section')).every(
-                section => section.style.display === 'none'
-            );
-            
-            let noResultsMsg = document.getElementById('noResultsMessage');
-            
-            if (noVisibleSections && searchTerm.length > 0) {
-                if (!noResultsMsg) {
-                    noResultsMsg = document.createElement('div');
-                    noResultsMsg.id = 'noResultsMessage';
-                    noResultsMsg.className = 'no-results-message fade-in';
-                    noResultsMsg.innerHTML = `
-                        <i class="fas fa-search"></i>
-                        <p>No results found for "<span>${searchTerm}</span>"</p>
-                        <button id="clearSearchFromMsg" class="btn btn-primary">
-                            <i class="fas fa-times"></i> Clear Search
-                        </button>
-                    `;
-                    apiContent.appendChild(noResultsMsg);
-                    
-                    document.getElementById('clearSearchFromMsg').addEventListener('click', () => {
-                        searchInput.value = '';
-                        searchInput.dispatchEvent(new Event('input'));
-                        searchInput.focus();
-                    });
-                } else {
-                    noResultsMsg.querySelector('span').textContent = searchTerm;
-                    noResultsMsg.style.display = 'flex';
-                }
-            } else if (noResultsMsg) {
-                noResultsMsg.style.display = 'none';
-            }
-        });
+        }
 
         // Enhanced API Button click handler
         document.addEventListener('click', event => {
@@ -528,7 +572,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 300);
 
             const { apiPath, apiName, apiDesc } = getApiBtn.dataset;
-            const modal = new bootstrap.Modal(document.getElementById('apiResponseModal'));
+            
+            // Check if bootstrap is available
+            if (typeof bootstrap === 'undefined') {
+                console.error('Bootstrap is not loaded');
+                return;
+            }
+            
+            const modalElement = document.getElementById('apiResponseModal');
+            if (!modalElement) {
+                console.error('API Response Modal not found');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(modalElement);
             const modalRefs = {
                 label: document.getElementById('apiResponseModalLabel'),
                 desc: document.getElementById('apiResponseModalDesc'),
@@ -541,25 +598,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
 
             // Reset modal with enhanced animations
-            modalRefs.label.textContent = apiName;
-            modalRefs.desc.textContent = apiDesc;
-            modalRefs.content.textContent = '';
-            modalRefs.endpoint.textContent = '';
-            modalRefs.spinner.classList.add('d-none');
-            modalRefs.content.classList.add('d-none');
-            modalRefs.container.classList.add('d-none');
-            modalRefs.endpoint.classList.add('d-none');
+            if (modalRefs.label) modalRefs.label.textContent = apiName || '';
+            if (modalRefs.desc) modalRefs.desc.textContent = apiDesc || '';
+            if (modalRefs.content) {
+                modalRefs.content.textContent = '';
+                modalRefs.content.classList.add('d-none');
+            }
+            if (modalRefs.endpoint) {
+                modalRefs.endpoint.textContent = '';
+                modalRefs.endpoint.classList.add('d-none');
+            }
+            if (modalRefs.spinner) modalRefs.spinner.classList.add('d-none');
+            if (modalRefs.container) modalRefs.container.classList.add('d-none');
 
-            modalRefs.queryInputContainer.innerHTML = '';
-            modalRefs.submitBtn.classList.add('d-none');
-            modalRefs.submitBtn.disabled = true;
-            modalRefs.submitBtn.classList.remove('btn-active');
+            if (modalRefs.queryInputContainer) modalRefs.queryInputContainer.innerHTML = '';
+            if (modalRefs.submitBtn) {
+                modalRefs.submitBtn.classList.add('d-none');
+                modalRefs.submitBtn.disabled = true;
+                modalRefs.submitBtn.classList.remove('btn-active');
+            }
 
-            let baseApiUrl = `${window.location.origin}${apiPath}`;
-            let params = new URLSearchParams(apiPath.split('?')[1]);
+            let baseApiUrl = `${window.location.origin}${apiPath || ''}`;
+            let params = new URLSearchParams((apiPath || '').split('?')[1]);
             let hasParams = params.toString().length > 0;
 
-            if (hasParams) {
+            if (hasParams && modalRefs.queryInputContainer) {
                 // Create enhanced input fields for parameters
                 const paramContainer = document.createElement('div');
                 paramContainer.className = 'param-container';
@@ -580,496 +643,205 @@ document.addEventListener('DOMContentLoaded', async () => {
                     labelContainer.className = 'param-label-container';
                     
                     const label = document.createElement('label');
-                    label.className = 'form-label';
+                    label.className = 'form-label param-label';
                     label.textContent = param;
-                    label.htmlFor = `param-${param}`;
+                    label.setAttribute('for', `param_${param}`);
                     
-                    // Add required indicator
-                    const requiredSpan = document.createElement('span');
-                    requiredSpan.className = 'required-indicator';
-                    requiredSpan.textContent = '*';
-                    label.appendChild(requiredSpan);
+                    const requiredIndicator = document.createElement('span');
+                    requiredIndicator.className = 'required-indicator';
+                    requiredIndicator.textContent = ' *';
+                    requiredIndicator.style.color = 'var(--error-color)';
+                    label.appendChild(requiredIndicator);
                     
                     labelContainer.appendChild(label);
                     
-                    // Add enhanced parameter description tooltip
-                    const currentItem = settings.categories
-                        .flatMap(category => category.items)
-                        .find(item => item.path === apiPath);
-                    
-                    if (currentItem && currentItem.params && currentItem.params[param]) {
-                        const tooltipIcon = document.createElement('i');
-                        tooltipIcon.className = 'fas fa-info-circle param-info';
-                        tooltipIcon.setAttribute('data-bs-toggle', 'tooltip');
-                        tooltipIcon.setAttribute('data-bs-placement', 'top');
-                        tooltipIcon.title = currentItem.params[param];
-                        labelContainer.appendChild(tooltipIcon);
-                    }
-                    
-                    paramGroup.appendChild(labelContainer);
-                    
-                    // Create input with enhanced styling
                     const inputContainer = document.createElement('div');
                     inputContainer.className = 'input-container';
                     
-                    const inputField = document.createElement('input');
-                    inputField.type = 'text';
-                    inputField.className = 'form-control custom-input';
-                    inputField.id = `param-${param}`;
-                    inputField.placeholder = `Enter ${param}...`;
-                    inputField.dataset.param = param;
-                    inputField.required = true;
-                    inputField.autocomplete = "off";
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'form-control param-input';
+                    input.id = `param_${param}`;
+                    input.name = param;
+                    input.placeholder = `Enter ${param}...`;
+                    input.value = params.get(param) || '';
+                    input.setAttribute('data-param', param);
                     
-                    // Add animation and validation events
-                    inputField.addEventListener('focus', () => {
-                        inputContainer.classList.add('input-focused');
-                    });
-                    
-                    inputField.addEventListener('blur', () => {
-                        inputContainer.classList.remove('input-focused');
-                        
-                        // Validate on blur
-                        if (!inputField.value.trim()) {
-                            inputField.classList.add('is-invalid');
+                    // Add real-time validation
+                    input.addEventListener('input', () => {
+                        const value = input.value.trim();
+                        if (value) {
+                            input.classList.remove('is-invalid');
+                            input.classList.add('is-valid');
                         } else {
-                            inputField.classList.remove('is-invalid');
+                            input.classList.remove('is-valid');
+                            input.classList.add('is-invalid');
+                        }
+                        
+                        // Check if all required fields are filled
+                        const allInputs = paramContainer.querySelectorAll('.param-input');
+                        const allFilled = Array.from(allInputs).every(inp => inp.value.trim() !== '');
+                        
+                        if (modalRefs.submitBtn) {
+                            modalRefs.submitBtn.disabled = !allFilled;
+                            if (allFilled) {
+                                modalRefs.submitBtn.classList.add('btn-active');
+                            } else {
+                                modalRefs.submitBtn.classList.remove('btn-active');
+                            }
                         }
                     });
                     
-                    inputField.addEventListener('input', validateInputs);
+                    // Add enhanced focus effects
+                    input.addEventListener('focus', () => {
+                        inputContainer.classList.add('input-focused');
+                        labelContainer.classList.add('label-focused');
+                    });
                     
-                    inputContainer.appendChild(inputField);
+                    input.addEventListener('blur', () => {
+                        inputContainer.classList.remove('input-focused');
+                        labelContainer.classList.remove('label-focused');
+                    });
+                    
+                    const inputIcon = document.createElement('i');
+                    inputIcon.className = 'fas fa-edit input-icon';
+                    
+                    inputContainer.appendChild(input);
+                    inputContainer.appendChild(inputIcon);
+                    
+                    paramGroup.appendChild(labelContainer);
                     paramGroup.appendChild(inputContainer);
+                    
                     paramContainer.appendChild(paramGroup);
                 });
                 
-                // Check for inner description and add with enhanced styling
-                const currentItem = settings.categories
-                    .flatMap(category => category.items)
-                    .find(item => item.path === apiPath);
-
-                if (currentItem && currentItem.innerDesc) {
-                    const innerDescDiv = document.createElement('div');
-                    innerDescDiv.className = 'inner-desc';
-                    innerDescDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${currentItem.innerDesc.replace(/\n/g, '<br>')}`;
-                    paramContainer.appendChild(innerDescDiv);
-                }
-
                 modalRefs.queryInputContainer.appendChild(paramContainer);
-                modalRefs.submitBtn.classList.remove('d-none');
-
-                // Enhanced submit button handler
-                modalRefs.submitBtn.onclick = async () => {
-                    const inputs = modalRefs.queryInputContainer.querySelectorAll('input');
-                    const newParams = new URLSearchParams();
-                    let isValid = true;
-
-                    inputs.forEach(input => {
-                        if (!input.value.trim()) {
-                            isValid = false;
-                            input.classList.add('is-invalid');
-                            input.parentElement.classList.add('shake-animation');
-                            setTimeout(() => {
-                                input.parentElement.classList.remove('shake-animation');
-                            }, 500);
-                        } else {
-                            input.classList.remove('is-invalid');
-                            newParams.append(input.dataset.param, input.value.trim());
+                
+                if (modalRefs.submitBtn) {
+                    modalRefs.submitBtn.classList.remove('d-none');
+                    modalRefs.submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Execute API';
+                    
+                    // Remove existing event listeners
+                    const newSubmitBtn = modalRefs.submitBtn.cloneNode(true);
+                    modalRefs.submitBtn.parentNode.replaceChild(newSubmitBtn, modalRefs.submitBtn);
+                    modalRefs.submitBtn = newSubmitBtn;
+                    
+                    modalRefs.submitBtn.addEventListener('click', async () => {
+                        const inputs = paramContainer.querySelectorAll('.param-input');
+                        const newParams = new URLSearchParams();
+                        
+                        let allValid = true;
+                        inputs.forEach(input => {
+                            const value = input.value.trim();
+                            if (!value) {
+                                input.classList.add('is-invalid');
+                                allValid = false;
+                            } else {
+                                input.classList.remove('is-invalid');
+                                newParams.set(input.getAttribute('data-param'), value);
+                            }
+                        });
+                        
+                        if (!allValid) {
+                            showToast('Please fill in all required parameters', 'error');
+                            return;
+                        }
+                        
+                        const finalUrl = `${baseApiUrl.split('?')[0]}?${newParams.toString()}`;
+                        
+                        // Show loading state
+                        if (modalRefs.spinner) modalRefs.spinner.classList.remove('d-none');
+                        if (modalRefs.container) modalRefs.container.classList.add('d-none');
+                        modalRefs.submitBtn.disabled = true;
+                        modalRefs.submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executing...';
+                        
+                        try {
+                            const response = await fetch(finalUrl);
+                            const data = await response.text();
+                            
+                            if (modalRefs.endpoint) {
+                                modalRefs.endpoint.textContent = finalUrl;
+                                modalRefs.endpoint.classList.remove('d-none');
+                            }
+                            if (modalRefs.content) {
+                                modalRefs.content.textContent = data;
+                                modalRefs.content.classList.remove('d-none');
+                            }
+                            if (modalRefs.container) modalRefs.container.classList.remove('d-none');
+                            
+                            showToast('API executed successfully!', 'success');
+                        } catch (error) {
+                            if (modalRefs.content) {
+                                modalRefs.content.textContent = `Error: ${error.message}`;
+                                modalRefs.content.classList.remove('d-none');
+                            }
+                            if (modalRefs.container) modalRefs.container.classList.remove('d-none');
+                            showToast('Failed to execute API', 'error');
+                        } finally {
+                            if (modalRefs.spinner) modalRefs.spinner.classList.add('d-none');
+                            modalRefs.submitBtn.disabled = false;
+                            modalRefs.submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Execute API';
                         }
                     });
-
-                    if (!isValid) {
-                        // Enhanced error message with animation
-                        const errorMsg = document.createElement('div');
-                        errorMsg.className = 'alert alert-danger mt-3 fade-in';
-                        errorMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please fill in all required fields.';
-                        
-                        // Remove existing error message if any
-                        const existingError = modalRefs.queryInputContainer.querySelector('.alert');
-                        if (existingError) existingError.remove();
-                        
-                        modalRefs.queryInputContainer.appendChild(errorMsg);
-                        
-                        // Shake the submit button for feedback
-                        modalRefs.submitBtn.classList.add('shake-animation');
-                        setTimeout(() => {
-                            modalRefs.submitBtn.classList.remove('shake-animation');
-                        }, 500);
-                        
-                        return;
-                    }
-
-                    // Enhanced loading animation
-                    modalRefs.submitBtn.disabled = true;
-                    modalRefs.submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
-
-
-                    const apiUrlWithParams = `${window.location.origin}${apiPath.split('?')[0]}?${newParams.toString()}`;
-                    
-                    // Improved animated transition
-                    modalRefs.queryInputContainer.style.opacity = '0';
-                    setTimeout(() => {
-                        modalRefs.queryInputContainer.innerHTML = '';
-                        modalRefs.queryInputContainer.style.opacity = '1';
-                        modalRefs.submitBtn.classList.add('d-none');
-                        handleApiRequest(apiUrlWithParams, modalRefs, apiName);
-                    }, 300);
-                };
-                
-                // Initialize tooltips
-                const tooltips = modalRefs.queryInputContainer.querySelectorAll('[data-bs-toggle="tooltip"]');
-                tooltips.forEach(tooltip => {
-                    new bootstrap.Tooltip(tooltip);
-                });
+                }
             } else {
-                handleApiRequest(baseApiUrl, modalRefs, apiName);
+                // Direct API call without parameters
+                if (modalRefs.spinner) modalRefs.spinner.classList.remove('d-none');
+                
+                fetch(baseApiUrl)
+                    .then(response => response.text())
+                    .then(data => {
+                        if (modalRefs.endpoint) {
+                            modalRefs.endpoint.textContent = baseApiUrl;
+                            modalRefs.endpoint.classList.remove('d-none');
+                        }
+                        if (modalRefs.content) {
+                            modalRefs.content.textContent = data;
+                            modalRefs.content.classList.remove('d-none');
+                        }
+                        if (modalRefs.container) modalRefs.container.classList.remove('d-none');
+                        showToast('API executed successfully!', 'success');
+                    })
+                    .catch(error => {
+                        if (modalRefs.content) {
+                            modalRefs.content.textContent = `Error: ${error.message}`;
+                            modalRefs.content.classList.remove('d-none');
+                        }
+                        if (modalRefs.container) modalRefs.container.classList.remove('d-none');
+                        showToast('Failed to execute API', 'error');
+                    })
+                    .finally(() => {
+                        if (modalRefs.spinner) modalRefs.spinner.classList.add('d-none');
+                    });
             }
-
+            
             modal.show();
         });
 
-        // Enhanced input validation with visual feedback
-        function validateInputs() {
-            const submitBtn = document.getElementById('submitQueryBtn');
-            const inputs = document.querySelectorAll('.param-container input');
-            const isValid = Array.from(inputs).every(input => input.value.trim() !== '');
-            
-            if (isValid) {
-                submitBtn.disabled = false;
-                submitBtn.classList.add('btn-active');
-            } else {
-                submitBtn.disabled = true;
-                submitBtn.classList.remove('btn-active');
+        // Hide loading screen with enhanced animation
+        setTimeout(() => {
+            clearInterval(loadingDotsAnimation);
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    body.classList.remove("no-scroll");
+                }, 500);
             }
-            
-            // Remove validation error on input
-            this.classList.remove('is-invalid');
-            
-            // Remove error message when user starts typing
-            const errorMsg = document.querySelector('.alert.alert-danger');
-            if (errorMsg && this.value.trim() !== '') {
-                errorMsg.classList.add('fade-out');
-                setTimeout(() => errorMsg.remove(), 300);
-            }
-        }
+        }, 2000);
 
-        // Enhanced API request handler with improved animations and error handling
-        async function handleApiRequest(apiUrl, modalRefs, apiName) {
-            modalRefs.spinner.classList.remove('d-none');
-            modalRefs.container.classList.add('d-none');
-            
-            // Display the endpoint with enhanced typing animation
-            modalRefs.endpoint.textContent = '';
-            modalRefs.endpoint.classList.remove('d-none');
-            
-            const typingSpeed = 20; // ms per character
-            const endpointText = apiUrl;
-            let charIndex = 0;
-            
-            const typeEndpoint = () => {
-                if (charIndex < endpointText.length) {
-                    modalRefs.endpoint.textContent += endpointText.charAt(charIndex);
-                    charIndex++;
-                    setTimeout(typeEndpoint, typingSpeed);
-                }
-            };
-            
-            typeEndpoint();
-
-            try {
-                // Add request timeout for better UX
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
-                
-                const response = await fetch(apiUrl, { 
-                    signal: controller.signal 
-                }).catch(error => {
-                    if (error.name === 'AbortError') {
-                        throw new Error('Request timed out. Please try again.');
-                    }
-                    throw error;
-                });
-                
-                clearTimeout(timeoutId);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText || 'Unknown error'}`);
-                }
-
-                const contentType = response.headers.get('Content-Type');
-                if (contentType && contentType.startsWith('image/')) {
-                    // Handle image response with enhanced animation
-                    const blob = await response.blob();
-                    const imageUrl = URL.createObjectURL(blob);
-
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.alt = apiName;
-                    img.className = 'response-image fade-in';
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.borderRadius = 'var(--border-radius)';
-                    img.style.boxShadow = 'var(--shadow)';
-                    img.style.transition = 'var(--transition)';
-                    
-                    // Add hover effect
-                    img.onmouseover = () => {
-                        img.style.transform = 'scale(1.02)';
-                        img.style.boxShadow = 'var(--hover-shadow)';
-                    };
-                    
-                    img.onmouseout = () => {
-                        img.style.transform = 'scale(1)';
-                        img.style.boxShadow = 'var(--shadow)';
-                    };
-
-                    modalRefs.content.innerHTML = '';
-                    modalRefs.content.appendChild(img);
-                    
-                    // Show download button for images
-                    const downloadBtn = document.createElement('button');
-                    downloadBtn.className = 'btn btn-primary mt-3';
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadBtn.style.width = '100%';
-                    
-                    downloadBtn.onclick = () => {
-                        const link = document.createElement('a');
-                        link.href = imageUrl;
-                        link.download = `${apiName.toLowerCase().replace(/\s+/g, '-')}.${blob.type.split('/')[1]}`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        
-                        // Show notification
-                        showToast('Image download started!', 'success');
-                    };
-                    
-                    modalRefs.content.appendChild(downloadBtn);
-                } else {
-                    // Handle JSON response with enhanced syntax highlighting and animation
-                    const data = await response.json();
-                    
-                    // Pretty-print JSON with enhanced syntax highlighting
-                    const formattedJson = syntaxHighlight(JSON.stringify(data, null, 2));
-                    modalRefs.content.innerHTML = formattedJson;
-                    
-                    // Add code folding for large responses with enhanced UI
-                    if (JSON.stringify(data, null, 2).split('\n').length > 15) {
-                        addCodeFolding(modalRefs.content);
-                    }
-                }
-
-                modalRefs.container.classList.remove('d-none');
-                modalRefs.content.classList.remove('d-none');
-                
-                // Animate the response container with enhanced animation
-                modalRefs.container.classList.add('slide-in-bottom');
-                
-                // Show success toast
-                showToast(`Successfully retrieved ${apiName}`, 'success');
-            } catch (error) {
-                // Enhanced error display with more information
-                const errorContainer = document.createElement('div');
-                errorContainer.className = 'error-container fade-in';
-                
-                const errorIcon = document.createElement('div');
-                errorIcon.className = 'error-icon';
-                errorIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.innerHTML = `
-                    <h6>Error Occurred</h6>
-                    <p>${error.message}</p>
-                    <div class="mt-2">
-                        <button class="btn btn-sm retry-btn">
-                            <i class="fas fa-sync-alt"></i> Retry Request
-                        </button>
-                    </div>
-                `;
-                
-                errorContainer.appendChild(errorIcon);
-                errorContainer.appendChild(errorMessage);
-                
-                modalRefs.content.innerHTML = '';
-                modalRefs.content.appendChild(errorContainer);
-                modalRefs.container.classList.remove('d-none');
-                modalRefs.content.classList.remove('d-none');
-                
-                // Add retry functionality
-                errorContainer.querySelector('.retry-btn').addEventListener('click', () => {
-                    modalRefs.content.classList.add('d-none');
-                    modalRefs.container.classList.add('d-none');
-                    handleApiRequest(apiUrl, modalRefs, apiName);
-                });
-                
-                // Show error toast
-                showToast('Error retrieving data. Check response for details.', 'error');
-            } finally {
-                modalRefs.spinner.classList.add('d-none');
-            }
-        }
-        
-        // Enhanced code folding functionality
-        function addCodeFolding(container) {
-            const codeLines = container.innerHTML.split('\n');
-            let foldableContent = '';
-            let inObject = false;
-            let objectLevel = 0;
-            let foldedLineCount = 0;
-            
-            for (let i = 0; i < codeLines.length; i++) {
-                const line = codeLines[i];
-                
-                if (line.includes('{') && !line.includes('}')) {
-                    if (!inObject) {
-                        foldableContent += `<div class="code-fold-trigger" data-folded="false">${line}</div>`;
-                        foldableContent += '<div class="code-fold-content">';
-                        inObject = true;
-                        objectLevel = 1;
-                    } else {
-                        foldableContent += line + '\n';
-                        objectLevel++;
-                    }
-                } else if (line.includes('}') && !line.includes('{')) {
-                    objectLevel--;
-                    if (objectLevel === 0 && inObject) {
-                        foldableContent += line + '\n';
-                        foldableContent += '</div>';
-                        inObject = false;
-                    } else {
-                        foldableContent += line + '\n';
-                    }
-                } else {
-                    if (inObject) {
-                        foldableContent += line + '\n';
-                        foldedLineCount++;
-                    } else {
-                        foldableContent += line + '\n';
-                    }
-                }
-            }
-            
-            container.innerHTML = foldableContent;
-            
-            // Add enhanced click handlers for fold/unfold
-            const foldTriggers = container.querySelectorAll('.code-fold-trigger');
-            foldTriggers.forEach(trigger => {
-                trigger.addEventListener('click', () => {
-                    const isFolded = trigger.getAttribute('data-folded') === 'true';
-                    const content = trigger.nextElementSibling;
-                    
-                    if (isFolded) {
-                        // Unfold with animation
-                        content.style.maxHeight = '0';
-                        content.style.display = 'block';
-                        setTimeout(() => {
-                            content.style.maxHeight = content.scrollHeight + 'px';
-                            trigger.setAttribute('data-folded', 'false');
-                            trigger.classList.remove('folded');
-                        }, 10);
-                        
-                        setTimeout(() => {
-                            content.style.maxHeight = '';
-                        }, 300);
-                    } else {
-                        // Fold with animation
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        setTimeout(() => {
-                            content.style.maxHeight = '0';
-                        }, 10);
-                        
-                        setTimeout(() => {
-                            content.style.display = 'none';
-                            trigger.setAttribute('data-folded', 'true');
-                            trigger.classList.add('folded');
-                        }, 300);
-                    }
-                });
-                
-                // Add enhanced fold icon and count
-                if (trigger.nextElementSibling.classList.contains('code-fold-content')) {
-                    const lineCount = trigger.nextElementSibling.innerHTML.split('\n').length - 1;
-                    const foldIndicator = document.createElement('span');
-                    foldIndicator.className = 'fold-indicator';
-                    foldIndicator.innerHTML = `<i class="fas fa-chevron-down"></i> ${lineCount} lines`;
-                    trigger.appendChild(foldIndicator);
-                }
-            });
-        }
-        
-        // Enhanced JSON syntax highlighting
-        function syntaxHighlight(json) {
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                let cls = 'json-number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'json-key';
-                    } else {
-                        cls = 'json-string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'json-boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'json-null';
-                }
-                return '<span class="' + cls + '">' + match + '</span>';
-            });
-        }
-        
-        // Initialize all tooltips
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-            new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-
-        // Add bell notification dropdown on click
-        const notificationBell = document.querySelector('.notification-bell');
-        if (notificationBell) {
-            notificationBell.addEventListener('click', () => {
-                showToast('🎉 2 new updates available! Click to see more.', 'info');
-            });
-        }
-        
     } catch (error) {
         console.error('Error loading settings:', error);
+        showToast('Failed to load application settings', 'error');
         
-        // Show enhanced error notification
-        showToast(`Failed to load settings: ${error.message}`, 'error');
-    } finally {
-        // Add enhanced animation to loading screen disappearance
-        clearInterval(loadingDotsAnimation);
-          setTimeout(() => {
-            loadingScreen.classList.add('fade-out');
-
-            setTimeout(() => {
-          loadingScreen.style.display = "none";
-        body.classList.remove("no-scroll");
-          }, 500); // waktu animasi fade-out
-       }, 9500); // tunggu 9.5 detik dulu sebelum animasi
+        // Hide loading screen even on error
+        setTimeout(() => {
+            clearInterval(loadingDotsAnimation);
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+                body.classList.remove("no-scroll");
+            }
+        }, 1000);
     }
-    // Animate in API items as they come into view
-    const observeElements = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in-view');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
-        
-        document.querySelectorAll('.api-item:not(.in-view)').forEach(item => {
-            observer.observe(item);
-        });
-    };
-    
-    // Call on load and whenever content might change
-    observeElements();
-    // Re-run on window resize
-    window.addEventListener('resize', observeElements);
 });
+
