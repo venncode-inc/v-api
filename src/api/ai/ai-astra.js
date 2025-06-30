@@ -2,7 +2,8 @@ const axios = require('axios');
 
 module.exports = function (app) {
     const SOURCES = [        
-        { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' }
+        { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' },
+        // Tambahkan lebih banyak sumber jika ingin
     ];
 
     async function checkDatabase(text) {
@@ -11,7 +12,7 @@ module.exports = function (app) {
                 axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/local.json'),
                 axios.get('https://raw.githubusercontent.com/hazelnuttty/API/refs/heads/main/AstraAi.json')
             ]);
-            
+
             const data = [...resAstraAI.data, ...resDatabase.data];
 
             for (const item of data) {
@@ -54,7 +55,9 @@ module.exports = function (app) {
                     }
                 });
 
-                const result = response.data?.result || response.data?.message || 'Tidak ada hasil dari model';
+                const logicPrompt = `Kamu adalah ai yang bernama Astra Ai. Tugas kamu adalah menjawab. Kamu dibuat oleh Hazel sang pengembang. Fokus kamu adalah harus sopan, pintar, dan menjawab secara detail. Berikut pertanyaan dari user: ${userText}`;
+                
+                const result = response.data?.result || response.data?.message || JSON.stringify(response.data);
                 const speed = Date.now() - start;
 
                 return {
@@ -63,7 +66,7 @@ module.exports = function (app) {
                     speed_ms: speed
                 };
             } catch (error) {
-                console.warn(`Gagal menggunakan ${chosen.name}, coba API berikutnya...`);
+                console.warn(`Gagal menggunakan ${chosen.name}: ${error.message}`);
                 continue;
             }
         }
