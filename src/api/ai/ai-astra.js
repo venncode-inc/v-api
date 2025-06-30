@@ -1,10 +1,17 @@
 const axios = require('axios');
 
 module.exports = function (app) {
-    const SOURCES = [        
-        { name: 'luminai', url: 'https://zelapioffciall.vercel.app/ai/luminai', param: 'text' },
-        // Tambahkan lebih banyak sumber jika ingin
-    ];
+    const AI_SOURCE = {
+        name: 'luminai',
+        url: 'https://zelapioffciall.vercel.app/ai/luminai?text={logic}'
+    };
+
+    const DEFAULT_PROMPT = (userText) => `
+Kamu adalah Astra AI, asisten virtual pintar yang dibuat oleh Hazel.
+Jawabanmu harus sopan, detail, dan fokus pada isi pertanyaan.
+Berikut pertanyaan dari user:
+${userText}
+`.trim();
 
     async function checkDatabase(text) {
         try {
@@ -14,13 +21,16 @@ module.exports = function (app) {
             ]);
 
             const data = [...resAstraAI.data, ...resDatabase.data];
+            const lowerText = text.toLowerCase();
 
             for (const item of data) {
-                const patterns = item.patterns.map(p => p.toLowerCase());
+                const patterns = (item.patterns || []).map(p => p.toLowerCase());
                 for (const pattern of patterns) {
-                    if (text.toLowerCase().includes(pattern)) {
-                        const responses = item.responses;
-                        return responses[Math.floor(Math.random() * responses.length)];
+                    if (lowerText.includes(pattern)) {
+                        const responses = item.responses || [];
+                        if (responses.length > 0) {
+                            return responses[Math.floor(Math.random() * responses.length)];
+                        }
                     }
                 }
             }
@@ -32,49 +42,38 @@ module.exports = function (app) {
         }
     }
 
-    async function AstraAIRandomAI(userText) {
+    async function callAstraAI(userText) {
         if (!userText || typeof userText !== 'string' || userText.trim().length === 0) {
             throw new Error('Teks tidak boleh kosong atau hanya spasi');
         }
 
-        const shuffledSources = [...SOURCES].sort(() => Math.random() - 0.5);
+        const prompt = DEFAULT_PROMPT(userText);
+        const finalUrl = AI_SOURCE.url.replace('{logic}', encodeURIComponent(prompt));
         const start = Date.now();
 
-        for (const chosen of shuffledSources) {
-            const paramName = chosen.param || 'text';
-            const url = chosen.url;
+        try {
+            const response = await axios.get(finalUrl, {
+                timeout: 10000,
+                headers: {
+                    'User-Agent': 'AstraAI/1.0 (Hazel)'
+                }
+            });
 
-            const params = new URLSearchParams();
-            params.append(paramName, userText);
+            const result = response.data?.result || response.data?.message || JSON.stringify(response.data);
+            const speed = Date.now() - start;
 
-            try {
-                const response = await axios.get(`${url}?${params.toString()}`, {
-                    timeout: 10000,
-                    headers: {
-                        'User-Agent': 'AstraAI/1.0 (Hazel)'
-                    }
-                });
-
-                const logicPrompt = `Kamu adalah ai yang bernama Astra Ai. Tugas kamu adalah menjawab. Kamu dibuat oleh Hazel sang pengembang. Fokus kamu adalah harus sopan, pintar, dan menjawab secara detail. Berikut pertanyaan dari user: ${userText}`;
-                
-                const result = response.data?.result || response.data?.message || JSON.stringify(response.data);
-                const speed = Date.now() - start;
-
-                return {
-                    status: true,
-                    result,
-                    speed_ms: speed
-                };
-            } catch (error) {
-                console.warn(`Gagal menggunakan ${chosen.name}: ${error.message}`);
-                continue;
-            }
+            return {
+                status: true,
+                result,
+                speed_ms: speed
+            };
+        } catch (error) {
+            console.warn(`Gagal menggunakan ${AI_SOURCE.name}: ${error.message}`);
+            return {
+                status: false,
+                result: `AI gagal merespons: ${error.message}`
+            };
         }
-
-        return {
-            status: false,
-            result: 'Semua sumber gagal merespons dalam batas waktu 😔'
-        };
     }
 
     app.get('/ai/astraai', async (req, res) => {
@@ -83,7 +82,9 @@ module.exports = function (app) {
         if (!text) {
             return res.status(400).json({
                 status: false,
-                error: 'Parameter ?text= wajib diisi yaa sayangg 💔'
+                creator: "Hazel",
+                source: "Astra AI",
+                result: 'Parameter ?text= wajib diisi yaa sayangg 💔'
             });
         }
 
@@ -93,19 +94,20 @@ module.exports = function (app) {
                 return res.status(200).json({
                     status: true,
                     creator: "Hazel",
-                    source: "Astra AI",
+                    source: "Astra AI (Database)",
                     result: localResponse
                 });
             }
 
-            const result = await AstraAIRandomAI(text);
+            const result = await callAstraAI(text);
             return res.status(result.status ? 200 : 500).json({
                 status: result.status,
                 creator: "Hazel",
-                source: "Astra AI",
+                source: "Astra AI (Prompt)",
                 result: result.result
             });
         } catch (err) {
+            console.error('Internal Error:', err);
             return res.status(500).json({
                 status: false,
                 creator: "Hazel",
