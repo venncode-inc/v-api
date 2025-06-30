@@ -64,7 +64,8 @@ app.use((req, res, next) => {
       sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
       return res.status(403).json({
         status: false,
-        message: "🚫 Your access is restricted due to abnormal traffic.",
+        antiddos: true,
+        message: "🚫 Akses terblokir",
       });
     } else {
       bannedIPs.delete(ip);
