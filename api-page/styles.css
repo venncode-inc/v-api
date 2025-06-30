@@ -918,6 +918,10 @@ input:checked + .slider:before { transform: translateX(26px); }
 .spinner-wrapper p { color: var(--text-color); font-weight: 500; margin-top: var(--space-lg); font-size: 1.1rem; letter-spacing: 1px; }
 .loading-dots { display: inline-block; width: 20px; text-align: left; }
 .fade-out { opacity: 0; transition: opacity 0.5s ease; }
+.loading-dots { display: inline-block; width: 20px; text-align: left; background: linear-gradient(90deg, #00f0ff, #ff00cc); background-size: 200% 200%; -webkit-background-clip: text;-webkit-text-fill-color: transparent; background-clip: text; color: transparent; animation: shine 5s linear infinite; filter: drop-shadow(0 0 3px #ffffff66); }
+@keyframes shine { 0% { background-position: 200% 0; } 100% { background-position: -200% 0;
+    }
+}
 
 /* Toast Notification */
 .toast-container { position: fixed; bottom: var(--space-lg); right: var(--space-lg); z-index: 1060; }
