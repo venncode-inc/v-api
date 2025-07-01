@@ -124,7 +124,6 @@ app.use(cors());
 
 // === STATIC FILES ===
 app.use('/', express.static(path.join(__dirname, 'api-page')));
-app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 // === LOAD ROUTES ===
 let totalRoutes = 0;
@@ -154,17 +153,6 @@ app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
 });
 
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'admin', '404.html'));
-});
-
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'dashboard', '404.html'));
-});
-
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'home', '404.html'));
-});
 // === ERROR HANDLER ===
 app.use((err, req, res, next) => {
   console.error(err.stack);
