@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Fungsi Notifikasi ---
     const loadNotifications = async () => {
         try {
-            const response = await fetch('/api-page/notifications.json'); 
+            const response = await fetch('notifications.json'); 
             if (!response.ok) throw new Error(`Gagal memuat notifikasi: ${response.status}`);
             allNotifications = await response.json();
             updateNotificationBadge();
