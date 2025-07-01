@@ -122,32 +122,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-const protectedStatic = (routePath, dirPath) => {
-  app.use(routePath, (req, res, next) => {
-    const referer = req.headers.referer || '';
-    const ip = req.ip || req.connection.remoteAddress;
-
-    const allow =
-      referer.includes(req.hostname) ||                 // akses dari halaman sendiri
-      referer.includes("localhost") ||                  // akses lokal
-      ip.startsWith("192.") || ip === "127.0.0.1";      // jaringan lokal
-
-    if (allow) {
-      return express.static(dirPath)(req, res, next);
-    }
-
-    console.log(`🚫 Blocked static access: ${ip} => ${req.originalUrl}`);
-    return res.status(403).send('🚫 Akses langsung ke folder ini dilarang!');
-  });
-};
-
-protectedStatic('/src', path.join(__dirname, 'src'));
-protectedStatic('/dashboard', path.join(__dirname, 'dashboard'));
-protectedStatic('/admin', path.join(__dirname, 'admin'));
-
 // === STATIC FILES ===
-app.use('/', express.static(path.join(__dirname, 'home')));
-app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
+app.use('/', express.static(path.join(__dirname, 'api-page')));
 
 // === LOAD ROUTES ===
 let totalRoutes = 0;
