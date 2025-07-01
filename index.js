@@ -16,11 +16,12 @@ const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
 const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/wwX9g6pl5oZITfbF3aezRf0u-SO6IGmyKMXYzu-r-YW9IO-S4A4c6KfKEves4PbI0uu0';
 
+// === LIMIT SETTINGS ===
 const RATE_LIMIT = 10;
 const WINDOW_TIME = 5 * 1000;
 const BAN_TIME = 3 * 60 * 1000;
-const ipRequests = new Map();
-const bannedIPs = new Map();
+const ipRequests = new Map(); // key = `${ip}_${endpoint}`
+const bannedIPs = new Map();  // key = `${ip}_${endpoint}`
 
 // === WHITELIST IP ===
 let whitelistedIPs = [];
@@ -40,7 +41,7 @@ async function loadWhitelist() {
 }
 
 loadWhitelist();
-setInterval(loadWhitelist, 5 * 60 * 1000); // refresh setiap 5 menit
+setInterval(loadWhitelist, 5 * 60 * 1000); // refresh whitelist tiap 5 menit
 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
@@ -71,50 +72,46 @@ function sendRawRequestLog({ ip, path, headers }) {
   }).catch(() => {});
 }
 
-// === MIDDLEWARE UTAMA ===
+// === ANTI-DDOS MIDDLEWARE ===
 app.use((req, res, next) => {
-  const ip = req.ip || req.connection.remoteAddress;
+  const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   const endpoint = req.originalUrl;
   const now = Date.now();
+  const key = `${ip}_${endpoint}`;
 
-  // Lewati anti-DDoS jika IP termasuk whitelist
-  if (whitelistedIPs.includes(ip)) {
-    return next();
-  }
+  if (whitelistedIPs.includes(ip)) return next();
 
-  // If banned, log every request to Discord, block it
-  if (bannedIPs.has(ip)) {
-    const banEnd = bannedIPs.get(ip);
+  if (bannedIPs.has(key)) {
+    const banEnd = bannedIPs.get(key);
     if (now < banEnd) {
       sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
       return res.status(403).json({
         status: false,
         antiddos: true,
         blocked: true,
-        ip: ip,
-        until: new Date(bannedIPs.get(ip)).toISOString(),
-        message: "🚫 Akses dari IP ini diblokir.",
-        reason: "Deteksi serangan DDoS dari alamat ip ini"
+        ip,
+        endpoint,
+        until: new Date(banEnd).toISOString(),
+        message: "🚫 Akses endpoint ini diblokir sementara.",
+        reason: "Terlalu sering mengakses endpoint ini."
       });
     } else {
-      bannedIPs.delete(ip);
+      bannedIPs.delete(key);
     }
   }
 
-  // Rate limiting
-  const requestData = ipRequests.get(ip) || { count: 0, startTime: now };
+  const requestData = ipRequests.get(key) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
   } else {
     requestData.count = 1;
     requestData.startTime = now;
   }
-  ipRequests.set(ip, requestData);
+  ipRequests.set(key, requestData);
 
-  // DDoS detected
   if (requestData.count > RATE_LIMIT) {
     const banEndTime = now + BAN_TIME;
-    bannedIPs.set(ip, banEndTime);
+    bannedIPs.set(key, banEndTime);
 
     sendDiscordAlert({
       ip,
@@ -125,11 +122,18 @@ app.use((req, res, next) => {
     });
 
     console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
-    req.destroy(); // kill connection instantly
-    return;
+    return res.status(429).json({
+      status: false,
+      antiddos: true,
+      blocked: true,
+      ip,
+      endpoint,
+      until: new Date(banEndTime).toISOString(),
+      message: "🚫 Kamu terlalu sering request ke endpoint ini.",
+      reason: "Deteksi DDoS lokal pada route ini."
+    });
   }
 
-  // Wrap response
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
@@ -145,6 +149,21 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// === AUTO CLEANUP CACHE ===
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, value] of ipRequests.entries()) {
+    if (now - value.startTime > WINDOW_TIME) {
+      ipRequests.delete(key);
+    }
+  }
+  for (const [key, until] of bannedIPs.entries()) {
+    if (now > until) {
+      bannedIPs.delete(key);
+    }
+  }
+}, 60 * 1000);
 
 // === MIDDLEWARE LAINNYA ===
 app.use(express.json());
