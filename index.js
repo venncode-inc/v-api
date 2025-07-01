@@ -51,13 +51,13 @@ function sendRawRequestLog({ ip, path, headers }) {
   }).catch(() => {});
 }
 
-// === MIDDLEWARE UTAMA ===
+// === MIDDLEWARE ANTI DDOS ===
 app.use((req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
   const endpoint = req.originalUrl;
   const now = Date.now();
 
-  // If banned, log every request to Discord, block it
+  // Cek apakah IP diblok
   if (bannedIPs.has(ip)) {
     const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
@@ -72,7 +72,7 @@ app.use((req, res, next) => {
     }
   }
 
-  // Rate limiting
+  // Hitung request
   const requestData = ipRequests.get(ip) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
@@ -82,7 +82,7 @@ app.use((req, res, next) => {
   }
   ipRequests.set(ip, requestData);
 
-  // DDoS detected
+  // Jika melebihi batas, blokir
   if (requestData.count > RATE_LIMIT) {
     const banEndTime = now + BAN_TIME;
     bannedIPs.set(ip, banEndTime);
@@ -96,11 +96,11 @@ app.use((req, res, next) => {
     });
 
     console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
-    req.destroy(); // kill connection instantly
+    req.destroy(); // putuskan koneksi
     return;
   }
 
-  // Wrap response
+  // Bungkus JSON output
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
@@ -153,13 +153,13 @@ app.get('/', (req, res) => {
 });
 
 // === 404 ===
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
 });
 
-// === ERROR HANDLER ===
+// === 500 INTERNAL ERROR HANDLER ===
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('[SERVER ERROR]', err.stack);
   res.status(500).sendFile(path.join(__dirname, 'api-page', '500.html'));
 });
 
