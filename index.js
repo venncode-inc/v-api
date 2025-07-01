@@ -22,8 +22,9 @@ const BAN_TIME = 60 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
-// === WHITELIST IP ===
+// === WHITELIST & BLACKLIST ===
 let whitelistedIPs = [];
+let blacklistedIPs = [];
 
 async function loadWhitelist() {
   try {
@@ -39,8 +40,24 @@ async function loadWhitelist() {
   }
 }
 
+async function loadBlacklist() {
+  try {
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/blacklist.json');
+    if (Array.isArray(data)) {
+      blacklistedIPs = data;
+      console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
+    } else {
+      console.error('[Blacklist Error] Format JSON bukan array');
+    }
+  } catch (err) {
+    console.error('[Blacklist Load Error]', err.message);
+  }
+}
+
 loadWhitelist();
-setInterval(loadWhitelist, 5 * 60 * 1000); // refresh setiap 5 menit
+loadBlacklist();
+setInterval(loadWhitelist, 5 * 60 * 1000);
+setInterval(loadBlacklist, 5 * 60 * 1000);
 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
@@ -77,12 +94,26 @@ app.use((req, res, next) => {
   const endpoint = req.originalUrl;
   const now = Date.now();
 
-  // Lewati anti-DDoS jika IP termasuk whitelist
+  // Whitelisted? Bypass
   if (whitelistedIPs.includes(ip)) {
     return next();
   }
 
-  // If banned, log every request to Discord, block it
+  // Blacklisted? Block langsung
+  if (blacklistedIPs.includes(ip)) {
+    console.log(chalk.bgRed.white(`[BLACKLISTED] ${ip} tried accessing ${endpoint}`));
+    sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
+    return res.status(403).json({
+      status: false,
+      antiddos: true,
+      blocked: true,
+      ip: ip,
+      message: "🚫 IP ini masuk blacklist",
+      reason: "IP ini diblokir secara manual oleh sistem."
+    });
+  }
+
+  // Rate-limit terblokir?
   if (bannedIPs.has(ip)) {
     const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
@@ -94,7 +125,7 @@ app.use((req, res, next) => {
         ip: ip,
         until: new Date(bannedIPs.get(ip)).toISOString(),
         message: "🚫 Akses dari IP ini diblokir.",
-        reason: "Deteksi serangan DDoS dari alamat ip ini"
+        reason: "Deteksi serangan DDoS dari alamat IP ini"
       });
     } else {
       bannedIPs.delete(ip);
