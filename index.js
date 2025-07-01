@@ -190,17 +190,22 @@ setInterval(() => {
 }, 60 * 1000);
 
 // ==== STATIC PROTECTION ====
-function secureStatic(folderPath, routePath) {
+function secureStatic(folderPath, routePath, allowFrontend = false) {
   app.use(routePath, (req, res, next) => {
-    const blockedExt = ['.js', '.css', '.map', '.env', '.json'];
-    const fileExt = path.extname(req.path).toLowerCase();
-    if (blockedExt.includes(fileExt)) {
+    const ext = path.extname(req.path).toLowerCase();
+    const blockedExt = ['.env', '.map', '.json', '.ts', '.lock'];
+
+    if (!allowFrontend && ['.js', '.css'].includes(ext)) {
       return res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
     }
+
+    if (blockedExt.includes(ext)) {
+      return res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
+    }
+
     next();
   }, express.static(folderPath));
 }
-
 // ==== MIDDLEWARE UMUM ====
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
