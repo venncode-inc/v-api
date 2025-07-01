@@ -16,9 +16,9 @@ const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
 const discordWebhookURL = 'https://discord.com/api/webhooks/1381323318015168713/n7-0frn24IaSz4BXK3nD6TnLTYKzNq8iZxq8RWkUDmEF0P35Dz_9o_ALgjDQkyFx78h9';
 
-const RATE_LIMIT = 20;
-const WINDOW_TIME = 10 * 1000;
-const BAN_TIME = 5 * 60 * 1000;
+const RATE_LIMIT = 3;
+const WINDOW_TIME = 2 * 1000;
+const BAN_TIME = 35 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
@@ -51,28 +51,32 @@ function sendRawRequestLog({ ip, path, headers }) {
   }).catch(() => {});
 }
 
-// === MIDDLEWARE ANTI DDOS ===
+// === MIDDLEWARE UTAMA ===
 app.use((req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
   const endpoint = req.originalUrl;
   const now = Date.now();
 
-  // Cek apakah IP diblok
+  // If banned, log every request to Discord, block it
   if (bannedIPs.has(ip)) {
     const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
       sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
       return res.status(403).json({
-        status: false,
-        antiddos: true,
-        message: "🚫 Akses terblokir",
-      });
+          status: false,
+          antiddos: true,
+          blocked: true,
+          ip: ip,
+          until: new Date(bannedIPs.get(ip)).toISOString(),
+          message: "🚫 Akses dari IP ini diblokir.",
+          reason: "Deteksi serangan DDoS dari alamat ip ini"
+         });
     } else {
       bannedIPs.delete(ip);
     }
   }
 
-  // Hitung request
+  // Rate limiting
   const requestData = ipRequests.get(ip) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
@@ -82,7 +86,7 @@ app.use((req, res, next) => {
   }
   ipRequests.set(ip, requestData);
 
-  // Jika melebihi batas, blokir
+  // DDoS detected
   if (requestData.count > RATE_LIMIT) {
     const banEndTime = now + BAN_TIME;
     bannedIPs.set(ip, banEndTime);
@@ -96,11 +100,11 @@ app.use((req, res, next) => {
     });
 
     console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
-    req.destroy(); // putuskan koneksi
+    req.destroy(); // kill connection instantly
     return;
   }
 
-  // Bungkus JSON output
+  // Wrap response
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
@@ -153,14 +157,14 @@ app.get('/', (req, res) => {
 });
 
 // === 404 ===
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
 });
 
-// === 500 INTERNAL ERROR HANDLER ===
+// === ERROR HANDLER ===
 app.use((err, req, res, next) => {
-  console.error('[SERVER ERROR]', err.stack);
-  res.status(500).sendFile(path.join(__dirname, 'api-page', '500.html'));
+  console.error(err.stack);
+  res.status(500).sendFile(path.join(__dirname, 'api-page', 'akses.html'));
 });
 
 // === START SERVER ===
