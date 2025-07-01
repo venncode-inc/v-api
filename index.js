@@ -14,21 +14,21 @@ app.set("json spaces", 2);
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
-const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/wwX9g6pl5oZITfbF3aezRf0u-SO6IGmyKMXYzu-r-YW9IO-S4A4c6KfKEves4PbI0uu0';
-
-const RATE_LIMIT = 3;
-const WINDOW_TIME = 3 * 1000;
-const BAN_TIME = 60 * 60 * 1000;
+// === LIMIT SETTINGS ===
+const RATE_LIMIT = 5;
+const WINDOW_TIME = 5 * 1000;
+const BAN_TIME = 3 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
-// === WHITELIST & BLACKLIST ===
+// === WHITELIST & WEBHOOK ===
 let whitelistedIPs = [];
-let blacklistedIPs = [];
+let discordWebhookURL = null;
 
+// === LOAD WHITELIST ===
 async function loadWhitelist() {
   try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json');
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/whitelist.json');
     if (Array.isArray(data)) {
       whitelistedIPs = data;
       console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
@@ -40,27 +40,30 @@ async function loadWhitelist() {
   }
 }
 
-async function loadBlacklist() {
+// === LOAD WEBHOOK URL ===
+async function loadWebhookURL() {
   try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/blacklist.json');
-    if (Array.isArray(data)) {
-      blacklistedIPs = data;
-      console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/webhook.json');
+    if (data?.webhook) {
+      discordWebhookURL = data.webhook;
+      console.log(chalk.cyan('[Webhook Loaded] URL from webhook.json'));
     } else {
-      console.error('[Blacklist Error] Format JSON bukan array');
+      console.error('[Webhook Load Error] webhook field tidak ditemukan');
     }
   } catch (err) {
-    console.error('[Blacklist Load Error]', err.message);
+    console.error('[Webhook Fetch Error]', err.message);
   }
 }
 
 loadWhitelist();
-loadBlacklist();
+loadWebhookURL();
 setInterval(loadWhitelist, 5 * 60 * 1000);
-setInterval(loadBlacklist, 5 * 60 * 1000);
+setInterval(loadWebhookURL, 5 * 60 * 1000);
 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
+  if (!discordWebhookURL) return;
+
   const embed = {
     title: "🚨 DDoS Detected",
     color: 0xff0000,
@@ -83,6 +86,8 @@ function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
 }
 
 function sendRawRequestLog({ ip, path, headers }) {
+  if (!discordWebhookURL) return;
+
   return axios.post(discordWebhookURL, {
     content: `📩 Blocked Request:\nIP: ${ip}\nPath: ${path}\nHeaders:\n\`\`\`json\n${JSON.stringify(headers, null, 2)}\n\`\`\``
   }).catch(() => {});
@@ -94,26 +99,8 @@ app.use((req, res, next) => {
   const endpoint = req.originalUrl;
   const now = Date.now();
 
-  // Whitelisted? Bypass
-  if (whitelistedIPs.includes(ip)) {
-    return next();
-  }
+  if (whitelistedIPs.includes(ip)) return next();
 
-  // Blacklisted? Block langsung
-  if (blacklistedIPs.includes(ip)) {
-    console.log(chalk.bgRed.white(`[BLACKLISTED] ${ip} tried accessing ${endpoint}`));
-    sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
-    return res.status(403).json({
-      status: false,
-      antiddos: true,
-      blocked: true,
-      ip: ip,
-      message: "🚫 IP ini masuk blacklist",
-      reason: "IP ini diblokir secara manual oleh sistem."
-    });
-  }
-
-  // Rate-limit terblokir?
   if (bannedIPs.has(ip)) {
     const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
@@ -123,16 +110,15 @@ app.use((req, res, next) => {
         antiddos: true,
         blocked: true,
         ip: ip,
-        until: new Date(bannedIPs.get(ip)).toISOString(),
+        until: new Date(banEnd).toISOString(),
         message: "🚫 Akses dari IP ini diblokir.",
-        reason: "Deteksi serangan DDoS dari alamat IP ini"
+        reason: "Deteksi serangan DDoS dari alamat ip ini"
       });
     } else {
       bannedIPs.delete(ip);
     }
   }
 
-  // Rate limiting
   const requestData = ipRequests.get(ip) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
@@ -142,7 +128,6 @@ app.use((req, res, next) => {
   }
   ipRequests.set(ip, requestData);
 
-  // DDoS detected
   if (requestData.count > RATE_LIMIT) {
     const banEndTime = now + BAN_TIME;
     bannedIPs.set(ip, banEndTime);
@@ -156,11 +141,10 @@ app.use((req, res, next) => {
     });
 
     console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
-    req.destroy(); // kill connection instantly
+    req.destroy();
     return;
   }
 
-  // Wrap response
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
