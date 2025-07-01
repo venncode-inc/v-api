@@ -28,7 +28,7 @@ let blacklistedIPs = [];
 
 async function loadWhitelist() {
   try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/whitelist.json');
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json');
     if (Array.isArray(data)) {
       whitelistedIPs = data;
       console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
@@ -42,7 +42,7 @@ async function loadWhitelist() {
 
 async function loadBlacklist() {
   try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/blacklist.json');
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/blacklist.json');
     if (Array.isArray(data)) {
       blacklistedIPs = data;
       console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
