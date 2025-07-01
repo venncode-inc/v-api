@@ -1,4 +1,3 @@
-// ==== CORE MODULE ====
 const express = require('express');
 const chalk = require('chalk');
 const fs = require('fs');
@@ -6,108 +5,110 @@ const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
 
-// ==== EXPRESS INIT ====
 const app = express();
 const PORT = process.env.PORT || 4000;
 app.enable("trust proxy");
 app.set("json spaces", 2);
 
-// ==== SETTINGS ====
+// === SETTINGS ===
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
-// ==== WEBHOOK ====
 const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/wwX9g6pl5oZITfbF3aezRf0u-SO6IGmyKMXYzu-r-YW9IO-S4A4c6KfKEves4PbI0uu0';
 
-// ==== LIMIT CONFIG ====
+// === LIMIT SETTINGS ===
 const RATE_LIMIT = 5;
-const WINDOW_TIME = 5000;
+const WINDOW_TIME = 5 * 1000;
 const BAN_TIME = 35 * 60 * 1000;
+const ipRequests = new Map(); // key = `${ip}_${endpoint}`
+const bannedIPs = new Map();  // key = `${ip}_${endpoint}`
 
-const ipRequests = new Map();     // Format: { "ip_endpoint": {count, startTime} }
-const bannedIPs = new Map();      // Format: { "ip_endpoint": banEndTimestamp }
-
-// ==== WHITELIST ====
+// === WHITELIST IP ===
 let whitelistedIPs = [];
+
 async function loadWhitelist() {
   try {
     const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json');
     if (Array.isArray(data)) {
       whitelistedIPs = data;
       console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
-    } else console.error('[Whitelist Error] Format JSON bukan array');
+    } else {
+      console.error('[Whitelist Error] Format JSON bukan array');
+    }
   } catch (err) {
     console.error('[Whitelist Load Error]', err.message);
   }
 }
-loadWhitelist();
-setInterval(loadWhitelist, 10 * 1000);
 
-// ==== BLACKLIST ====
+loadWhitelist();
+setInterval(loadWhitelist, 10 * 1000); // refresh whitelist tiap 5 menit
+
+// === BLACKLIST IP ===
 let blacklistedIPs = [];
+
 async function loadBlacklist() {
   try {
     const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/blacklist.json');
     if (Array.isArray(data)) {
       blacklistedIPs = data;
       console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
-    } else console.error('[Blacklist Error] Format JSON bukan array');
+    } else {
+      console.error('[Blacklist Error] Format JSON bukan array');
+    }
   } catch (err) {
     console.error('[Blacklist Load Error]', err.message);
   }
 }
 loadBlacklist();
-setInterval(loadBlacklist, 10 * 1000);
-
-// ==== WEBHOOK NOTIFIER ====
-function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime }) {
+setInterval(loadBlacklist, 10 * 1000); 
+// === WEBHOOK LOGGER ===
+function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   const embed = {
     title: "🚨 DDoS Detected",
     color: 0xff0000,
     fields: [
       { name: "IP", value: ip, inline: true },
       { name: "Endpoint", value: endpoint, inline: true },
-      { name: "Time", value: ddosTime },
-      { name: "Ban Until", value: banEndTime }
+      { name: "Time", value: ddosTime, inline: false },
+      { name: "Ban Until", value: banEndTime, inline: false },
     ],
     timestamp: new Date().toISOString(),
     footer: { text: "Hazel Anti-DDoS System" }
   };
 
-  axios.post(discordWebhookURL, {
+  return axios.post(discordWebhookURL, {
     content: "⚠️ Suspicious Traffic Detected",
     embeds: [embed]
-  }).catch(() => {});
+  }).catch(err => {
+    console.error('[Webhook Failed]', err.message);
+  });
 }
 
 function sendRawRequestLog({ ip, path, headers }) {
-  axios.post(discordWebhookURL, {
+  return axios.post(discordWebhookURL, {
     content: `📩 Blocked Request:\nIP: ${ip}\nPath: ${path}\nHeaders:\n\`\`\`json\n${JSON.stringify(headers, null, 2)}\n\`\`\``
   }).catch(() => {});
 }
 
-// ==== ANTI-DDOS MIDDLEWARE ====
+// === ANTI-DDOS MIDDLEWARE ===
 app.use((req, res, next) => {
   const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   const endpoint = req.originalUrl;
   const now = Date.now();
   const key = `${ip}_${endpoint}`;
 
-  // === WHITELIST / BLACKLIST ===
   if (whitelistedIPs.includes(ip)) return next();
   if (blacklistedIPs.includes(ip)) {
-    return res.status(403).json({
-      status: false,
-      antiddos: true,
-      blocked: true,
-      permanent: true,
-      ip,
-      message: "🚫 Akses ditolak. IP kamu masuk daftar hitam.",
-      reason: "IP ini diblacklist permanen oleh admin."
-    });
-  }
-
-  // === BANNED CHECK ===
+     return res.status(403).json({
+       status: false,
+       antiddos: true,
+       blocked: true,
+       permanent: true,
+       ip,
+       message: "🚫 Akses ditolak. IP kamu masuk daftar hitam.",
+       reason: "IP ini diblacklist permanen oleh admin."
+      });
+   }
   if (bannedIPs.has(key)) {
     const banEnd = bannedIPs.get(key);
     if (now < banEnd) {
@@ -127,7 +128,6 @@ app.use((req, res, next) => {
     }
   }
 
-  // === RATE LIMIT ===
   const requestData = ipRequests.get(key) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
@@ -145,7 +145,8 @@ app.use((req, res, next) => {
       ip,
       endpoint,
       ddosTime: new Date(now).toLocaleString(),
-      banEndTime: new Date(banEndTime).toLocaleString()
+      banEndTime: new Date(banEndTime).toLocaleString(),
+      headers: req.headers
     });
 
     console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
@@ -161,13 +162,12 @@ app.use((req, res, next) => {
     });
   }
 
-  // === WRAPPER ===
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
       const wrapped = {
         status: data.status ?? true,
-        creator: settings.apiSettings?.creator || "Hazel",
+        creator: settings.apiSettings.creator || "Hazel",
         ...data
       };
       return originalJson.call(this, wrapped);
@@ -178,55 +178,43 @@ app.use((req, res, next) => {
   next();
 });
 
-// ==== AUTO CLEANUP ====
+// === AUTO CLEANUP CACHE ===
 setInterval(() => {
   const now = Date.now();
   for (const [key, value] of ipRequests.entries()) {
-    if (now - value.startTime > WINDOW_TIME) ipRequests.delete(key);
+    if (now - value.startTime > WINDOW_TIME) {
+      ipRequests.delete(key);
+    }
   }
   for (const [key, until] of bannedIPs.entries()) {
-    if (now > until) bannedIPs.delete(key);
+    if (now > until) {
+      bannedIPs.delete(key);
+    }
   }
 }, 60 * 1000);
 
-// ==== STATIC PROTECTION ====
-function secureStatic(folderPath, routePath, allowFrontend = false) {
-  app.use(routePath, (req, res, next) => {
-    const ext = path.extname(req.path).toLowerCase();
-    const blockedExt = ['.env', '.map', '.json', '.ts', '.lock'];
-
-    if (!allowFrontend && ['.js', '.css'].includes(ext)) {
-      return res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
-    }
-
-    if (blockedExt.includes(ext)) {
-      return res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
-    }
-
-    next();
-  }, express.static(folderPath));
-}
-// ==== MIDDLEWARE UMUM ====
+// === MIDDLEWARE LAINNYA ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-// ==== STATIC FOLDERS ====
-secureStatic(path.join(__dirname, '/'), 'home');
-secureStatic(path.join(__dirname, '/api-page'), 'api-page');
-secureStatic(path.join(__dirname, '/src'), 'src');
-secureStatic(path.join(__dirname, '/dashboard'), 'dashboard');
-secureStatic(path.join(__dirname, '/admin'), 'admin');
+// === STATIC FILES ===
+app.use('/', express.static(path.join(__dirname, 'home')));
+app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
+app.use('/src', express.static(path.join(__dirname, 'src')));
+app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// ==== LOAD ROUTES ====
+// === LOAD ROUTES ===
 let totalRoutes = 0;
 const apiFolder = path.join(__dirname, './src/api');
 fs.readdirSync(apiFolder).forEach((subfolder) => {
   const subfolderPath = path.join(apiFolder, subfolder);
   if (fs.statSync(subfolderPath).isDirectory()) {
     fs.readdirSync(subfolderPath).forEach((file) => {
+      const filePath = path.join(subfolderPath, file);
       if (path.extname(file) === '.js') {
-        require(path.join(subfolderPath, file))(app);
+        require(filePath)(app);
         totalRoutes++;
         console.log(chalk.bgHex('#FFFF99').hex('#333')(` Loaded: ${file} `));
       }
@@ -235,23 +223,43 @@ fs.readdirSync(apiFolder).forEach((subfolder) => {
 });
 console.log(chalk.bgGreen.hex('#000')(` ✅ Loaded ${totalRoutes} routes `));
 
-// ==== HOMEPAGE ====
+// === HOMEPAGE ===
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
 });
 
-// ==== 404 HANDLER ====
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
+// === 404 HANDLER (Gabung semua jadi satu) ===
+app.use((req, res, next) => {
+  const tryPaths = [
+    path.join(__dirname, 'api-page', '404.html'),
+    path.join(__dirname, 'dashboard', '404.html'),
+    path.join(__dirname, 'admin', '404.html'),
+    path.join(__dirname, 'home', '404.html')
+  ];
+
+  for (const filePath of tryPaths) {
+    if (fs.existsSync(filePath)) {
+      return res.status(404).sendFile(filePath);
+    }
+  }
+
+  res.status(404).json({
+    status: false,
+    message: "404 Not Found"
+  });
 });
 
-// ==== ERROR HANDLER ====
+// === ERROR HANDLER ===
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).sendFile(path.join(__dirname, 'api-page', 'akses.html'));
+  const errorPage = path.join(__dirname, 'api-page', 'akses.html');
+  if (fs.existsSync(errorPage)) {
+    return res.status(500).sendFile(errorPage);
+  }
+  res.status(500).json({ status: false, message: "Internal Server Error" });
 });
 
-// ==== START ====
+// === START SERVER ===
 app.listen(PORT, () => {
   console.log(chalk.bgGreen.hex('#000')(` 🚀 Server Running at Port ${PORT} `));
 });
