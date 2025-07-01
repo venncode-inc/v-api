@@ -14,11 +14,11 @@ app.set("json spaces", 2);
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
-const discordWebhookURL = 'https://discord.com/api/webhooks/1381323318015168713/n7-0frn24IaSz4BXK3nD6TnLTYKzNq8iZxq8RWkUDmEF0P35Dz_9o_ALgjDQkyFx78h9';
+const discordWebhookURL = 'https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json';
 
-const RATE_LIMIT = 10;
-const WINDOW_TIME = 5 * 1000;
-const BAN_TIME = 3 * 60 * 1000;
+const RATE_LIMIT = 3;
+const WINDOW_TIME = 3 * 1000;
+const BAN_TIME = 60 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
