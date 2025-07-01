@@ -17,7 +17,7 @@ const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 // === LIMIT SETTINGS ===
 const RATE_LIMIT = 5;
 const WINDOW_TIME = 5 * 1000;
-const BAN_TIME = 3 * 60 * 1000;
+const BAN_TIME = 60 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
