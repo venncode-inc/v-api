@@ -14,53 +14,14 @@ app.set("json spaces", 2);
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
-const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/wwX9g6pl5oZITfbF3aezRf0u-SO6IGmyKMXYzu-r-YW9IO-S4A4c6KfKEves4PbI0uu0';
+const discordWebhookURL = 'https://discord.com/api/webhooks/1381323318015168713/n7-0frn24IaSz4BXK3nD6TnLTYKzNq8iZxq8RWkUDmEF0P35Dz_9o_ALgjDQkyFx78h9';
 
-// === LIMIT SETTINGS ===
-const RATE_LIMIT = 5;
-const WINDOW_TIME = 5 * 1000;
-const BAN_TIME = 35 * 60 * 1000;
-const ipRequests = new Map(); // key = `${ip}_${endpoint}`
-const bannedIPs = new Map();  // key = `${ip}_${endpoint}`
+const RATE_LIMIT = 20;
+const WINDOW_TIME = 10 * 1000;
+const BAN_TIME = 5 * 60 * 1000;
+const ipRequests = new Map();
+const bannedIPs = new Map();
 
-// === WHITELIST IP ===
-let whitelistedIPs = [];
-
-async function loadWhitelist() {
-  try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json');
-    if (Array.isArray(data)) {
-      whitelistedIPs = data;
-      console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
-    } else {
-      console.error('[Whitelist Error] Format JSON bukan array');
-    }
-  } catch (err) {
-    console.error('[Whitelist Load Error]', err.message);
-  }
-}
-
-loadWhitelist();
-setInterval(loadWhitelist, 10 * 1000); // refresh whitelist tiap 5 menit
-
-// === BLACKLIST IP ===
-let blacklistedIPs = [];
-
-async function loadBlacklist() {
-  try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/blacklist.json');
-    if (Array.isArray(data)) {
-      blacklistedIPs = data;
-      console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
-    } else {
-      console.error('[Blacklist Error] Format JSON bukan array');
-    }
-  } catch (err) {
-    console.error('[Blacklist Load Error]', err.message);
-  }
-}
-loadBlacklist();
-setInterval(loadBlacklist, 10 * 1000); 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   const embed = {
@@ -90,56 +51,41 @@ function sendRawRequestLog({ ip, path, headers }) {
   }).catch(() => {});
 }
 
-// === ANTI-DDOS MIDDLEWARE ===
+// === MIDDLEWARE UTAMA ===
 app.use((req, res, next) => {
-  const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const ip = req.ip || req.connection.remoteAddress;
   const endpoint = req.originalUrl;
   const now = Date.now();
-  const key = `${ip}_${endpoint}`;
 
-  if (whitelistedIPs.includes(ip)) return next();
-  if (blacklistedIPs.includes(ip)) {
-     return res.status(403).json({
-       status: false,
-       antiddos: true,
-       blocked: true,
-       permanent: true,
-       ip,
-       message: "🚫 Akses ditolak. IP kamu masuk daftar hitam.",
-       reason: "IP ini diblacklist permanen oleh admin."
-      });
-   }
-  if (bannedIPs.has(key)) {
-    const banEnd = bannedIPs.get(key);
+  // If banned, log every request to Discord, block it
+  if (bannedIPs.has(ip)) {
+    const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
       sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
       return res.status(403).json({
         status: false,
         antiddos: true,
-        blocked: true,
-        ip,
-        endpoint,
-        until: new Date(banEnd).toISOString(),
-        message: "🚫 Akses endpoint ini diblokir sementara.",
-        reason: "Terlalu sering mengakses endpoint ini."
+        message: "🚫 Akses terblokir",
       });
     } else {
-      bannedIPs.delete(key);
+      bannedIPs.delete(ip);
     }
   }
 
-  const requestData = ipRequests.get(key) || { count: 0, startTime: now };
+  // Rate limiting
+  const requestData = ipRequests.get(ip) || { count: 0, startTime: now };
   if (now - requestData.startTime < WINDOW_TIME) {
     requestData.count++;
   } else {
     requestData.count = 1;
     requestData.startTime = now;
   }
-  ipRequests.set(key, requestData);
+  ipRequests.set(ip, requestData);
 
+  // DDoS detected
   if (requestData.count > RATE_LIMIT) {
     const banEndTime = now + BAN_TIME;
-    bannedIPs.set(key, banEndTime);
+    bannedIPs.set(ip, banEndTime);
 
     sendDiscordAlert({
       ip,
@@ -150,18 +96,11 @@ app.use((req, res, next) => {
     });
 
     console.log(chalk.red(`[DDoS Blocked] ${ip} @ ${endpoint}`));
-    return res.status(429).json({
-      status: false,
-      antiddos: true,
-      blocked: true,
-      ip,
-      endpoint,
-      until: new Date(banEndTime).toISOString(),
-      message: "🚫 Kamu terlalu sering request ke endpoint ini.",
-      reason: "Deteksi DDoS lokal pada route ini."
-    });
+    req.destroy(); // kill connection instantly
+    return;
   }
 
+  // Wrap response
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
@@ -178,60 +117,37 @@ app.use((req, res, next) => {
   next();
 });
 
-// === ANTI-INTIP ===
-const internalStaticPaths = {
-  '/src': path.join(__dirname, 'src'),
-  '/admin': path.join(__dirname, 'admin'),
-  '/dashboard': path.join(__dirname, 'dashboard')
-};
-
-Object.entries(internalStaticPaths).forEach(([route, dir]) => {
-  app.use(route, (req, res, next) => {
-    if (req.headers['referer'] && req.headers['referer'].includes('yourdomain.com')) {
-      return express.static(dir)(req, res, next);
-    }
-    return res.status(403).send('Akses langsung dilarang!');
-  });
-});
-});
-
-// === AUTO CLEANUP CACHE ===
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, value] of ipRequests.entries()) {
-    if (now - value.startTime > WINDOW_TIME) {
-      ipRequests.delete(key);
-    }
-  }
-  for (const [key, until] of bannedIPs.entries()) {
-    if (now > until) {
-      bannedIPs.delete(key);
-    }
-  }
-}, 60 * 1000);
-
-// === ANTI INTIP ===
-const allowStaticAccess = (dirPath) => {
-  return (req, res, next) => {
-    const referer = req.headers.referer || '';
-    const isLocalRequest = referer.includes(req.hostname) || referer.includes("localhost");
-
-    if (isLocalRequest) {
-      return express.static(dirPath)(req, res, next);
-    } else {
-      res.status(403).send('🚫 Akses folder ini tidak diperbolehkan!');
-    }
-  };
-};
-
-app.use('/src', allowStaticAccess(path.join(__dirname, 'src')));
-app.use('/admin', allowStaticAccess(path.join(__dirname, 'admin')));
-app.use('/dashboard', allowStaticAccess(path.join(__dirname, 'dashboard')));
-
 // === MIDDLEWARE LAINNYA ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
+const protectedStatic = (routePath, dirPath) => {
+  app.use(routePath, (req, res, next) => {
+    const referer = req.headers.referer || '';
+    const ip = req.ip || req.connection.remoteAddress;
+
+    const allow =
+      referer.includes(req.hostname) ||                 // akses dari halaman sendiri
+      referer.includes("localhost") ||                  // akses lokal
+      ip.startsWith("192.") || ip === "127.0.0.1";      // jaringan lokal
+
+    if (allow) {
+      return express.static(dirPath)(req, res, next);
+    }
+
+    console.log(`🚫 Blocked static access: ${ip} => ${req.originalUrl}`);
+    return res.status(403).send('🚫 Akses langsung ke folder ini dilarang!');
+  });
+};
+
+protectedStatic('/src', path.join(__dirname, 'src'));
+protectedStatic('/dashboard', path.join(__dirname, 'dashboard'));
+protectedStatic('/admin', path.join(__dirname, 'admin'));
+
+// === STATIC FILES ===
+app.use('/', express.static(path.join(__dirname, 'home')));
+app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
 
 // === LOAD ROUTES ===
 let totalRoutes = 0;
@@ -265,6 +181,12 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).sendFile(path.join(__dirname, 'api-page', 'akses.html'));
+});
+
+// === ANTI DDOS ===
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(ddos).sendFile(path.join(__dirname, 'api-page', '500.html'));
 });
 
 // === START SERVER ===
