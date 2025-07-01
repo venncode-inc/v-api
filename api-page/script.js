@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             copyEndpointBtn: document.getElementById('copyEndpoint'),
             copyResponseBtn: document.getElementById('copyResponse')
         },
-        // Elemen yang diisi dari 
+        // Elemen yang diisi dari settings.json
         pageTitle: document.getElementById('page'),
         wm: document.getElementById('wm'),
         appName: document.getElementById('name'),
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         apiLinksContainer: document.getElementById('apiLinks')
     };
 
-    let settings = {}; // Untuk menyimpan data dari 
+    let settings = {}; // Untuk menyimpan data dari settings.json
     let currentApiData = null; // Untuk menyimpan data API yang sedang ditampilkan di modal
     let allNotifications = []; // Untuk menyimpan semua notifikasi dari JSON
 
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Fungsi Notifikasi ---
     const loadNotifications = async () => {
         try {
-            const response = await fetch('notifications.json'); 
+            const response = await fetch('/notifications.json'); 
             if (!response.ok) throw new Error(`Gagal memuat notifikasi: ${response.status}`);
             allNotifications = await response.json();
             updateNotificationBadge();
@@ -343,11 +343,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!settings || Object.keys(settings).length === 0) return;
 
         const currentYear = new Date().getFullYear();
-        const creator = settings.apiSettings?.creator || 'Zelapi';
+        const creator = settings.apiSettings?.creator || 'FlowFalcon';
 
-        setPageContent(DOM.pageTitle, settings.name, "Zelapi");
-        setPageContent(DOM.wm, `© ${currentYear} Zelapi's Corp. All rights reversed.`);
-        setPageContent(DOM.appName, settings.name, "Zelapi");
+        setPageContent(DOM.pageTitle, settings.name, "Falcon API");
+        setPageContent(DOM.wm, `© ${currentYear} ${creator}. Semua hak dilindungi.`);
+        setPageContent(DOM.appName, settings.name, "Falcon API");
         setPageContent(DOM.sideNavName, settings.name || "API");
         setPageContent(DOM.versionBadge, settings.version, "v1.0");
         setPageContent(DOM.versionHeaderBadge, settings.header?.status, "Aktif!");
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (DOM.apiLinksContainer) {
             DOM.apiLinksContainer.innerHTML = ''; 
-            const defaultLinks = [{ url: "", name: "", icon: "fab fa-github" }];
+            const defaultLinks = [{ url: "https://github.com/FlowFalcon/Falcon-Api-UI", name: "Lihat di GitHub", icon: "fab fa-github" }];
             const linksToRender = settings.links?.length ? settings.links : defaultLinks;
 
             linksToRender.forEach(({ url, name, icon }, index) => {
