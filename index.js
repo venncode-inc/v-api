@@ -16,11 +16,31 @@ const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
 const discordWebhookURL = 'https://discord.com/api/webhooks/1381323318015168713/n7-0frn24IaSz4BXK3nD6TnLTYKzNq8iZxq8RWkUDmEF0P35Dz_9o_ALgjDQkyFx78h9';
 
-const RATE_LIMIT = 10 ;
+const RATE_LIMIT = 10;
 const WINDOW_TIME = 5 * 1000;
 const BAN_TIME = 3 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
+
+// === WHITELIST IP ===
+let whitelistedIPs = [];
+
+async function loadWhitelist() {
+  try {
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/whitelist.json');
+    if (Array.isArray(data)) {
+      whitelistedIPs = data;
+      console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
+    } else {
+      console.error('[Whitelist Error] Format JSON bukan array');
+    }
+  } catch (err) {
+    console.error('[Whitelist Load Error]', err.message);
+  }
+}
+
+loadWhitelist();
+setInterval(loadWhitelist, 5 * 60 * 1000); // refresh setiap 5 menit
 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
@@ -57,20 +77,25 @@ app.use((req, res, next) => {
   const endpoint = req.originalUrl;
   const now = Date.now();
 
+  // Lewati anti-DDoS jika IP termasuk whitelist
+  if (whitelistedIPs.includes(ip)) {
+    return next();
+  }
+
   // If banned, log every request to Discord, block it
   if (bannedIPs.has(ip)) {
     const banEnd = bannedIPs.get(ip);
     if (now < banEnd) {
       sendRawRequestLog({ ip, path: endpoint, headers: req.headers });
       return res.status(403).json({
-          status: false,
-          antiddos: true,
-          blocked: true,
-          ip: ip,
-          until: new Date(bannedIPs.get(ip)).toISOString(),
-          message: "🚫 Akses dari IP ini diblokir.",
-          reason: "Deteksi serangan DDoS dari alamat ip ini"
-         });
+        status: false,
+        antiddos: true,
+        blocked: true,
+        ip: ip,
+        until: new Date(bannedIPs.get(ip)).toISOString(),
+        message: "🚫 Akses dari IP ini diblokir.",
+        reason: "Deteksi serangan DDoS dari alamat ip ini"
+      });
     } else {
       bannedIPs.delete(ip);
     }
