@@ -14,7 +14,7 @@ app.set("json spaces", 2);
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
-const discordWebhookURL = 'https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json';
+const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/wwX9g6pl5oZITfbF3aezRf0u-SO6IGmyKMXYzu-r-YW9IO-S4A4c6KfKEves4PbI0uu0';
 
 const RATE_LIMIT = 3;
 const WINDOW_TIME = 3 * 1000;
