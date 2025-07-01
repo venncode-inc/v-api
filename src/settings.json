@@ -211,7 +211,13 @@
                     "name": "Motivasi Islam",
                     "desc": "Random motivasi islam",
                     "path": "/random/motivasi-islam",
-                    "status": "Ready"                         
+                    "status": "Ready"   
+                },
+                {
+                    "name": "Motivasi Kristen",
+                    "desc": "Random motivasi kristen",
+                    "path": "/random/motivasi-kristen",
+                    "status": "Ready"       
                 },
                 {
                     "name": "Nsfw",
