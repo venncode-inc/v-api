@@ -17,9 +17,9 @@ const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/wwX9g6pl5oZITfbF3aezRf0u-SO6IGmyKMXYzu-r-YW9IO-S4A4c6KfKEves4PbI0uu0';
 
 // === LIMIT SETTINGS ===
-const RATE_LIMIT = 10;
+const RATE_LIMIT = 5;
 const WINDOW_TIME = 5 * 1000;
-const BAN_TIME = 3 * 60 * 1000;
+const BAN_TIME = 35 * 60 * 1000;
 const ipRequests = new Map(); // key = `${ip}_${endpoint}`
 const bannedIPs = new Map();  // key = `${ip}_${endpoint}`
 
