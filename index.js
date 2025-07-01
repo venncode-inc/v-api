@@ -18,7 +18,7 @@ const discordWebhookURL = 'https://discord.com/api/webhooks/1381323318015168713/
 
 const RATE_LIMIT = 3;
 const WINDOW_TIME = 2 * 1000;
-const BAN_TIME = 35 * 60 * 1000;
+const BAN_TIME = 3 * 60 * 1000;
 const ipRequests = new Map();
 const bannedIPs = new Map();
 
