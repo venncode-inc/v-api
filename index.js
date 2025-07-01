@@ -124,6 +124,7 @@ app.use(cors());
 
 // === STATIC FILES ===
 app.use('/', express.static(path.join(__dirname, 'api-page')));
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 // === LOAD ROUTES ===
 let totalRoutes = 0;
