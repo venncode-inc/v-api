@@ -57,7 +57,7 @@ async function loadWebhookURL() {
 
 loadWhitelist();
 loadWebhookURL();
-setInterval(loadWhitelist, 5 * 60 * 1000);
+setInterval(loadWhitelist, 10 * 1000); 
 setInterval(loadWebhookURL, 5 * 60 * 1000);
 
 // === WEBHOOK LOGGER ===
