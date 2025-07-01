@@ -27,7 +27,7 @@ let whitelistedIPs = [];
 
 async function loadWhitelist() {
   try {
-    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/main/whitelist.json');
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/whitelist.json');
     if (Array.isArray(data)) {
       whitelistedIPs = data;
       console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
