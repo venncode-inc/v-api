@@ -41,7 +41,7 @@ async function loadWhitelist() {
 }
 
 loadWhitelist();
-setInterval(loadWhitelist, 5 * 60 * 1000); // refresh whitelist tiap 5 menit
+setInterval(loadWhitelist, 10 * 1000); // refresh whitelist tiap 5 menit
 
 // === BLACKLIST IP ===
 let blacklistedIPs = [];
@@ -60,7 +60,7 @@ async function loadBlacklist() {
   }
 }
 loadBlacklist();
-setInterval(loadBlacklist, 5 * 60 * 1000); 
+setInterval(loadBlacklist, 10 * 1000); 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   const embed = {
