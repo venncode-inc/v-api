@@ -8,9 +8,7 @@
     },
     "apiSettings": {
         "creator": "Hazel",
-        "apikey": [
-            "velin"
-        ]
+        "apikey": ["velin"]
     },
     "categories": [
         {
@@ -207,7 +205,13 @@
                     "name": "Quotes",
                     "desc": "Random quotes",
                     "path": "/random/quotes",
-                    "status": "Ready"                
+                    "status": "Ready"         
+                },
+                {
+                    "name": "Motivasi Islam",
+                    "desc": "Random motivasi islam",
+                    "path": "/random/motivasi-islam",
+                    "status": "Ready"                         
                 },
                 {
                     "name": "Nsfw",
