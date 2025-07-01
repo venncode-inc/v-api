@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>API Key Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .scale-up {
+            transform: scale(1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .scale-up:hover {
+            transform: scale(1.05);
+        }
+
+        .button-transition {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button-transition:hover {
+            background-color: #38a169; /* Darker green */
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md fade-in">
+        <h2 class="text-2xl font-bold text-center mb-4">Create API Key</h2>
+        
+        <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter user name"
+            class="w-full p-3 border rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        />
+        
+        <button
+            onclick="generateApiKey()"
+            class="w-full bg-green-600 text-white py-2 rounded-xl font-semibold button-transition"
+        >
+            Generate
+        </button>
+
+        <div id="result" class="mt-4 text-center hidden"></div>
+
+        <hr class="my-6" />
+
+        <div>
+            <h3 class="text-lg font-semibold mb-2">API Key History</h3>
+            <ul id="historyList" class="list-disc ml-6 text-sm text-gray-700 space-y-1"></ul>
+        </div>
+    </div>
+
+    <script>
+        const resultDiv = document.getElementById('result');
+        const historyList = document.getElementById('historyList');
+
+        function updateHistory(newKey) {
+            const history = JSON.parse(localStorage.getItem('apikeyHistory') || '[]');
+            history.push(newKey);
+            localStorage.setItem('apikeyHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('apikeyHistory') || '[]');
+            historyList.innerHTML = '';
+            history.forEach((key) => {
+                const li = document.createElement('li');
+                li.textContent = key;
+                historyList.appendChild(li);
+            });
+        }
+
+        async function generateApiKey() {
+            const name = document.getElementById('nameInput').value.trim();
+
+            if (!name) {
+                resultDiv.textContent = "Name cannot be empty!";
+                resultDiv.className = "text-red-600 mt-4 text-center fade-in";
+                resultDiv.classList.remove("hidden");
+                return;
+            }
+
+            resultDiv.textContent = "Generating API Key...";
+            resultDiv.className = "text-gray-600 mt-4 text-center fade-in";
+            resultDiv.classList.remove("hidden");
+
+            try {
+                const res = await fetch(`https://zelapioffciall.vercel.app/generate/createapikey?name=${encodeURIComponent(name)}`);
+                const data = await res.json();
+
+                if (data.status && data["your apikey"]) {
+                    const apikey = data["your apikey"];
+                    resultDiv.innerHTML = `
+                        <p class="text-green-700 font-mono text-lg break-words">${apikey}</p>
+                    `;
+                    resultDiv.classList.remove("text-red-600");
+                    updateHistory(apikey);
+                } else {
+                    resultDiv.innerHTML = `<span class="text-red-600">Failed to create API Key.</span>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<span class="text-red-600">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Load history when the page is opened
+        renderHistory();
+    </script>
+</body>
+</html>
