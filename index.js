@@ -20,11 +20,11 @@ const discordWebhookURL = 'https://discord.com/api/webhooks/1388578723791376385/
 const RATE_LIMIT = 5;
 const WINDOW_TIME = 5 * 1000;
 const BAN_TIME = 35 * 60 * 1000;
-const ipRequests = new Map();
-const bannedIPs = new Map();
+const ipRequests = new Map(); // key = `${ip}_${endpoint}`
+const bannedIPs = new Map();  // key = `${ip}_${endpoint}`
 
-// === WHITELIST & BLACKLIST ===
-let whitelistedIPs = [], blacklistedIPs = [];
+// === WHITELIST IP ===
+let whitelistedIPs = [];
 
 async function loadWhitelist() {
   try {
@@ -32,11 +32,19 @@ async function loadWhitelist() {
     if (Array.isArray(data)) {
       whitelistedIPs = data;
       console.log(chalk.green(`[Whitelist Loaded] ${whitelistedIPs.length} IPs`));
-    } else console.error('[Whitelist Error] Format JSON bukan array');
+    } else {
+      console.error('[Whitelist Error] Format JSON bukan array');
+    }
   } catch (err) {
     console.error('[Whitelist Load Error]', err.message);
   }
 }
+
+loadWhitelist();
+setInterval(loadWhitelist, 10 * 1000); // refresh whitelist tiap 5 menit
+
+// === BLACKLIST IP ===
+let blacklistedIPs = [];
 
 async function loadBlacklist() {
   try {
@@ -44,17 +52,15 @@ async function loadBlacklist() {
     if (Array.isArray(data)) {
       blacklistedIPs = data;
       console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
-    } else console.error('[Blacklist Error] Format JSON bukan array');
+    } else {
+      console.error('[Blacklist Error] Format JSON bukan array');
+    }
   } catch (err) {
     console.error('[Blacklist Load Error]', err.message);
   }
 }
-
-loadWhitelist();
 loadBlacklist();
-setInterval(loadWhitelist, 10 * 1000);
-setInterval(loadBlacklist, 10 * 1000);
-
+setInterval(loadBlacklist, 10 * 1000); 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   const embed = {
@@ -73,7 +79,9 @@ function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   return axios.post(discordWebhookURL, {
     content: "⚠️ Suspicious Traffic Detected",
     embeds: [embed]
-  }).catch(err => console.error('[Webhook Failed]', err.message));
+  }).catch(err => {
+    console.error('[Webhook Failed]', err.message);
+  });
 }
 
 function sendRawRequestLog({ ip, path, headers }) {
@@ -91,17 +99,16 @@ app.use((req, res, next) => {
 
   if (whitelistedIPs.includes(ip)) return next();
   if (blacklistedIPs.includes(ip)) {
-    return res.status(403).json({
-      status: false,
-      antiddos: true,
-      blocked: true,
-      permanent: true,
-      ip,
-      message: "🚫 Akses ditolak. IP kamu masuk daftar hitam.",
-      reason: "IP ini diblacklist permanen oleh admin."
-    });
-  }
-
+     return res.status(403).json({
+       status: false,
+       antiddos: true,
+       blocked: true,
+       permanent: true,
+       ip,
+       message: "🚫 Akses ditolak. IP kamu masuk daftar hitam.",
+       reason: "IP ini diblacklist permanen oleh admin."
+      });
+   }
   if (bannedIPs.has(key)) {
     const banEnd = bannedIPs.get(key);
     if (now < banEnd) {
@@ -113,10 +120,12 @@ app.use((req, res, next) => {
         ip,
         endpoint,
         until: new Date(banEnd).toISOString(),
-        message: "🚫 Endpoint ini diblokir sementara.",
-        reason: "Terlalu sering akses endpoint ini."
+        message: "🚫 Akses endpoint ini diblokir sementara.",
+        reason: "Terlalu sering mengakses endpoint ini."
       });
-    } else bannedIPs.delete(key);
+    } else {
+      bannedIPs.delete(key);
+    }
   }
 
   const requestData = ipRequests.get(key) || { count: 0, startTime: now };
@@ -148,8 +157,8 @@ app.use((req, res, next) => {
       ip,
       endpoint,
       until: new Date(banEndTime).toISOString(),
-      message: "🚫 Terlalu sering request ke endpoint ini.",
-      reason: "Deteksi DDoS lokal."
+      message: "🚫 Kamu terlalu sering request ke endpoint ini.",
+      reason: "Deteksi DDoS lokal pada route ini."
     });
   }
 
@@ -178,33 +187,51 @@ const internalStaticPaths = {
 
 Object.entries(internalStaticPaths).forEach(([route, dir]) => {
   app.use(route, (req, res, next) => {
-    const referer = req.headers['referer'] || '';
-    if (referer.includes('yourdomain.com')) {
+    if (req.headers['referer'] && req.headers['referer'].includes('yourdomain.com')) {
       return express.static(dir)(req, res, next);
     }
-    return res.status(403).send('🚫 Akses langsung tidak diperbolehkan!');
+    return res.status(403).send('Akses langsung dilarang!');
   });
 });
+});
 
-// === AUTO CLEANUP ===
+// === AUTO CLEANUP CACHE ===
 setInterval(() => {
   const now = Date.now();
   for (const [key, value] of ipRequests.entries()) {
-    if (now - value.startTime > WINDOW_TIME) ipRequests.delete(key);
+    if (now - value.startTime > WINDOW_TIME) {
+      ipRequests.delete(key);
+    }
   }
   for (const [key, until] of bannedIPs.entries()) {
-    if (now > until) bannedIPs.delete(key);
+    if (now > until) {
+      bannedIPs.delete(key);
+    }
   }
 }, 60 * 1000);
+
+// === ANTI INTIP ===
+const allowStaticAccess = (dirPath) => {
+  return (req, res, next) => {
+    const referer = req.headers.referer || '';
+    const isLocalRequest = referer.includes(req.hostname) || referer.includes("localhost");
+
+    if (isLocalRequest) {
+      return express.static(dirPath)(req, res, next);
+    } else {
+      res.status(403).send('🚫 Akses folder ini tidak diperbolehkan!');
+    }
+  };
+};
+
+app.use('/src', allowStaticAccess(path.join(__dirname, 'src')));
+app.use('/admin', allowStaticAccess(path.join(__dirname, 'admin')));
+app.use('/dashboard', allowStaticAccess(path.join(__dirname, 'dashboard')));
 
 // === MIDDLEWARE LAINNYA ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-
-// === STATIC FILE (PUBLIC) ===
-app.use('/', express.static(path.join(__dirname, 'home')));
-app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
 
 // === LOAD ROUTES ===
 let totalRoutes = 0;
@@ -213,8 +240,9 @@ fs.readdirSync(apiFolder).forEach((subfolder) => {
   const subfolderPath = path.join(apiFolder, subfolder);
   if (fs.statSync(subfolderPath).isDirectory()) {
     fs.readdirSync(subfolderPath).forEach((file) => {
+      const filePath = path.join(subfolderPath, file);
       if (path.extname(file) === '.js') {
-        require(path.join(subfolderPath, file))(app);
+        require(filePath)(app);
         totalRoutes++;
         console.log(chalk.bgHex('#FFFF99').hex('#333')(` Loaded: ${file} `));
       }
@@ -229,7 +257,7 @@ app.get('/', (req, res) => {
 });
 
 // === 404 ===
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
 });
 
