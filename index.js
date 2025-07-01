@@ -207,11 +207,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // ==== STATIC FOLDERS ====
-secureStatic(path.join(__dirname, 'home'), '/');
-secureStatic(path.join(__dirname, 'api-page'), '/api-page');
-secureStatic(path.join(__dirname, 'src'), '/src');
-secureStatic(path.join(__dirname, 'dashboard'), '/dashboard');
-secureStatic(path.join(__dirname, 'admin'), '/admin');
+secureStatic(path.join(__dirname, '/'), 'home');
+secureStatic(path.join(__dirname, '/api-page'), 'api-page');
+secureStatic(path.join(__dirname, '/src'), 'src');
+secureStatic(path.join(__dirname, '/dashboard'), 'dashboard');
+secureStatic(path.join(__dirname, '/admin'), 'admin');
 
 // ==== LOAD ROUTES ====
 let totalRoutes = 0;
