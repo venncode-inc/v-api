@@ -193,17 +193,30 @@ setInterval(() => {
   }
 }, 60 * 1000);
 
+function secureStatic(folderPath, routePath) {
+  app.use(routePath, (req, res, next) => {
+    const blockedExt = ['.js', '.css', '.map', '.env', '.json'];
+    const fileExt = path.extname(req.path).toLowerCase();
+
+    if (blockedExt.includes(fileExt)) {
+      return res.status(404).sendFile(path.join(__dirname, 'api-page', '404.html'));
+    }
+
+    next();
+  }, express.static(folderPath));
+}
+
 // === MIDDLEWARE LAINNYA ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-// === STATIC FILES ===
-app.use('/', express.static(path.join(__dirname, 'home')));
-app.use('/api-page', express.static(path.join(__dirname, 'api-page')));
-app.use('/src', express.static(path.join(__dirname, 'src')));
-app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
-app.use('/admin', express.static(path.join(__dirname, 'admin')));
+// === AMANIN STATIC FOLDER ===
+secureStatic(path.join(__dirname, 'home'), '/');
+secureStatic(path.join(__dirname, 'api-page'), '/api-page');
+secureStatic(path.join(__dirname, 'src'), '/src');
+secureStatic(path.join(__dirname, 'dashboard'), '/dashboard');
+secureStatic(path.join(__dirname, 'admin'), '/admin');
 
 // === LOAD ROUTES ===
 let totalRoutes = 0;
