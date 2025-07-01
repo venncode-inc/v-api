@@ -43,6 +43,24 @@ async function loadWhitelist() {
 loadWhitelist();
 setInterval(loadWhitelist, 5 * 60 * 1000); // refresh whitelist tiap 5 menit
 
+// === BLACKLIST IP ===
+let blacklistedIPs = [];
+
+async function loadBlacklist() {
+  try {
+    const { data } = await axios.get('https://raw.githubusercontent.com/hazelnuttty/API/main/blacklist.json');
+    if (Array.isArray(data)) {
+      blacklistedIPs = data;
+      console.log(chalk.red(`[Blacklist Loaded] ${blacklistedIPs.length} IPs`));
+    } else {
+      console.error('[Blacklist Error] Format JSON bukan array');
+    }
+  } catch (err) {
+    console.error('[Blacklist Load Error]', err.message);
+  }
+}
+loadBlacklist();
+setInterval(loadBlacklist, 5 * 60 * 1000); 
 // === WEBHOOK LOGGER ===
 function sendDiscordAlert({ ip, endpoint, ddosTime, banEndTime, headers }) {
   const embed = {
@@ -80,7 +98,17 @@ app.use((req, res, next) => {
   const key = `${ip}_${endpoint}`;
 
   if (whitelistedIPs.includes(ip)) return next();
-
+  if (blacklistedIPs.includes(ip)) {
+     return res.status(403).json({
+       status: false,
+       antiddos: true,
+       blocked: true,
+       permanent: true,
+       ip,
+       message: "🚫 Akses ditolak. IP kamu masuk daftar hitam.",
+       reason: "IP ini diblacklist permanen oleh admin."
+      });
+   }
   if (bannedIPs.has(key)) {
     const banEnd = bannedIPs.get(key);
     if (now < banEnd) {
